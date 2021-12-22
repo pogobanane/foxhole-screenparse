@@ -32,6 +32,15 @@
         src.delete(); dst.delete(); mask.delete();
       }
 
+      const drawRect = (domID, x, y, width, height) => {
+        let src = cv.imread(domID);
+        let color = new cv.Scalar(0, 255, 0, 255);
+        let point = new cv.Point(x, y);
+        let size = new cv.Point(width, height);
+        cv.rectangle(src, point, size, color, 1, cv.LINE_8, 0);
+        cv.imshow(domID, src);
+      };
+
       // works: tesseract --oem 0 --psm 11 -l "eng" fhq-seaport-curve1.png cmd -c tessedit_write_images=T
       const ocr = () => {
         const worker = Tesseract.createWorker({
@@ -60,13 +69,20 @@
           const seaportIdx = result.data.words.findIndex((word) => {
             return word.text == "Seaport";
           });
-          console.log(result.data.words[seaportIdx])
-          console.log(result.data.words[seaportIdx+1])
-          console.log(result.data.words[seaportIdx+2])
-          console.log(result.data.words[seaportIdx+3])
-          console.log(result.data.words[seaportIdx+4])
-          console.log(result.data.words[seaportIdx+5])
-          console.log(result.data.words[seaportIdx+6])
+
+          const markWord = (word) => {
+            console.log(word);
+            console.log("icon width should be ", seaport2Icon(word.bbox.x1 - word.bbox.x0));
+            drawRect('canvasOutput', word.bbox.x0, word.bbox.y0, word.bbox.x1, word.bbox.y1);
+          }
+
+          markWord(result.data.words[seaportIdx]);
+          markWord(result.data.words[seaportIdx+1]);
+          markWord(result.data.words[seaportIdx+2]);
+          markWord(result.data.words[seaportIdx+3]);
+          markWord(result.data.words[seaportIdx+4]);
+          markWord(result.data.words[seaportIdx+5]);
+          markWord(result.data.words[seaportIdx+6]);
           await worker.terminate();
         })();
       }
@@ -94,6 +110,7 @@
       const postprocessSeaport = () => {
         let src = cv.imread('imageSrc');
         let step = new cv.Mat();
+        let step2 = new cv.Mat();
         let dst = new cv.Mat();
         cv.cvtColor(src, step, cv.COLOR_RGBA2GRAY, 0);
         //let lut = [];
@@ -102,15 +119,23 @@
         //lut += interpolateArray([7*(256/8), 255], 1*(256/8));
         //console.log(lut);
         //cv.LUT(src, lut, dst);
-        cv.threshold(step, dst, 0.75*256, 255, cv.THRESH_BINARY);
+        cv.threshold(step, step2, 0.75*256, 255, cv.THRESH_BINARY);
         //cv.threshold(step, dst, 0.65*256, 0, cv.THRESH_TOZERO);
+        cv.bitwise_not(step2, dst);
         cv.imshow('canvasOutput', dst);
         src.delete(); step.delete(); dst.delete();
+      }
+
+      // pixel on fhd
+      const seaport2Icon = (width) => {
+        // icon.width / seaport.width = x / width
+        return 32.0 * width / 51.0;
       }
 
       const run = () => {
         console.log("run");
         postprocessSeaport();
+        drawRect("canvasOutput", 90, 90, 100, 100);
         //parse();
         ocr();
       }
@@ -136,6 +161,10 @@
       <div class="inputoutput">
         <canvas id="canvasOutput" ></canvas>
         <div class="caption">canvasOutput</div>
+      </div>
+      <div class="inputoutput">
+        <canvas id="canvasOutput2" ></canvas>
+        <div class="caption">canvasOutput2</div>
       </div>
     </div>
     <script>
