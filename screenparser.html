@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://docs.opencv.org/4.1.1/opencv.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/tesseract.js@2.1.5/dist/tesseract.min.js" type="text/javascript"></script>
+    <script>
+      const connect_file_img = (imageid, fileinputid) => {
+        let imgElement = document.getElementById(imageid);
+        let inputElement = document.getElementById(fileinputid);
+        inputElement.addEventListener('change', (e) => {
+          imgElement.src = URL.createObjectURL(e.target.files[0]);
+        }, false);
+      }
+
+      const parse = () => {
+        let src = cv.imread('imageSrc');
+        let templ = cv.imread('imageTempl');
+        let dst = new cv.Mat();
+        let mask = new cv.Mat();
+        let foo = new cv.Mat();
+        let buffer = cv.matchTemplate(src, templ, dst, cv.TM_CCOEFF_NORMED, mask);
+        for (let i = 0; i <= 20; i++){
+                  let result = cv.minMaxLoc(dst, mask);
+                  let maxPoint = result.maxLoc;
+                  console.log(255 - i * 20);
+                  cv.floodFill(dst, foo, maxPoint, new cv.Scalar());
+                  let color = new cv.Scalar(255 - i * 10, 0, 0, 255);
+                  let point = new cv.Point(maxPoint.x + templ.cols, maxPoint.y + templ.rows);
+                  cv.rectangle(src, maxPoint, point, color, 1, cv.LINE_8, 0);
+              }
+        cv.imshow('canvasOutput', src);
+        src.delete(); dst.delete(); mask.delete();
+      }
+
+      // works: tesseract --oem 0 --psm 11 -l "eng" fhq-seaport-curve1.png cmd -c tessedit_write_images=T
+      const ocr = () => {
+        const worker = Tesseract.createWorker({
+          logger: m => console.log(m)
+        });
+
+        (async () => {
+          await worker.load();
+          await worker.loadLanguage('eng');
+          await worker.initialize('eng');
+          const params = {
+            //'tessedit_ocr_engine_mode': 0,
+            //'tessedit_pageseg_mode': 11,
+            'tessedit_ocr_engine_mode': Tesseract.OEM.TESSERACT_ONLY,
+            'tessedit_pageseg_mode': Tesseract.PSM.SPARSE_TEXT,
+            //'tessedit_char_whitelist': 'Seaport',
+            // 'tessjs_create_osd': '1'
+            //'tessjs_create_tsv': '1'
+          };
+          await worker.setParameters(params);
+          let imgElement = document.getElementById('canvasOutput');
+          //let imgElement = document.getElementById('imageSrc');
+          const result = await worker.recognize(imgElement);
+          console.log(result);
+          console.log(result.data.text);
+          const seaportIdx = result.data.words.findIndex((word) => {
+            return word.text == "Seaport";
+          });
+          console.log(result.data.words[seaportIdx])
+          console.log(result.data.words[seaportIdx+1])
+          console.log(result.data.words[seaportIdx+2])
+          console.log(result.data.words[seaportIdx+3])
+          console.log(result.data.words[seaportIdx+4])
+          console.log(result.data.words[seaportIdx+5])
+          console.log(result.data.words[seaportIdx+6])
+          await worker.terminate();
+        })();
+      }
+
+      // https://stackoverflow.com/questions/26941168/javascript-interpolate-an-array-of-numbers
+      const interpolateArray = (data, fitCount) => {
+        var linearInterpolate = function (before, after, atPoint) {
+          return before + (after - before) * atPoint;
+        };
+
+        var newData = new Array();
+        var springFactor = new Number((data.length - 1) / (fitCount - 1));
+        newData[0] = data[0]; // for new allocation
+        for ( var i = 1; i < fitCount - 1; i++) {
+          var tmp = i * springFactor;
+          var before = new Number(Math.floor(tmp)).toFixed();
+          var after = new Number(Math.ceil(tmp)).toFixed();
+          var atPoint = tmp - before;
+          newData[i] = linearInterpolate(data[before], data[after], atPoint);
+        }
+        newData[fitCount - 1] = data[data.length - 1]; // for new allocation
+        return newData;
+      }
+
+      const postprocessSeaport = () => {
+        let src = cv.imread('imageSrc');
+        let step = new cv.Mat();
+        let dst = new cv.Mat();
+        //cv.cvtColor(src, step, cv.COLOR_RGBA2GRAY, 0);
+        //let lut = [];
+        //lut += interpolateArray([0, 0], 256/2);
+        //lut += interpolateArray([0, 7*(256/8)], 7*(256/8));
+        //lut += interpolateArray([7*(256/8), 255], 1*(256/8));
+        //console.log(lut);
+        //cv.LUT(src, lut, dst);
+        cv.threshold(src, dst, 0.65*256, 255, cv.THRESH_BINARY);
+        //cv.threshold(step, dst, 0.65*256, 0, cv.THRESH_TOZERO);
+        cv.imshow('canvasOutput', dst);
+        src.delete(); step.delete(); dst.delete();
+      }
+
+      const run = () => {
+        console.log("run");
+        postprocessSeaport();
+        //parse();
+        ocr();
+      }
+    </script>
+    <style>
+      #imageSrc, #imageTempl {
+        # max-width: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    pe<b>n</b>is<br />
+    <div>
+      <div class="inputoutput">
+        <img id="imageSrc" alt="No Image" />
+        <div class="caption">imageSrc <input type="file" id="fileInputSrc" name="file" /></div>
+      </div>
+      <div class="inputoutput">
+        <img id="imageTempl" alt="No Image" />
+        <div class="caption">imageTempl <input type="file" id="fileInputTempl" name="file" /></div>
+      </div>
+      <button id="run" onclick="run();">Run it</button>
+      <div class="inputoutput">
+        <canvas id="canvasOutput" ></canvas>
+        <div class="caption">canvasOutput</div>
+      </div>
+    </div>
+    <script>
+      connect_file_img('imageSrc', 'fileInputSrc');
+      connect_file_img('imageTempl', 'fileInputTempl');
+    </script>
+  </body>
+</html>
