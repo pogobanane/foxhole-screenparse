@@ -12,22 +12,22 @@
         }, false);
       }
 
-      const prepareItem = () => {
-        let src = cv.imread('imageTempl');
+      const prepareItem = (domidIn, domidCanvasOut, itemSizePx) => {
+        let src = cv.imread(domidIn);
         let step = new cv.Mat();
         let dst = new cv.Mat();
         cv.cvtColor(src, step, cv.COLOR_RGBA2GRAY, 0);
-        let dsize = new cv.Size(32, 32);
+        let dsize = new cv.Size(itemSizePx, itemSizePx);
         // You can try more different parameters
         cv.resize(step, dst, dsize, 0, 0, cv.INTER_AREA);
-        cv.imshow('canvasOutput2', dst);
+        cv.imshow(domidCanvasOut, dst);
         src.delete(); dst.delete();
         console.info("item shrinked");
       }
 
-      const parse = () => {
-        let src = cv.imread('imageSrc');
-        let templ = cv.imread('canvasOutput2');
+      const imgmatch = (domidHaystack, domidNeedle, domidCanvasOut) => {
+        let src = cv.imread(domidHaystack);
+        let templ = cv.imread(domidNeedle);
         let dst = new cv.Mat();
         let mask = new cv.Mat();
         let foo = new cv.Mat();
@@ -41,26 +41,27 @@
                   let point = new cv.Point(maxPoint.x + templ.cols, maxPoint.y + templ.rows);
                   cv.rectangle(src, maxPoint, point, color, 1, cv.LINE_8, 0);
               }
-        cv.imshow('canvasOutput', src);
+        cv.imshow(domidCanvasOut, src);
         src.delete(); dst.delete(); mask.delete();
       }
 
-      const drawRect = (domID, x, y, width, height) => {
-        let src = cv.imread(domID);
+      const drawRect = (domidCanvas, x0, y0, x1, y1) => {
+        let src = cv.imread(domidCanvas);
         let color = new cv.Scalar(0, 255, 0, 255);
-        let point = new cv.Point(x, y);
-        let size = new cv.Point(width, height);
+        let point = new cv.Point(x0, y0);
+        let size = new cv.Point(x1, y1);
         cv.rectangle(src, point, size, color, 1, cv.LINE_8, 0);
-        cv.imshow(domID, src);
+        cv.imshow(domidCanvas, src);
       };
 
       // works: tesseract --oem 0 --psm 11 -l "eng" fhq-seaport-curve1.png cmd -c tessedit_write_images=T
-      const ocr = () => {
+      // returns: width an item icon should have in pixels
+      const ocr = (domidCanvas) => {
         const worker = Tesseract.createWorker({
           logger: m => console.log(m)
         });
 
-        (async () => {
+        return (async () => {
           await worker.load();
           await worker.loadLanguage('eng');
           await worker.initialize('eng');
@@ -74,21 +75,23 @@
             //'tessjs_create_tsv': '1'
           };
           await worker.setParameters(params);
-          let imgElement = document.getElementById('canvasOutput');
+          let imgElement = document.getElementById(domidCanvas);
           //let imgElement = document.getElementById('imageSrc');
           const result = await worker.recognize(imgElement);
-          console.log(result);
-          console.log(result.data.text);
+          console.debug(result);
+          console.debug(result.data.text);
+
           const seaportIdx = result.data.words.findIndex((word) => {
             return word.text == "Seaport";
           });
+          const word = result.data.words[seaportIdx];
+          const width = seaport2Icon(word.bbox.x1 - word.bbox.x0);
 
           const markWord = (word) => {
             console.log(word);
             console.log("icon width should be ", seaport2Icon(word.bbox.x1 - word.bbox.x0));
-            drawRect('canvasOutput', word.bbox.x0, word.bbox.y0, word.bbox.x1, word.bbox.y1);
+            drawRect(domidCanvas, word.bbox.x0, word.bbox.y0, word.bbox.x1, word.bbox.y1);
           }
-
           markWord(result.data.words[seaportIdx]);
           markWord(result.data.words[seaportIdx+1]);
           markWord(result.data.words[seaportIdx+2]);
@@ -97,6 +100,8 @@
           markWord(result.data.words[seaportIdx+5]);
           markWord(result.data.words[seaportIdx+6]);
           await worker.terminate();
+
+          return width
         })();
       }
 
@@ -120,8 +125,8 @@
         return newData;
       }
 
-      const postprocessSeaport = () => {
-        let src = cv.imread('imageSrc');
+      const postprocessSeaport = (domidIn, domidCanvasOut) => {
+        let src = cv.imread(domidIn);
         let step = new cv.Mat();
         let step2 = new cv.Mat();
         let dst = new cv.Mat();
@@ -135,23 +140,24 @@
         cv.threshold(step, step2, 0.75*256, 255, cv.THRESH_BINARY);
         //cv.threshold(step, dst, 0.65*256, 0, cv.THRESH_TOZERO);
         cv.bitwise_not(step2, dst);
-        cv.imshow('canvasOutput', dst);
+        cv.imshow(domidCanvasOut, dst);
         src.delete(); step.delete(); dst.delete();
       }
 
       // pixel on fhd
       const seaport2Icon = (width) => {
         // icon.width / seaport.width = x / width
-        return 32.0 * width / 51.0;
+        const f = 32.0 * width / 51.0;
+        return Math.round(f);
       }
 
       const run = () => {
         console.log("run");
-        prepareItem();
-        postprocessSeaport();
-        drawRect("canvasOutput", 90, 90, 100, 100);
-        parse();
-        //ocr();
+        postprocessSeaport('imageSrc', 'canvasOCR');
+        drawRect('canvasOCR', 90, 90, 100, 100);
+        const width = ocr('canvasOCR');
+        prepareItem('imageTempl', 'canvasItem', width);
+        imgmatch('imageSrc', 'canvasItem', 'canvasImgmatch');
       }
     </script>
     <style>
@@ -173,12 +179,16 @@
       </div>
       <button id="run" onclick="run();">Run it</button>
       <div class="inputoutput">
-        <canvas id="canvasOutput" ></canvas>
-        <div class="caption">canvasOutput</div>
+        <canvas id="canvasItem" ></canvas>
+        <div class="caption">canvasItem</div>
       </div>
       <div class="inputoutput">
-        <canvas id="canvasOutput2" ></canvas>
-        <div class="caption">canvasOutput2</div>
+        <canvas id="canvasImgmatch" ></canvas>
+        <div class="caption">canvasImgmatch</div>
+      </div>
+      <div class="inputoutput">
+        <canvas id="canvasOCR" ></canvas>
+        <div class="caption">canvasOCR</div>
       </div>
     </div>
     <script>
