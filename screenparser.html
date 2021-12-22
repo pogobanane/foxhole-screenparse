@@ -12,9 +12,22 @@
         }, false);
       }
 
+      const prepareItem = () => {
+        let src = cv.imread('imageTempl');
+        let step = new cv.Mat();
+        let dst = new cv.Mat();
+        cv.cvtColor(src, step, cv.COLOR_RGBA2GRAY, 0);
+        let dsize = new cv.Size(32, 32);
+        // You can try more different parameters
+        cv.resize(step, dst, dsize, 0, 0, cv.INTER_AREA);
+        cv.imshow('canvasOutput2', dst);
+        src.delete(); dst.delete();
+        console.info("item shrinked");
+      }
+
       const parse = () => {
         let src = cv.imread('imageSrc');
-        let templ = cv.imread('imageTempl');
+        let templ = cv.imread('canvasOutput2');
         let dst = new cv.Mat();
         let mask = new cv.Mat();
         let foo = new cv.Mat();
@@ -134,10 +147,11 @@
 
       const run = () => {
         console.log("run");
+        prepareItem();
         postprocessSeaport();
         drawRect("canvasOutput", 90, 90, 100, 100);
-        //parse();
-        ocr();
+        parse();
+        //ocr();
       }
     </script>
     <style>
