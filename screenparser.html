@@ -18,7 +18,8 @@
         let src = cv.imread(domidIn);
         let step = new cv.Mat();
         let dst = new cv.Mat();
-        cv.cvtColor(src, step, cv.COLOR_RGBA2GRAY, 0);
+        cv.cvtColor(src, step, cv.COLOR_RGBA2GRAY, 0); 
+        // TODO properly handle transparency through multiplication with background color
         let dsize = new cv.Size(itemSizePx, itemSizePx);
         // You can try more different parameters
         cv.resize(step, dst, dsize, 0, 0, cv.INTER_AREA);
@@ -98,6 +99,8 @@
         cv.imshow(domidCanvas, src);
       }
 
+      // 4 is often misinterpreted as 11. It thinks that there are two overlapping 1s.
+      // Use symbols instead and if some overlap, let only the most confident one win.
       const ocrItemCount = async (domidIn, box) => {
         const worker = Tesseract.createWorker({
           logger: m => console.log(m)
@@ -109,9 +112,9 @@
           await worker.initialize('eng');
           const params = {
             //'tessedit_ocr_engine_mode': 0,
-            //'tessedit_pageseg_mode': 11,
-            //'tessedit_ocr_engine_mode': Tesseract.OEM.TESSERACT_ONLY,
-            //'tessedit_pageseg_mode': Tesseract.PSM.SPARSE_TEXT,
+            //'tessedit_pageseg_mode': 8,
+            'tessedit_ocr_engine_mode': Tesseract.OEM.TESSERACT_ONLY,
+            'tessedit_pageseg_mode': Tesseract.PSM.SINGLE_WORD,
             'tessedit_char_whitelist': '0123456789',
             // 'tessjs_create_osd': '1'
             //'tessjs_create_tsv': '1'
@@ -263,7 +266,7 @@
         <div class="caption">imageSrc <input type="file" id="fileInputSrc" name="file" /></div>
       </div>
       <div class="inputoutput">
-        <img id="imageTempl" alt="No Image" />
+        <img id="imageTempl" alt="No Image" style="background-color: black;" />
         <div class="caption">imageTempl <input type="file" id="fileInputTempl" name="file" /></div>
       </div>
       <button id="run" onclick="run();">Run it</button>
