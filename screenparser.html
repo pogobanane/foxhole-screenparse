@@ -48,9 +48,37 @@
                   }
               }
         cv.imshow(domidCanvasOut, src);
-        const pos = itemCountPos(best.x, best.y, iconSizePx);
-        drawRect(domidCanvasOut, pos.x0, pos.y0, pos.x1, pos.y1);
+        const box = itemCountPos(best.x, best.y, iconSizePx);
+        console.log(box);
+        drawRect(domidCanvasOut, box.x0, box.y0, box.x1, box.y1);
+
+        const x = points2point(box);
+        console.log('convert ', x);
+        let rect = new cv.Rect(
+                x.x, 
+                x.y, 
+                x.width,
+                x.height
+              );
+        console.log(rect);
+        dst = src.roi(rect);
+        console.log('roi');
+        cv.imshow('canvasCount', dst);
+        console.log('show');
+        //postprocessSeaport('canvasCount', 'canvasCount');
+        console.log(box);
+        ocrItemCount('canvasCount', box);
         src.delete(); dst.delete(); mask.delete();
+      }
+
+      const points2point = (points) => {
+        const x0 = Math.min(points.x0, points.x1);
+        const x1 = Math.max(points.x0, points.x1);
+        const y0 = Math.min(points.y0, points.y1);
+        const y1 = Math.max(points.y0, points.y1);
+        const width = Math.abs(x1 - x0);
+        const height = Math.abs(y1 - y0);
+        return { x: x0, y: y0, width: width, height: height };
       }
 
       const itemCountPos = (x, y, iconSizePx) => {
@@ -70,7 +98,7 @@
         cv.imshow(domidCanvas, src);
       }
 
-      const ocrItemCount = async (domidIn, x0, y0) => {
+      const ocrItemCount = async (domidIn, box) => {
         const worker = Tesseract.createWorker({
           logger: m => console.log(m)
         });
@@ -91,25 +119,19 @@
           await worker.setParameters(params);
           let imgElement = document.getElementById(domidIn);
           //let imgElement = document.getElementById('imageSrc');
-          const result = await worker.recognize(imgElement);
+          const options = { rectangle: { 
+                  top: box.x0, 
+                  left: box.y0, 
+                  width: Math.abs(box.x1 - box.x0), 
+                  height: Math.abs(box.y1 - box.y0)
+          }};
+          console.log(options);
+          const result = await worker.recognize(imgElement); // , options);
           console.log(result);
           console.log(result.data.text);
 
-          const seaportIdx = result.data.words.findIndex((word) => {
-            return word.text == "Seaport";
-          });
-          const word = result.data.words[seaportIdx];
-          const width = seaport2Icon(word.bbox.x1 - word.bbox.x0);
-
-          const markWord = (word) => {
-            console.log(word);
-            console.log("icon width should be ", seaport2Icon(word.bbox.x1 - word.bbox.x0));
-            drawRect(domidCanvas, word.bbox.x0, word.bbox.y0, word.bbox.x1, word.bbox.y1);
-          }
-          markWord(result.data.words[seaportIdx]);
-          await worker.terminate();
-
-          return width;
+          const itemCount = parseInt(result.data.text);
+          window.alert('The selected item has ' + itemCount + ' crates in store.');
         })();
 
         return res;
