@@ -56,12 +56,12 @@
 
       // works: tesseract --oem 0 --psm 11 -l "eng" fhq-seaport-curve1.png cmd -c tessedit_write_images=T
       // returns: width an item icon should have in pixels
-      const ocr = (domidCanvas) => {
+      const ocr = async (domidCanvas) => {
         const worker = Tesseract.createWorker({
           logger: m => console.log(m)
         });
 
-        return (async () => {
+        const res = (async () => {
           await worker.load();
           await worker.loadLanguage('eng');
           await worker.initialize('eng');
@@ -101,8 +101,10 @@
           markWord(result.data.words[seaportIdx+6]);
           await worker.terminate();
 
-          return width
+          return width;
         })();
+
+        return res;
       }
 
       // https://stackoverflow.com/questions/26941168/javascript-interpolate-an-array-of-numbers
@@ -155,9 +157,11 @@
         console.log("run");
         postprocessSeaport('imageSrc', 'canvasOCR');
         drawRect('canvasOCR', 90, 90, 100, 100);
-        const width = ocr('canvasOCR');
-        prepareItem('imageTempl', 'canvasItem', width);
-        imgmatch('imageSrc', 'canvasItem', 'canvasImgmatch');
+        ocr('canvasOCR').then((width) => {
+          console.warn('run: width ', width);
+          prepareItem('imageTempl', 'canvasItem', width);
+          imgmatch('imageSrc', 'canvasItem', 'canvasImgmatch');
+        })
       }
     </script>
     <style>
