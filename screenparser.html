@@ -18,16 +18,42 @@
         let src = cv.imread(domidIn);
         let step = new cv.Mat();
         let dst = new cv.Mat();
-        cv.cvtColor(src, step, cv.COLOR_RGBA2GRAY, 0); 
-        // TODO properly handle transparency through multiplication with background color
+        let rgbaPlanes = new cv.MatVector();
+        cv.split(src, rgbaPlanes);
+        console.warn(rgbaPlanes);
+        let step2 = new cv.Mat();
+        let nilVal = new cv.Mat();
+        rgbaPlanes.get(0).convertTo(nilVal, -1, 0, 0);
+        let maxVal = new cv.Mat();
+        nilVal.convertTo(maxVal, -1, 1, 255);
+        let alphaMask = new cv.Mat();
+        let mask = new cv.Mat();
+        //cv.subtract(rgbaPlanes.get(0), rgbaPlanes.get(0), step2, mask);
+        //cv.add(step2, step3, 254);
+        rgbaPlanes.get(3).convertTo(alphaMask, cv.CV_32F, 1.0/256.0, 0);
+        // bake alpha into R
+        cv.multiply(rgbaPlanes.get(0), alphaMask, step2, 1.0, rgbaPlanes.get(0).type());
+        rgbaPlanes.set(0, step2);
+        // bake alpha into G
+        cv.multiply(rgbaPlanes.get(1), alphaMask, step2, 1.0, rgbaPlanes.get(0).type());
+        rgbaPlanes.set(1, step2);
+        // bake alpha into B
+        cv.multiply(rgbaPlanes.get(2), alphaMask, step2, 1.0, rgbaPlanes.get(0).type());
+        rgbaPlanes.set(2, step2);
+        // set transparency to 255 (none)
+        rgbaPlanes.set(3, maxVal);
+        // merge planes
+        cv.merge(rgbaPlanes, step);
+        //cv.cvtColor(src, step, cv.COLOR_RGBA2GRAY, 0); 
         let dsize = new cv.Size(itemSizePx, itemSizePx);
         // You can try more different parameters
         cv.resize(step, dst, dsize, 0, 0, cv.INTER_AREA);
         cv.imshow(domidCanvasOut, dst);
-        src.delete(); dst.delete();
+        src.delete(); dst.delete(); step.delete(); mask.delete();
         console.info("item shrinked");
       }
 
+      // TODO find confidence threashold from which we assume the item to be absent
       const imgmatch = (domidHaystack, domidNeedle, domidCanvasOut, iconSizePx) => {
         let src = cv.imread(domidHaystack);
         let templ = cv.imread(domidNeedle);
