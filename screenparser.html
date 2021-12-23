@@ -71,10 +71,13 @@
                   let color = new cv.Scalar(255 - i * 10, 0, 0, 255);
                   let point = new cv.Point(maxPoint.x + templ.cols, maxPoint.y + templ.rows);
                   cv.rectangle(src, maxPoint, point, color, 1, cv.LINE_8, 0);
-                  if (best == null) {
+                  if (best == null && result.maxVal >= 0.8) {
                     best = point;
                   }
               }
+        if (best == null) {
+          return;
+        }
         cv.imshow(domidCanvasOut, src);
         const box = itemCountPos(best.x, best.y, iconSizePx);
         console.log(box);
@@ -296,7 +299,10 @@
         //  imgmatch('imageSrc', 'canvasItem', 'canvasImgmatch', iconSizePx);
         //}
         //image.src = 'https://assets.foxhole.tools/icons/items/antitankmineitem.png';
-        loadImageToCanvas('https://assets.foxhole.tools/icons/items/antitankmineitem.png', 'canvasItemIn', iconSizePx);
+        //items.forEach((item) => { if (item.imgPath != null) { 
+          let item = items[70];
+          loadImageToCanvas('https://assets.foxhole.tools/' + item.imgPath, 'canvasItemIn', iconSizePx);
+        //}})
       };
 
       const run = () => {
