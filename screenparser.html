@@ -15,6 +15,8 @@
     </script>
     <script>
 
+      let evil_counter = 0;
+
       const prepareItem = (domidIn, domidCanvasOut, itemSizePx) => {
         let src = cv.imread(domidIn);
         let step = new cv.Mat();
@@ -55,7 +57,7 @@
       }
 
       // TODO find confidence threashold from which we assume the item to be absent
-      const imgmatch = (domidHaystack, domidNeedle, domidCanvasOut, iconSizePx) => {
+      const imgmatch = async (domidHaystack, domidNeedle, domidCanvasOut, iconSizePx) => {
         let src = cv.imread(domidHaystack);
         let templ = cv.imread(domidNeedle);
         let dst = new cv.Mat();
@@ -98,7 +100,7 @@
         console.log('show');
         //postprocessSeaport('canvasCount', 'canvasCount');
         console.log(box);
-        ocrItemCount('canvasCount', box);
+        await ocrItemCount('canvasCount', box);
         src.delete(); dst.delete(); mask.delete();
       }
 
@@ -281,7 +283,11 @@
           canvas.height = img.height;
           ctx.drawImage(img, 0, 0, img.width, img.height);
           prepareItem('canvasItemIn', 'canvasItem', iconSizePx);
-          imgmatch('imageSrc', 'canvasItem', 'canvasImgmatch', iconSizePx);
+                imgmatch('imageSrc', 'canvasItem', 'canvasImgmatch', iconSizePx).then(() => {
+          evil_counter += 1;
+          let item = items[evil_counter];
+          loadImageToCanvas('https://assets.foxhole.tools/' + item.imgPath, 'canvasItemIn', iconSizePx);
+                      });
         };
         img.src = url;
       };
@@ -300,7 +306,7 @@
         //}
         //image.src = 'https://assets.foxhole.tools/icons/items/antitankmineitem.png';
         //items.forEach((item) => { if (item.imgPath != null) { 
-          let item = items[70];
+          let item = items[evil_counter];
           loadImageToCanvas('https://assets.foxhole.tools/' + item.imgPath, 'canvasItemIn', iconSizePx);
         //}})
       };
