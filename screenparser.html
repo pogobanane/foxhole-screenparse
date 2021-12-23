@@ -3,6 +3,7 @@
   <head>
     <script src="https://docs.opencv.org/4.1.1/opencv.js" type="text/javascript"></script>
     <script src="https://unpkg.com/tesseract.js@2.1.5/dist/tesseract.min.js" type="text/javascript"></script>
+    <script src="file:///home/peter/dev/foxhole/foxhole-parser/items.js" type="text/javascript"></script>
     <script>
       const connect_file_img = (imageid, fileinputid) => {
         let imgElement = document.getElementById(imageid);
@@ -266,6 +267,38 @@
         return Math.round(f);
       }
 
+      // Borrowed from docs.opencv.org sources
+      const loadImageToCanvas = function(url, cavansId, iconSizePx) {
+        let canvas = document.getElementById(cavansId);
+        let ctx = canvas.getContext('2d');
+        let img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = function() {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0, img.width, img.height);
+          prepareItem('canvasItemIn', 'canvasItem', iconSizePx);
+          imgmatch('imageSrc', 'canvasItem', 'canvasImgmatch', iconSizePx);
+        };
+        img.src = url;
+      };
+
+      const countItems = (iconSizePx) => {
+        //let canvas = document.getElementById('canvasItem');
+        //let context = canvas.getContext('2d');
+        //let image = new Image();
+        //image.onload = () => {
+        //  console.log('image loaded');
+        //  //canvas.src = image.src;
+        //  //context.drawImage(image, 0, 0);
+        //  loadImageToCanvas('https://assets.foxhole.tools/icons/items/antitankmineitem.png', 'canvasItemIn');
+        //  prepareItem('canvasItemIn', 'canvasItem', iconSizePx);
+        //  imgmatch('imageSrc', 'canvasItem', 'canvasImgmatch', iconSizePx);
+        //}
+        //image.src = 'https://assets.foxhole.tools/icons/items/antitankmineitem.png';
+        loadImageToCanvas('https://assets.foxhole.tools/icons/items/antitankmineitem.png', 'canvasItemIn', iconSizePx);
+      };
+
       const run = () => {
         console.log("run");
         //postprocessSeaport('imageSrc', 'canvasOCR');
@@ -273,8 +306,9 @@
         //ocr('canvasOCR').then((width) => {
           const width = 32;
           console.warn('run: width ', width);
-          prepareItem('imageTempl', 'canvasItem', width);
-          imgmatch('imageSrc', 'canvasItem', 'canvasImgmatch', width);
+          //prepareItem('imageTempl', 'canvasItem', width);
+          //imgmatch('imageSrc', 'canvasItem', 'canvasImgmatch', width);
+          countItems(width);
         //})
       }
     </script>
@@ -297,7 +331,11 @@
       </div>
       <button id="run" onclick="run();">Run it</button>
       <div class="inputoutput">
-        <canvas id="canvasItem" ></canvas>
+        <canvas id="canvasItemIn"  style="background-color: black;"></canvas>
+        <div class="caption">canvasItemIn</div>
+      </div>
+      <div class="inputoutput">
+        <canvas id="canvasItem"  style="background-color: black;"></canvas>
         <div class="caption">canvasItem</div>
       </div>
       <div class="inputoutput">
