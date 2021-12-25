@@ -74,11 +74,12 @@ const points2point = (points) => {
   return { x: x0, y: y0, width: width, height: height };
 }
 
+// expects coords of corner with smallest coords (as from points2point)
 const itemCountPos = (_x0, _y0, iconSizePx) => {
-  const x0 = _x0 + 0.4 * iconSizePx;
+  const x0 = _x0 + 1.4 * iconSizePx;
   const y0 = _y0;
-  const x1 = _x0 + 1.7 * iconSizePx;
-  const y1 = _y0 - iconSizePx;
+  const x1 = x0 + 1.3 * iconSizePx;
+  const y1 = y0 + iconSizePx;
   return { x0: x0, y0: y0, x1: x1, y1: y1 };
 }
 
@@ -92,7 +93,7 @@ const drawRect = async (matIn, x0, y0, x1, y1) => {
 
 // 4 is often misinterpreted as 11. It thinks that there are two overlapping 1s.
 // Use symbols instead and if some overlap, let only the most confident one win.
-const ocrItemCount = async (domidIn, points) => {
+const ocrItemCount = async (domElem, points) => {
   const worker = Tesseract.createWorker({
     logger: m => console.debug(m)
   });
@@ -110,8 +111,6 @@ const ocrItemCount = async (domidIn, points) => {
     //'tessjs_create_tsv': '1'
   };
   await worker.setParameters(params);
-  let imgElement = document.getElementById(domidIn);
-  //let imgElement = document.getElementById('imageSrc');
   const options = { rectangle: { 
           top: points.x0, 
           left: points.y0, 
@@ -119,7 +118,7 @@ const ocrItemCount = async (domidIn, points) => {
           height: Math.abs(points.y1 - points.y0)
   }};
   console.log(options);
-  const result = await worker.recognize(imgElement, options);
+  const result = await worker.recognize(domElem); //, options);
   console.log(result);
   console.log(result.data.text);
 
@@ -253,6 +252,7 @@ const countItems = async (iconSizePx) => {
     //let canvas = img2canvas(icon);
     let iconUnprocessedMat = cv.imread(icon);
     let iconMat = await prepareItem(iconUnprocessedMat, iconSizePx);
+    cv.imshow('canvasItem', iconMat);
     let screenshot = cv.imread('imageSrc');
     let matches = await imgmatch(screenshot, iconMat);
     let best = matches[0];
@@ -261,7 +261,12 @@ const countItems = async (iconSizePx) => {
     }
     const box = points2point(best);
     const countPoints = itemCountPos(box.x, box.y, iconSizePx);
-    //drawRect(domidCanvasOut, box.x0, box.y0, box.x1, box.y1);
+
+    let debugShot = cv.imread('imageSrc');
+    drawRect(debugShot, best.x0, best.y0, best.x1, best.y1);
+    drawRect(debugShot, countPoints.x0, countPoints.y0, countPoints.x1, countPoints.y1);
+    cv.imshow('canvasImgmatch', debugShot);
+
     const countBox = points2point(countPoints);
     let rect = new cv.Rect(
             countBox.x, 
@@ -270,7 +275,8 @@ const countItems = async (iconSizePx) => {
             countBox.height
           );
     let countMat = screenshot.roi(rect);
-    let itemCount = await ocrItemCount('imageSrc', countPoints);
+    //let itemCount = await ocrItemCount('imageSrc', countPoints);
+    let itemCount = await ocrItemCount(mat2canvas(countMat), countPoints);
     window.alert(item.itemName + ": " + itemCount);
   }
 };
