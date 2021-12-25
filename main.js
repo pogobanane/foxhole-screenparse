@@ -310,11 +310,18 @@ const img2canvas = (img) => {
 
 const run = async () => {
   console.log("run");
-  let src = cv.imread('imageSrc');
-  let canvasOCRMat = await postprocessSeaport(src);
-  await drawRect(canvasOCRMat, 90, 90, 100, 100);
-  //const width = await ocr(mat2canvas(canvasOCRMat));
-  const width = 32;
+  var width = 0;
+  if (false) {
+    let src = cv.imread('imageSrc');
+    let canvasOCRMat = await postprocessSeaport(src);
+    await drawRect(canvasOCRMat, 90, 90, 100, 100);
+    let perfStart = performance.now();
+    width = await ocr(mat2canvas(canvasOCRMat));
+    let perfOCRed = performance.now();
+    console.info("Seaport OCR: " + (perfOCRed - perfStart) + "ms");
+  } else {
+    width = 32;
+  }
   console.warn('run: width ', width);
   //prepareItem('imageTempl', 'canvasItem', width);
   //imgmatch('imageSrc', 'canvasItem', 'canvasImgmatch', width);
