@@ -105,13 +105,12 @@ const itemCountPos = (x, y, iconSizePx) => {
   return { x0: x0, y0: y0, x1: x1, y1: y1 };
 }
 
-const drawRect = (domidCanvas, x0, y0, x1, y1) => {
-  let src = cv.imread(domidCanvas);
+// returns nothing. Works inplace. 
+const drawRect = async (matIn, x0, y0, x1, y1) => {
   let color = new cv.Scalar(0, 255, 0, 255);
   let point = new cv.Point(x0, y0);
   let size = new cv.Point(x1, y1);
-  cv.rectangle(src, point, size, color, 1, cv.LINE_8, 0);
-  cv.imshow(domidCanvas, src);
+  cv.rectangle(matIn, point, size, color, 1, cv.LINE_8, 0);
 }
 
 // 4 is often misinterpreted as 11. It thinks that there are two overlapping 1s.
@@ -158,55 +157,49 @@ const ocrItemCount = async (domidIn, box) => {
 
 // works: tesseract --oem 0 --psm 11 -l "eng" fhq-seaport-curve1.png cmd -c tessedit_write_images=T
 // returns: width an item icon should have in pixels
-const ocr = async (domidCanvas) => {
+const ocr = async (domCanvas) => {
   const worker = Tesseract.createWorker({
-    logger: m => console.log(m)
+    logger: m => console.debug(m)
   });
 
-  const res = (async () => {
-    await worker.load();
-    await worker.loadLanguage('eng');
-    await worker.initialize('eng');
-    const params = {
-      //'tessedit_ocr_engine_mode': 0,
-      //'tessedit_pageseg_mode': 11,
-      'tessedit_ocr_engine_mode': Tesseract.OEM.TESSERACT_ONLY,
-      'tessedit_pageseg_mode': Tesseract.PSM.SPARSE_TEXT,
-      //'tessedit_char_whitelist': 'Seaport',
-      // 'tessjs_create_osd': '1'
-      //'tessjs_create_tsv': '1'
-    };
-    await worker.setParameters(params);
-    let imgElement = document.getElementById(domidCanvas);
-    //let imgElement = document.getElementById('imageSrc');
-    const result = await worker.recognize(imgElement);
-    console.debug(result);
-    console.debug(result.data.text);
+  await worker.load();
+  await worker.loadLanguage('eng');
+  await worker.initialize('eng');
+  const params = {
+    //'tessedit_ocr_engine_mode': 0,
+    //'tessedit_pageseg_mode': 11,
+    'tessedit_ocr_engine_mode': Tesseract.OEM.TESSERACT_ONLY,
+    'tessedit_pageseg_mode': Tesseract.PSM.SPARSE_TEXT,
+    //'tessedit_char_whitelist': 'Seaport',
+    // 'tessjs_create_osd': '1'
+    //'tessjs_create_tsv': '1'
+  };
+  await worker.setParameters(params);
+  const result = await worker.recognize(image);
+  console.debug(result);
+  console.debug(result.data.text);
 
-    const seaportIdx = result.data.words.findIndex((word) => {
-      return word.text == "Seaport";
-    });
-    const word = result.data.words[seaportIdx];
-    const width = seaport2Icon(word.bbox.x1 - word.bbox.x0);
+  const seaportIdx = result.data.words.findIndex((word) => {
+    return word.text == "Seaport";
+  });
+  const word = result.data.words[seaportIdx];
+  const width = seaport2Icon(word.bbox.x1 - word.bbox.x0);
 
-    const markWord = (word) => {
-      console.log(word);
-      console.log("icon width should be ", seaport2Icon(word.bbox.x1 - word.bbox.x0));
-      drawRect(domidCanvas, word.bbox.x0, word.bbox.y0, word.bbox.x1, word.bbox.y1);
-    }
-    markWord(result.data.words[seaportIdx]);
-    markWord(result.data.words[seaportIdx+1]);
-    markWord(result.data.words[seaportIdx+2]);
-    markWord(result.data.words[seaportIdx+3]);
-    markWord(result.data.words[seaportIdx+4]);
-    markWord(result.data.words[seaportIdx+5]);
-    markWord(result.data.words[seaportIdx+6]);
-    await worker.terminate();
+  const markWord = (word) => {
+    console.log(word);
+    console.log("icon width should be ", seaport2Icon(word.bbox.x1 - word.bbox.x0));
+    drawRect(domCanvas, word.bbox.x0, word.bbox.y0, word.bbox.x1, word.bbox.y1);
+  }
+  markWord(result.data.words[seaportIdx]);
+  markWord(result.data.words[seaportIdx+1]);
+  markWord(result.data.words[seaportIdx+2]);
+  markWord(result.data.words[seaportIdx+3]);
+  markWord(result.data.words[seaportIdx+4]);
+  markWord(result.data.words[seaportIdx+5]);
+  markWord(result.data.words[seaportIdx+6]);
+  await worker.terminate();
 
-    return width;
-  })();
-
-  return res;
+  return width;
 }
 
 // https://stackoverflow.com/questions/26941168/javascript-interpolate-an-array-of-numbers
@@ -229,12 +222,11 @@ const interpolateArray = (data, fitCount) => {
   return newData;
 }
 
-const postprocessSeaport = (domidIn, domidCanvasOut) => {
-  let src = cv.imread(domidIn);
+// returns: matOut
+const postprocessSeaport = async (matIn) => {
   let step = new cv.Mat();
   let step2 = new cv.Mat();
-  let dst = new cv.Mat();
-  cv.cvtColor(src, step, cv.COLOR_RGBA2GRAY, 0);
+  cv.cvtColor(matIn, step, cv.COLOR_RGBA2GRAY, 0);
   //let lut = [];
   //lut += interpolateArray([0, 0], 256/2);
   //lut += interpolateArray([0, 7*(256/8)], 7*(256/8));
@@ -243,9 +235,9 @@ const postprocessSeaport = (domidIn, domidCanvasOut) => {
   //cv.LUT(src, lut, dst);
   cv.threshold(step, step2, 0.75*256, 255, cv.THRESH_BINARY);
   //cv.threshold(step, dst, 0.65*256, 0, cv.THRESH_TOZERO);
-  cv.bitwise_not(step2, dst);
-  cv.imshow(domidCanvasOut, dst);
-  src.delete(); step.delete(); dst.delete();
+  cv.bitwise_not(step2, step);
+  step2.delete();
+  return step;
 }
 
 // pixel on fhd
@@ -275,34 +267,22 @@ const loadImageToCanvas = function(url, cavansId, iconSizePx) {
   img.src = url;
 };
 
-const countItems = (iconSizePx) => {
-  //let canvas = document.getElementById('canvasItem');
-  //let context = canvas.getContext('2d');
-  //let image = new Image();
-  //image.onload = () => {
-  //  console.log('image loaded');
-  //  //canvas.src = image.src;
-  //  //context.drawImage(image, 0, 0);
-  //  loadImageToCanvas('https://assets.foxhole.tools/icons/items/antitankmineitem.png', 'canvasItemIn');
-  //  prepareItem('canvasItemIn', 'canvasItem', iconSizePx);
-  //  imgmatch('imageSrc', 'canvasItem', 'canvasImgmatch', iconSizePx);
-  //}
-  //image.src = 'https://assets.foxhole.tools/icons/items/antitankmineitem.png';
-  //items.forEach((item) => { if (item.imgPath != null) { 
-    let item = items[evil_counter];
-    loadImageToCanvas('https://assets.foxhole.tools/' + item.imgPath, 'canvasItemIn', iconSizePx);
-  //}})
+const countItems = async (iconSizePx) => {
+  let item = items[evil_counter];
+  await loadImageToCanvas('https://assets.foxhole.tools/' + item.imgPath, 'canvasItemIn', iconSizePx);
 };
 
-const run = () => {
+const run = async () => {
   console.log("run");
-  //postprocessSeaport('imageSrc', 'canvasOCR');
-  //drawRect('canvasOCR', 90, 90, 100, 100);
-  //ocr('canvasOCR').then((width) => {
-    const width = 32;
-    console.warn('run: width ', width);
-    //prepareItem('imageTempl', 'canvasItem', width);
-    //imgmatch('imageSrc', 'canvasItem', 'canvasImgmatch', width);
-    countItems(width);
-  //})
+  let src = cv.imread('imageSrc');
+  let canvasOCRMat = await postprocessSeaport(src);
+  await drawRect(canvasOCRMat, 90, 90, 100, 100);
+  cv.imshow('canvasTmp', canvasOCRMat);
+  const width = await ocr(document.getElementById('canvasTmp');
+  //const width = 32;
+  console.warn('run: width ', width);
+  //prepareItem('imageTempl', 'canvasItem', width);
+  //imgmatch('imageSrc', 'canvasItem', 'canvasImgmatch', width);
+  await countItems(width);
+  src.delete();
 }
