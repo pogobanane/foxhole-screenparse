@@ -1,12 +1,10 @@
-let evil_counter = 0;
-
 // TODO bake in: menus/filtercrates.png
-const prepareItem = (domidIn, domidCanvasOut, itemSizePx) => {
-  let src = cv.imread(domidIn);
+// returns mat of processed item
+const prepareItem = (inMat, itemSizePx) => {
   let step = new cv.Mat();
   let dst = new cv.Mat();
   let rgbaPlanes = new cv.MatVector();
-  cv.split(src, rgbaPlanes);
+  cv.split(inMat, rgbaPlanes);
   console.warn(rgbaPlanes);
   let step2 = new cv.Mat();
   let nilVal = new cv.Mat();
@@ -35,56 +33,35 @@ const prepareItem = (domidIn, domidCanvasOut, itemSizePx) => {
   let dsize = new cv.Size(itemSizePx, itemSizePx);
   // You can try more different parameters
   cv.resize(step, dst, dsize, 0, 0, cv.INTER_AREA);
-  cv.imshow(domidCanvasOut, dst);
-  src.delete(); dst.delete(); step.delete(); mask.delete();
+  step.delete(); mask.delete();
   console.info("item shrinked");
+  return dst;
 }
 
-const imgmatch = async (domidHaystack, domidNeedle, domidCanvasOut, iconSizePx) => {
-  let src = cv.imread(domidHaystack);
-  let templ = cv.imread(domidNeedle);
+const imgmatch = async (haystackMat, needleMat) => {
   let dst = new cv.Mat();
   let mask = new cv.Mat();
   let foo = new cv.Mat();
-  let buffer = cv.matchTemplate(src, templ, dst, cv.TM_CCOEFF_NORMED, mask);
+  let buffer = cv.matchTemplate(haystackMat, needleMat, dst, cv.TM_CCOEFF_NORMED, mask);
   let best = null;
+  let matches = [];
   for (let i = 0; i <= 20; i++){
-            let result = cv.minMaxLoc(dst, mask);
-            let maxPoint = result.maxLoc;
-            console.log(result.maxVal);
-            cv.floodFill(dst, foo, maxPoint, new cv.Scalar());
-            let color = new cv.Scalar(255 - i * 10, 0, 0, 255);
-            let point = new cv.Point(maxPoint.x + templ.cols, maxPoint.y + templ.rows);
-            cv.rectangle(src, maxPoint, point, color, 1, cv.LINE_8, 0);
-            if (best == null && result.maxVal >= 0.8) {
-              best = point;
-            }
-        }
-  if (best == null) {
-    return;
+    let result = cv.minMaxLoc(dst, mask);
+    let maxPoint = result.maxLoc;
+    cv.floodFill(dst, foo, maxPoint, new cv.Scalar());
+    let color = new cv.Scalar(255 - i * 10, 0, 0, 255);
+    let point = new cv.Point(maxPoint.x + needleMat.cols, maxPoint.y + needleMat.rows);
+    cv.rectangle(haystackMat, maxPoint, point, color, 1, cv.LINE_8, 0);
+    matches.push({
+      "confidence": result.maxVal,
+      "x0": maxPoint.x,
+      "y0": maxPoint.y,
+      "x1": maxPoint.x + needleMat.cols,
+      "y1": maxPoint.y + needleMat.rows
+    });
   }
-  cv.imshow(domidCanvasOut, src);
-  const box = itemCountPos(best.x, best.y, iconSizePx);
-  console.log(box);
-  drawRect(domidCanvasOut, box.x0, box.y0, box.x1, box.y1);
-
-  const x = points2point(box);
-  console.log('convert ', x);
-  let rect = new cv.Rect(
-          x.x, 
-          x.y, 
-          x.width,
-          x.height
-        );
-  console.log(rect);
-  dst = src.roi(rect);
-  console.log('roi');
-  cv.imshow('canvasCount', dst);
-  console.log('show');
-  //postprocessSeaport('canvasCount', 'canvasCount');
-  console.log(box);
-  await ocrItemCount('canvasCount', box);
-  src.delete(); dst.delete(); mask.delete();
+  dst.delete(); mask.delete();
+  return matches;
 }
 
 const points2point = (points) => {
@@ -97,11 +74,11 @@ const points2point = (points) => {
   return { x: x0, y: y0, width: width, height: height };
 }
 
-const itemCountPos = (x, y, iconSizePx) => {
-  const x0 = x + 0.4 * iconSizePx;
-  const y0 = y;
-  const x1 = x + 1.7 * iconSizePx;
-  const y1 = y - iconSizePx;
+const itemCountPos = (_x0, _y0, iconSizePx) => {
+  const x0 = _x0 + 0.4 * iconSizePx;
+  const y0 = _y0;
+  const x1 = _x0 + 1.7 * iconSizePx;
+  const y1 = _y0 - iconSizePx;
   return { x0: x0, y0: y0, x1: x1, y1: y1 };
 }
 
@@ -115,43 +92,40 @@ const drawRect = async (matIn, x0, y0, x1, y1) => {
 
 // 4 is often misinterpreted as 11. It thinks that there are two overlapping 1s.
 // Use symbols instead and if some overlap, let only the most confident one win.
-const ocrItemCount = async (domidIn, box) => {
+const ocrItemCount = async (domidIn, points) => {
   const worker = Tesseract.createWorker({
-    logger: m => console.log(m)
+    logger: m => console.debug(m)
   });
 
-  const res = (async () => {
-    await worker.load();
-    await worker.loadLanguage('eng');
-    await worker.initialize('eng');
-    const params = {
-      //'tessedit_ocr_engine_mode': 0,
-      //'tessedit_pageseg_mode': 8,
-      'tessedit_ocr_engine_mode': Tesseract.OEM.TESSERACT_ONLY,
-      'tessedit_pageseg_mode': Tesseract.PSM.SINGLE_WORD,
-      'tessedit_char_whitelist': '0123456789',
-      // 'tessjs_create_osd': '1'
-      //'tessjs_create_tsv': '1'
-    };
-    await worker.setParameters(params);
-    let imgElement = document.getElementById(domidIn);
-    //let imgElement = document.getElementById('imageSrc');
-    const options = { rectangle: { 
-            top: box.x0, 
-            left: box.y0, 
-            width: Math.abs(box.x1 - box.x0), 
-            height: Math.abs(box.y1 - box.y0)
-    }};
-    console.log(options);
-    const result = await worker.recognize(imgElement); // , options);
-    console.log(result);
-    console.log(result.data.text);
+  await worker.load();
+  await worker.loadLanguage('eng');
+  await worker.initialize('eng');
+  const params = {
+    //'tessedit_ocr_engine_mode': 0,
+    //'tessedit_pageseg_mode': 8,
+    'tessedit_ocr_engine_mode': Tesseract.OEM.TESSERACT_ONLY,
+    'tessedit_pageseg_mode': Tesseract.PSM.SINGLE_WORD,
+    'tessedit_char_whitelist': '0123456789',
+    // 'tessjs_create_osd': '1'
+    //'tessjs_create_tsv': '1'
+  };
+  await worker.setParameters(params);
+  let imgElement = document.getElementById(domidIn);
+  //let imgElement = document.getElementById('imageSrc');
+  const options = { rectangle: { 
+          top: points.x0, 
+          left: points.y0, 
+          width: Math.abs(points.x1 - points.x0), 
+          height: Math.abs(points.y1 - points.y0)
+  }};
+  console.log(options);
+  const result = await worker.recognize(imgElement, options);
+  console.log(result);
+  console.log(result.data.text);
 
-    const itemCount = parseInt(result.data.text);
-    window.alert('The selected item has ' + itemCount + ' crates in store.');
-  })();
+  const itemCount = parseInt(result.data.text);
 
-  return res;
+  return itemCount;
   
 }
 
@@ -175,7 +149,7 @@ const ocr = async (domCanvas) => {
     //'tessjs_create_tsv': '1'
   };
   await worker.setParameters(params);
-  const result = await worker.recognize(image);
+  const result = await worker.recognize(domCanvas);
   console.debug(result);
   console.debug(result.data.text);
 
@@ -185,18 +159,18 @@ const ocr = async (domCanvas) => {
   const word = result.data.words[seaportIdx];
   const width = seaport2Icon(word.bbox.x1 - word.bbox.x0);
 
-  const markWord = (word) => {
-    console.log(word);
-    console.log("icon width should be ", seaport2Icon(word.bbox.x1 - word.bbox.x0));
-    drawRect(domCanvas, word.bbox.x0, word.bbox.y0, word.bbox.x1, word.bbox.y1);
-  }
-  markWord(result.data.words[seaportIdx]);
-  markWord(result.data.words[seaportIdx+1]);
-  markWord(result.data.words[seaportIdx+2]);
-  markWord(result.data.words[seaportIdx+3]);
-  markWord(result.data.words[seaportIdx+4]);
-  markWord(result.data.words[seaportIdx+5]);
-  markWord(result.data.words[seaportIdx+6]);
+  //const markWord = (word) => {
+  //  console.log(word);
+  //  console.log("icon width should be ", seaport2Icon(word.bbox.x1 - word.bbox.x0));
+  //  drawRect(domCanvas, word.bbox.x0, word.bbox.y0, word.bbox.x1, word.bbox.y1);
+  //}
+  //markWord(result.data.words[seaportIdx]);
+  //markWord(result.data.words[seaportIdx+1]);
+  //markWord(result.data.words[seaportIdx+2]);
+  //markWord(result.data.words[seaportIdx+3]);
+  //markWord(result.data.words[seaportIdx+4]);
+  //markWord(result.data.words[seaportIdx+5]);
+  //markWord(result.data.words[seaportIdx+6]);
   await worker.terminate();
 
   return width;
@@ -247,42 +221,85 @@ const seaport2Icon = (width) => {
   return Math.round(f);
 }
 
+// taken from https://stackoverflow.com/questions/37854355/wait-for-image-loading-to-complete-in-javascript
+const loadImage = async function(imageUrl) {
+    let img;
+    const imageLoadPromise = new Promise(resolve => {
+        img = new Image();
+        img.onload = resolve;
+	img.crossOrigin = "anonymous"; // without this opencv imread throws "this operation is unsecure"
+        img.src = imageUrl;
+    });
+
+    await imageLoadPromise;
+    return img;
+}
+
 // Borrowed from docs.opencv.org sources
-const loadImageToCanvas = function(url, cavansId, iconSizePx) {
-  let canvas = document.getElementById(cavansId);
-  let ctx = canvas.getContext('2d');
-  let img = new Image();
-  img.crossOrigin = 'anonymous';
-  img.onload = function() {
-    canvas.width = img.width;
-    canvas.height = img.height;
-    ctx.drawImage(img, 0, 0, img.width, img.height);
-    prepareItem('canvasItemIn', 'canvasItem', iconSizePx);
-          imgmatch('imageSrc', 'canvasItem', 'canvasImgmatch', iconSizePx).then(() => {
-    evil_counter += 1;
-    let item = items[evil_counter];
-    loadImageToCanvas('https://assets.foxhole.tools/' + item.imgPath, 'canvasItemIn', iconSizePx);
-                });
-  };
-  img.src = url;
+const loadImageToCanvas = async function(url, domCanvas) {
+  let ctx = domCanvas.getContext('2d');
+  let img = await loadImage(url);
+  canvas.width = img.width;
+  canvas.height = img.height;
+  ctx.drawImage(img, 0, 0, img.width, img.height);
 };
 
 const countItems = async (iconSizePx) => {
-  let item = items[evil_counter];
-  await loadImageToCanvas('https://assets.foxhole.tools/' + item.imgPath, 'canvasItemIn', iconSizePx);
+  for (const item of items) {
+    if (typeof item.imgPath === 'undefined') {
+      continue;
+    }
+    let icon = await loadImage('https://assets.foxhole.tools/' + item.imgPath);
+    //let canvas = img2canvas(icon);
+    let iconUnprocessedMat = cv.imread(icon);
+    let iconMat = await prepareItem(iconUnprocessedMat, iconSizePx);
+    let screenshot = cv.imread('imageSrc');
+    let matches = await imgmatch(screenshot, iconMat);
+    let best = matches[0];
+    if (best.confidence < 0.8) {
+      continue;
+    }
+    const box = points2point(best);
+    const countPoints = itemCountPos(box.x, box.y, iconSizePx);
+    //drawRect(domidCanvasOut, box.x0, box.y0, box.x1, box.y1);
+    const countBox = points2point(countPoints);
+    let rect = new cv.Rect(
+            countBox.x, 
+            countBox.y, 
+            countBox.width,
+            countBox.height
+          );
+    let countMat = screenshot.roi(rect);
+    let itemCount = await ocrItemCount('imageSrc', countPoints);
+    window.alert(item.itemName + ": " + itemCount);
+  }
 };
+
+// returns dom object of canvas
+const mat2canvas = (mat) => {
+  cv.imshow('canvasTmp', mat);
+  return document.getElementById('canvasTmp');
+}
+
+// returns dom object of canvas
+const img2canvas = (img) => {
+  let canvas = document.getElementById('canvasTmp');
+  let ctx = canvas.getContext('2d');
+  canvas.width = img.width;
+  canvas.height = img.height;
+  ctx.drawImage(img, 0, 0, img.width, img.height);
+  return canvas;
+}
 
 const run = async () => {
   console.log("run");
   let src = cv.imread('imageSrc');
   let canvasOCRMat = await postprocessSeaport(src);
   await drawRect(canvasOCRMat, 90, 90, 100, 100);
-  cv.imshow('canvasTmp', canvasOCRMat);
-  const width = await ocr(document.getElementById('canvasTmp');
-  //const width = 32;
+  //const width = await ocr(mat2canvas(canvasOCRMat));
+  const width = 32;
   console.warn('run: width ', width);
   //prepareItem('imageTempl', 'canvasItem', width);
   //imgmatch('imageSrc', 'canvasItem', 'canvasImgmatch', width);
   await countItems(width);
-  src.delete();
 }
