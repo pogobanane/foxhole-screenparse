@@ -5,7 +5,6 @@ const prepareItem = (inMat, itemSizePx) => {
   let dst = new cv.Mat();
   let rgbaPlanes = new cv.MatVector();
   cv.split(inMat, rgbaPlanes);
-  console.warn(rgbaPlanes);
   let step2 = new cv.Mat();
   let nilVal = new cv.Mat();
   rgbaPlanes.get(0).convertTo(nilVal, -1, 0, 0);
@@ -13,6 +12,7 @@ const prepareItem = (inMat, itemSizePx) => {
   nilVal.convertTo(maxVal, -1, 1, 255);
   let alphaMask = new cv.Mat();
   let mask = new cv.Mat();
+  let gray = new cv.Mat();
   //cv.subtract(rgbaPlanes.get(0), rgbaPlanes.get(0), step2, mask);
   //cv.add(step2, step3, 254);
   rgbaPlanes.get(3).convertTo(alphaMask, cv.CV_32F, 1.0/256.0, 0);
@@ -29,12 +29,11 @@ const prepareItem = (inMat, itemSizePx) => {
   rgbaPlanes.set(3, maxVal);
   // merge planes
   cv.merge(rgbaPlanes, step);
-  //cv.cvtColor(src, step, cv.COLOR_RGBA2GRAY, 0); 
+  cv.cvtColor(step, gray, cv.COLOR_RGBA2GRAY, 0); 
   let dsize = new cv.Size(itemSizePx, itemSizePx);
   // You can try more different parameters
-  cv.resize(step, dst, dsize, 0, 0, cv.INTER_AREA);
+  cv.resize(gray, dst, dsize, 0, 0, cv.INTER_AREA);
   step.delete(); mask.delete();
-  console.info("item shrinked");
   return dst;
 }
 
@@ -117,10 +116,9 @@ const ocrItemCount = async (domElem, points) => {
           width: Math.abs(points.x1 - points.x0), 
           height: Math.abs(points.y1 - points.y0)
   }};
-  console.log(options);
   const result = await worker.recognize(domElem); //, options);
-  console.log(result);
-  console.log(result.data.text);
+  console.debug(result);
+  console.debug(result.data.text);
 
   const itemCount = parseInt(result.data.text);
 
@@ -244,19 +242,27 @@ const loadImageToCanvas = async function(url, domCanvas) {
 };
 
 const countItems = async (iconSizePx) => {
+  let found = [];
+  let image = cv.imread('imageSrc');
+  var screenshot = new cv.Mat();
+  cv.cvtColor(image, screenshot, cv.COLOR_RGBA2GRAY, 0);
+
   for (const item of items) {
     if (typeof item.imgPath === 'undefined') {
       continue;
     }
+    let perfStart = performance.now();
+    console.log("Searching " + item.itemName + "...");
     let icon = await loadImage('https://assets.foxhole.tools/' + item.imgPath);
     //let canvas = img2canvas(icon);
     let iconUnprocessedMat = cv.imread(icon);
     let iconMat = await prepareItem(iconUnprocessedMat, iconSizePx);
     cv.imshow('canvasItem', iconMat);
-    let screenshot = cv.imread('imageSrc');
     let matches = await imgmatch(screenshot, iconMat);
+    let perfMatched = performance.now();
     let best = matches[0];
     if (best.confidence < 0.8) {
+      console.info("Matching: " + (perfMatched - perfStart) + "ms");
       continue;
     }
     const box = points2point(best);
@@ -277,8 +283,13 @@ const countItems = async (iconSizePx) => {
     let countMat = screenshot.roi(rect);
     //let itemCount = await ocrItemCount('imageSrc', countPoints);
     let itemCount = await ocrItemCount(mat2canvas(countMat), countPoints);
-    window.alert(item.itemName + ": " + itemCount);
+    console.log(item.itemName + ": " + itemCount);
+    found.push({ "name": item.itemName, "count": itemCount });
+    let perfOCRed = performance.now();
+    console.info("Matching: " + (perfMatched - perfStart) + "ms, OCR: " + (perfOCRed - perfMatched) + "ms");
   }
+
+  console.info(found);
 };
 
 // returns dom object of canvas
