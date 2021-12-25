@@ -329,20 +329,28 @@ const countItems = async (iconSizePx) => {
     let perfMatched = performance.now();
     let best = matches[0];
     console.info("Confidence: " + best.confidence);
+    const box = points2point(best);
+    let rect = new cv.Rect(
+            box.x, 
+            box.y, 
+            box.width,
+            box.height
+          );
+    let matchedMat = screenshot.roi(rect);
     if (best.confidence < 0.9) {
       console.info("Matching: " + (perfMatched - perfStart) + "ms");
+      domListAppend(item, best.confidence, iconMat, matchedMat);
       continue;
     }
-    const box = points2point(best);
-    const countPoints = itemCountPos(box.x, box.y, iconSizePx);
 
+    const countPoints = itemCountPos(box.x, box.y, iconSizePx);
     let debugShot = cv.imread('imageSrc');
     drawRect(debugShot, best.x0, best.y0, best.x1, best.y1);
     drawRect(debugShot, countPoints.x0, countPoints.y0, countPoints.x1, countPoints.y1);
     cv.imshow('canvasImgmatch', debugShot);
 
     const countBox = points2point(countPoints);
-    let rect = new cv.Rect(
+    rect = new cv.Rect(
             countBox.x, 
             countBox.y, 
             countBox.width,
@@ -355,6 +363,7 @@ const countItems = async (iconSizePx) => {
     found.push({ "name": item.itemName, "count": itemCount });
     let perfOCRed = performance.now();
     console.info("Matching: " + (perfMatched - perfStart) + "ms, OCR: " + (perfOCRed - perfMatched) + "ms");
+    domListAppend(item, best.confidence, iconMat, matchedMat, countMat, itemCount);
   }
 
   console.info(found);
@@ -374,6 +383,46 @@ const img2canvas = (img) => {
   canvas.height = img.height;
   ctx.drawImage(img, 0, 0, img.width, img.height);
   return canvas;
+}
+
+const domListAppend = async (item, confidence, iconRendered, iconFound, countFound, countRead) => {
+  let list = document.getElementById("itemlist");
+  let li = document.createElement("li");
+  li.setAttribute("style", "position: inline-block;");
+
+  let canvas = document.createElement("canvas");
+  cv.imshow(canvas, iconRendered);
+  li.appendChild(canvas);
+
+  if (typeof iconFound !== 'undefined') {
+    canvas = document.createElement("canvas");
+    cv.imshow(canvas, iconFound);
+    li.appendChild(canvas);
+  }
+
+  if (typeof countFound !== 'undefined') {
+    canvas = document.createElement("canvas");
+    cv.imshow(canvas, countFound);
+    li.appendChild(canvas);
+  }
+
+  if (typeof countRead !== 'undefined') {
+    text = document.createTextNode(" " + countRead + " crates - ");
+    li.appendChild(text);
+  } else {
+    text = document.createTextNode(" no crates - ");
+    li.appendChild(text);
+  }
+
+  text = document.createTextNode(item.itemName);
+  li.appendChild(text);
+  
+  if (typeof confidence !== 'undefined') {
+    text = document.createTextNode(" (" + confidence.toFixed(2) + ")");
+    li.appendChild(text);
+  }
+
+  list.appendChild(li);
 }
 
 const run = async () => {
