@@ -246,6 +246,17 @@ const countItems = async (iconSizePx) => {
   let image = cv.imread('imageSrc');
   var screenshot = new cv.Mat();
   cv.cvtColor(image, screenshot, cv.COLOR_RGBA2GRAY, 0);
+  // TODO quartering the search canvas quarters the matching time.
+  //let image = cv.imread('imageSrc');
+  //let origScreenshot = new cv.Mat();
+  //cv.cvtColor(image, origScreenshot, cv.COLOR_RGBA2GRAY, 0);
+  //let rect = new cv.Rect(
+  //        720, 
+  //        0, 
+  //        403,
+  //        1080 
+  //      );
+  //var screenshot = origScreenshot.roi(rect);
 
   for (const item of items) {
     if (typeof item.imgPath === 'undefined') {
