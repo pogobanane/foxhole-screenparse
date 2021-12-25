@@ -106,7 +106,7 @@ const imgmatch = async (haystackMat, needleMat) => {
     cv.floodFill(dst, foo, maxPoint, new cv.Scalar());
     let color = new cv.Scalar(255 - i * 10, 0, 0, 255);
     let point = new cv.Point(maxPoint.x + needleMat.cols, maxPoint.y + needleMat.rows);
-    cv.rectangle(haystackMat, maxPoint, point, color, 1, cv.LINE_8, 0);
+    //cv.rectangle(haystackMat, maxPoint, point, color, 1, cv.LINE_8, 0);
     matches.push({
       "confidence": result.maxVal,
       "x0": maxPoint.x,
@@ -313,8 +313,9 @@ const countItems = async (iconSizePx) => {
   //        1080 
   //      );
   //var screenshot = origScreenshot.roi(rect);
-
-  for (const item of items) {
+	
+  for (let item of items) {
+    //item = items[14];
     if (typeof item.imgPath === 'undefined') {
       continue;
     }
@@ -328,7 +329,7 @@ const countItems = async (iconSizePx) => {
     let perfMatched = performance.now();
     let best = matches[0];
     console.info("Confidence: " + best.confidence);
-    if (best.confidence < 0.8) {
+    if (best.confidence < 0.9) {
       console.info("Matching: " + (perfMatched - perfStart) + "ms");
       continue;
     }
@@ -354,7 +355,6 @@ const countItems = async (iconSizePx) => {
     found.push({ "name": item.itemName, "count": itemCount });
     let perfOCRed = performance.now();
     console.info("Matching: " + (perfMatched - perfStart) + "ms, OCR: " + (perfOCRed - perfMatched) + "ms");
-    return;
   }
 
   console.info(found);
