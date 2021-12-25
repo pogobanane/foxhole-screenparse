@@ -1,6 +1,61 @@
+var prepareItemCache = {};
+
+// return new mat with added crate
+const addCrate = async (scaledItemMat, itemSizePx) => {
+  let icon = await loadImage('https://assets.foxhole.tools/icons/menus/filtercrates.png');
+  let step1 = cv.imread(icon);
+  let step2 = new cv.Mat();
+  let step3 = new cv.Mat();
+  let step4 = new cv.Mat();
+  let step5 = new cv.Mat();
+  let emptyMask = new cv.Mat();
+  // @ itemSizePx=32
+  // scale to 14x14px
+  const length = Math.round(14.0 / 32.0 * itemSizePx);
+  let dsize = new cv.Size(length, length);
+  cv.resize(step1, step3, dsize, 0, 0, cv.INTER_AREA);
+  // px away from bottom and 1 from right
+  let fillerColor = new cv.Scalar(0, 0, 0, 0);
+  let padBot = Math.round(0.0 / 32.0 * itemSizePx);;
+  let padRight = Math.round(0.0 / 32.0 * itemSizePx);;
+  let padTop = itemSizePx - padBot - length;
+  let padLeft = itemSizePx - padRight - length;
+  cv.copyMakeBorder(step3, step4, 
+    padTop, padBot, padLeft, padRight, 
+    cv.BORDER_CONSTANT, fillerColor);
+  
+  // opacity 50%
+  // apply : (0.5a)F + (1-0.5a)B
+  let planes = new cv.MatVector();
+  cv.split(step4, planes);
+  // norm alpha to 0<a<1 (=> 1/256) and apply 50% opacity
+  let alphaMask = new cv.Mat();
+  let alphaMaskInv = new cv.Mat();
+  let maxVal = new cv.Mat();
+  planes.get(0).convertTo(maxVal, -1, 0, 255);
+  let oneVal = new cv.Mat();
+  maxVal.convertTo(oneVal, cv.CV_32F, 0, 1);
+  planes.get(3).convertTo(alphaMask, cv.CV_32F, 1.0 / 256.0, 0);
+  cv.subtract(oneVal, alphaMask, alphaMaskInv, new cv.Mat(), -1);
+  let background1 = new cv.Mat();
+  let background2 = new cv.Mat();
+  let background3 = new cv.Mat();
+  let background4 = new cv.Mat();
+  cv.multiply(scaledItemMat, alphaMaskInv, background1, 1.0, scaledItemMat.type());
+  
+  // apply alpha mask to each color and add it with factor 1/3 to background
+  cv.multiply(planes.get(0), alphaMask, step5, 1.0/3.0, planes.get(0).type());
+  cv.add(background1, step5, background2, emptyMask, background1.type());
+  cv.multiply(planes.get(1), alphaMask, step5, 1.0/3.0, planes.get(0).type());
+  cv.add(background2, step5, background3, emptyMask, background1.type());
+  cv.multiply(planes.get(2), alphaMask, step5, 1.0/3.0, planes.get(0).type());
+  cv.add(background3, step5, background4, emptyMask, background1.type());
+  return background4;
+}
+
 // TODO bake in: menus/filtercrates.png
 // returns mat of processed item
-const prepareItem = (inMat, itemSizePx) => {
+const prepareItem = async (inMat, itemSizePx) => {
   let step = new cv.Mat();
   let dst = new cv.Mat();
   let rgbaPlanes = new cv.MatVector();
@@ -33,8 +88,9 @@ const prepareItem = (inMat, itemSizePx) => {
   let dsize = new cv.Size(itemSizePx, itemSizePx);
   // You can try more different parameters
   cv.resize(gray, dst, dsize, 0, 0, cv.INTER_AREA);
+  let crated = await addCrate(dst, itemSizePx);
   step.delete(); mask.delete();
-  return dst;
+  return crated;
 }
 
 const imgmatch = async (haystackMat, needleMat) => {
@@ -265,13 +321,13 @@ const countItems = async (iconSizePx) => {
     let perfStart = performance.now();
     console.log("Searching " + item.itemName + "...");
     let icon = await loadImage('https://assets.foxhole.tools/' + item.imgPath);
-    //let canvas = img2canvas(icon);
     let iconUnprocessedMat = cv.imread(icon);
     let iconMat = await prepareItem(iconUnprocessedMat, iconSizePx);
     cv.imshow('canvasItem', iconMat);
     let matches = await imgmatch(screenshot, iconMat);
     let perfMatched = performance.now();
     let best = matches[0];
+    console.info("Confidence: " + best.confidence);
     if (best.confidence < 0.8) {
       console.info("Matching: " + (perfMatched - perfStart) + "ms");
       continue;
@@ -298,6 +354,7 @@ const countItems = async (iconSizePx) => {
     found.push({ "name": item.itemName, "count": itemCount });
     let perfOCRed = performance.now();
     console.info("Matching: " + (perfMatched - perfStart) + "ms, OCR: " + (perfOCRed - perfMatched) + "ms");
+    return;
   }
 
   console.info(found);
