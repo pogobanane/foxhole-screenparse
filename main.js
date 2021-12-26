@@ -359,7 +359,10 @@ const countItems = async (iconSizePx) => {
             countBox.width,
             countBox.height
           );
-    let countMat = screenshot.roi(rect);
+    let countSmallMat = screenshot.roi(rect);
+    let countMat = new cv.Mat();
+    let dsize = new cv.Size(countBox.width*4.0, countBox.height*4.0);
+    cv.resize(countSmallMat, countMat, dsize, 0, 0, cv.INTER_AREA);
     //let itemCount = await ocrItemCount('imageSrc', countPoints);
     let itemCount = await ocrItemCount(mat2canvas(countMat), countPoints);
     console.log(item.itemName + ": " + itemCount);
