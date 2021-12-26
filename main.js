@@ -53,7 +53,7 @@ const addCrate = async (scaledItemMat, itemSizePx) => {
   return background4;
 }
 
-// TODO bake in: menus/filtercrates.png
+// TODO bake in: demage type icons / uniform purpose
 // returns mat of processed item
 const prepareItem = async (inMat, itemSizePx) => {
   let step = new cv.Mat();
@@ -146,6 +146,7 @@ const drawRect = async (matIn, x0, y0, x1, y1) => {
   cv.rectangle(matIn, point, size, color, 1, cv.LINE_8, 0);
 }
 
+// TODO upscale
 // 4 is often misinterpreted as 11. It thinks that there are two overlapping 1s.
 // Use symbols instead and if some overlap, let only the most confident one win.
 const ocrItemCount = async (domElem, points) => {
@@ -313,6 +314,8 @@ const countItems = async (iconSizePx) => {
   //        1080 
   //      );
   //var screenshot = origScreenshot.roi(rect);
+  // TODO try reverse lookup: align at SS, GS, BS; get fist item icon and search in icon db
+  // filter items by faction to reduce amount of similar looking items
 	
   for (let item of items) {
     //item = items[14];
