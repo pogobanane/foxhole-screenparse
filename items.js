@@ -3610,7 +3610,115 @@ const items = [
       "cost": {
         "bmat": 100
       }
-    }
+    },
+    {
+      "displayId": 0,
+      "faction": [
+        "warden",
+        "colonial"
+      ],
+      "imgName": "",
+      "imgPath": "icons/items/basicmaterials.png",
+      "itemName": "Basic Materials",
+      "itemCategory": "refined",
+      "numberProduced": 100,
+    },
+    {
+      "displayId": 1,
+      "faction": [
+        "warden",
+        "colonial"
+      ],
+      "imgName": "",
+      "imgPath": "https://raw.githubusercontent.com/the-fellowship-of-the-warapi/Assets/master/Item Icons/Materials/ResourceFuelIcon.png", // TODO not in assets.foxhole.tools yet
+      "itemName": "Diesel",
+      "itemCategory": "refined",
+      "numberProduced": 1,
+    },
+    {
+      "displayId": 2,
+      "faction": [
+        "warden",
+        "colonial"
+      ],
+      "imgName": "",
+      "imgPath": "icons/items/explosivematerial.png",
+      "itemName": "Explosive Materials",
+      "itemCategory": "refined",
+      "numberProduced": 20,
+    },
+    {
+      "displayId": 3,
+      "faction": [
+        "warden",
+        "colonial"
+      ],
+      "imgName": "",
+      "imgPath": "icons/items/refinedmaterials.png",
+      "itemName": "Refined Materials",
+      "itemCategory": "refined",
+      "numberProduced": 20,
+    },
+    {
+      "displayId": 4,
+      "faction": [
+        "warden",
+        "colonial"
+      ],
+      "imgName": "",
+      "imgPath": "icons/items/heavyexplosivematerial.png",
+      "itemName": "Heavy Explosive Materials",
+      "itemCategory": "refined",
+      "numberProduced": 20,
+    },
+    {
+      "displayId": 5,
+      "faction": [
+        "warden",
+        "colonial"
+      ],
+      "imgName": "",
+      "imgPath": "icons/items/refinedfuel.png",
+      "itemName": "Petrol",
+      "itemCategory": "refined",
+      "numberProduced": 1,
+    },
+    {
+      "displayId": 6,
+      "faction": [
+        "warden",
+        "colonial"
+      ],
+      "imgName": "",
+      "imgPath": "icons/items/resoucealuminumrefined.png",
+      "itemName": "Aluminum Alloy",
+      "itemCategory": "refined",
+      "numberProduced": 20,
+    },
+    {
+      "displayId": 7,
+      "faction": [
+        "warden",
+        "colonial"
+      ],
+      "imgName": "",
+      "imgPath": "icons/items/resouceironrefined.png",
+      "itemName": "Iron Alloy",
+      "itemCategory": "refined",
+      "numberProduced": 20,
+    },
+    {
+      "displayId": 8,
+      "faction": [
+        "warden",
+        "colonial"
+      ],
+      "imgName": "",
+      "imgPath": "icons/items/resourcecopperrefined.png",
+      "itemName": "Copper Alloy",
+      "itemCategory": "refined",
+      "numberProduced": 20,
+    },
   ];
 
 const extra_icon = {
