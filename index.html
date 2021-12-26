@@ -21,15 +21,17 @@
     </style>
   </head>
   <body>
-    pe<b>n</b>is<br />
+    <h1>Foxhole-Screenparse</h1>
+    <p>
+      Choose a screenshot of foxhole showing a stockpile. Without uploading the screenshot to the cloud, your browser then parses the screenshot and returns a list of items in the stockpile together with the amount of crates stored. 
+    </p>
+    <p>
+      Current state: Supports 1920x1080p screenshots only. Only a limited set of items is recognized for now. Some similar looking items (uniforms and some rifles) are error prone. 
+    </p>
     <div>
       <div class="inputoutput">
         <img id="imageSrc" alt="No Image" />
         <div class="caption">imageSrc <input type="file" id="fileInputSrc" name="file" /></div>
-      </div>
-      <div class="inputoutput">
-        <img id="imageTempl" alt="No Image" style="background-color: black;" />
-        <div class="caption">imageTempl <input type="file" id="fileInputTempl" name="file" /></div>
       </div>
       <button id="run" onclick="run();">Run it</button>
       <div class="inputoutput">
@@ -44,18 +46,6 @@
       </ol>
 
 
-      <div class="inputoutput">
-        <canvas id="canvasItemIn"  style="background-color: black;"></canvas>
-        <div class="caption">canvasItemIn</div>
-      </div>
-      <div class="inputoutput">
-        <canvas id="canvasCount" ></canvas>
-        <div class="caption">canvasCount</div>
-      </div>
-      <div class="inputoutput">
-        <canvas id="canvasOCR" ></canvas>
-        <div class="caption">canvasOCR</div>
-      </div>
       <div class="inputoutput" style="display: none;">
         <canvas id="canvasTmp" ></canvas>
         <div class="caption">canvasTmp</div>
