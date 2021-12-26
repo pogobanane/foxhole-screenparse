@@ -3580,3 +3580,61 @@ const items = [
       }
     }
   ];
+
+const damage_types = {
+  "light_kinetic": {
+    "label": "Light Kinetic",
+    "labelLong": "Deals light kinetic damage",
+    "imgPath": "icons/items/subtypesb.png"
+  },
+  "heavy_kinetic": {
+    "label": "Heavy Kinetic",
+    "labelLong": "Deals heavy kinetic damage",
+    "imgPath": "icons/items/subtypehb.png"
+  },
+  "at_kinetic": {
+    "label": "Anti-Tank Kinetic",
+    "labelLong": "Deals anti-tank kinetic damage",
+    "imgPath": "icons/items/subtypeantitank.png"
+  },
+  "shrapnel": {
+    "label": "Shrapnel",
+    "labelLong": "Deals shrapnel damage",
+    "imgPath": "icons/items/subtypesh.png"
+  },
+  "flare": {
+    "label": "Flare",
+    "labelLong": "Shines a bright onto the battlefield",
+    "imgPath": "icons/items/subtypefl.png"
+  },
+  "gas": {
+    "label": "Poisonous Gas",
+    "labelLong": "Deals poisonous gas damage",
+    "imgPath": "icons/items/subtypega.png"
+  },
+  "explosive": {
+    "label": "Explosive",
+    "labelLong": "Deals explosive damage",
+    "imgPath": "icons/items/subtypese.png"
+  },
+  "high_explosive": {
+    "label": "High Explosive",
+    "labelLong": "Deals high explosive damage",
+    "imgPath": "icons/items/subtypehe.png"
+  },
+  "demolition": {
+    "label": "Demolitions",
+    "labelLong": "Deals demolition damage",
+    "imgPath": "icons/items/subtypelra.png"
+  },
+  "armour_piercing": {
+    "label": "Armour Piercing",
+    "labelLong": "Deals armor piercing damage",
+    "imgPath": "icons/items/subtypeap.png"
+  },
+  "at_explosive": {
+    "label": "Anti-Tank Explosive",
+    "labelLong": "Deals anti-tank explosive damage",
+    "imgPath": "icons/items/subtypeat.png"
+  }
+}
