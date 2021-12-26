@@ -1,9 +1,23 @@
 var prepareItemCache = {};
 
-// return new mat with added crate
 const addCrate = async (scaledItemMat, itemSizePx) => {
-  let icon = await loadImage('https://assets.foxhole.tools/icons/menus/filtercrates.png');
+  let icon = await loadImage(getImgPath('icons/menus/filtercrates.png'));
   let step1 = cv.imread(icon);
+  return addExtraDecor(scaledItemMat, step1, 'botright', itemSizePx);
+}
+
+const addExtraIcon = async (scaledItemMat, item, itemSizePx) => {
+  if (typeof item.extraIcon === 'undefined') {
+    return scaledItemMat;
+  }
+  let imgPath = extra_icons[item.extraIcon].imgPath;
+  let icon = await loadImage(getImgPath(imgPath));
+  let step1 = cv.imread(icon);
+  return addExtraDecor(scaledItemMat, step1, 'topleft', itemSizePx);
+}
+
+// return new mat with added crate
+const addExtraDecor = async (scaledItemMat, decorMat, position, itemSizePx) => {
   let step2 = new cv.Mat();
   let step3 = new cv.Mat();
   let step4 = new cv.Mat();
@@ -13,13 +27,25 @@ const addCrate = async (scaledItemMat, itemSizePx) => {
   // scale to 14x14px
   const length = Math.round(14.0 / 32.0 * itemSizePx);
   let dsize = new cv.Size(length, length);
-  cv.resize(step1, step3, dsize, 0, 0, cv.INTER_AREA);
+  cv.resize(decorMat, step3, dsize, 0, 0, cv.INTER_AREA);
   // px away from bottom and 1 from right
   let fillerColor = new cv.Scalar(0, 0, 0, 0);
-  let padBot = Math.round(0.0 / 32.0 * itemSizePx);;
-  let padRight = Math.round(0.0 / 32.0 * itemSizePx);;
-  let padTop = itemSizePx - padBot - length;
-  let padLeft = itemSizePx - padRight - length;
+
+  let padTop;
+  let padLeft;
+  let padBot;
+  let padRight;
+  if (position == 'topleft') {
+    padTop = 0;
+    padLeft = 0;
+    padBot = itemSizePx - length;
+    padRight = itemSizePx - length;
+  } else if (position == 'botright') {
+    padBot = Math.round(0.0 / 32.0 * itemSizePx);;
+    padRight = Math.round(0.0 / 32.0 * itemSizePx);;
+    padTop = itemSizePx - padBot - length;
+    padLeft = itemSizePx - padRight - length;
+  }
   cv.copyMakeBorder(step3, step4, 
     padTop, padBot, padLeft, padRight, 
     cv.BORDER_CONSTANT, fillerColor);
@@ -55,7 +81,7 @@ const addCrate = async (scaledItemMat, itemSizePx) => {
 
 // TODO bake in: demage type icons / uniform purpose
 // returns mat of processed item
-const prepareItem = async (inMat, itemSizePx) => {
+const prepareItem = async (inMat, item, itemSizePx) => {
   let step = new cv.Mat();
   let dst = new cv.Mat();
   let rgbaPlanes = new cv.MatVector();
@@ -89,8 +115,9 @@ const prepareItem = async (inMat, itemSizePx) => {
   // You can try more different parameters
   cv.resize(gray, dst, dsize, 0, 0, cv.INTER_AREA);
   let crated = await addCrate(dst, itemSizePx);
+  let extraIconed = await addExtraIcon(crated, item, itemSizePx);
   step.delete(); mask.delete();
-  return crated;
+  return extraIconed;
 }
 
 const imgmatch = async (haystackMat, needleMat) => {
@@ -298,6 +325,14 @@ const loadImageToCanvas = async function(url, domCanvas) {
   ctx.drawImage(img, 0, 0, img.width, img.height);
 };
 
+const getImgPath = (imgPath) => {
+  if (imgPath.startsWith('http')) {
+    return imgPath;
+  } else {
+    return 'https://assets.foxhole.tools/' + imgPath;
+  }
+}
+
 const countItems = async (iconSizePx) => {
   let found = [];
   let image = cv.imread('imageSrc');
@@ -318,15 +353,15 @@ const countItems = async (iconSizePx) => {
   // filter items by faction to reduce amount of similar looking items
 	
   for (let item of items) {
-    //item = items[14];
+    //item = items[188];
     if (typeof item.imgPath === 'undefined') {
       continue;
     }
     let perfStart = performance.now();
     console.log("Searching " + item.itemName + "...");
-    let icon = await loadImage('https://assets.foxhole.tools/' + item.imgPath);
+    let icon = await loadImage(getImgPath(item.imgPath));
     let iconUnprocessedMat = cv.imread(icon);
-    let iconMat = await prepareItem(iconUnprocessedMat, iconSizePx);
+    let iconMat = await prepareItem(iconUnprocessedMat, item, iconSizePx);
     cv.imshow('canvasItem', iconMat);
     let matches = await imgmatch(screenshot, iconMat);
     let perfMatched = performance.now();
