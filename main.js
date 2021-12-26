@@ -183,11 +183,11 @@ const ocrItemCount = async (domElem, points) => {
 
   await worker.load();
   await worker.loadLanguage('eng');
-  await worker.initialize('eng');
+  await worker.initialize('eng', Tesseract.OEM.TESSERACT_ONLY);
   const params = {
     //'tessedit_ocr_engine_mode': 0,
     //'tessedit_pageseg_mode': 8,
-    'tessedit_ocr_engine_mode': Tesseract.OEM.TESSERACT_ONLY,
+    //'tessedit_ocr_engine_mode': Tesseract.OEM.TESSERACT_ONLY,
     'tessedit_pageseg_mode': Tesseract.PSM.SINGLE_WORD,
     'tessedit_char_whitelist': '0123456789',
     // 'tessjs_create_osd': '1'
@@ -353,7 +353,7 @@ const countItems = async (faction, iconSizePx) => {
   // filter items by faction to reduce amount of similar looking items
 	
   for (let item of items) {
-    //item = items[188];
+    //item = items[31];
     if (typeof item.imgPath === 'undefined') {
       continue;
     }
@@ -401,7 +401,7 @@ const countItems = async (faction, iconSizePx) => {
     let countSmallMat = screenshot.roi(rect);
     let countMat = new cv.Mat();
     let dsize = new cv.Size(countBox.width*4.0, countBox.height*4.0);
-    cv.resize(countSmallMat, countMat, dsize, 0, 0, cv.INTER_AREA);
+    cv.resize(countSmallMat, countMat, dsize, 0, 0, cv.INTER_CUBIC);
     //let itemCount = await ocrItemCount('imageSrc', countPoints);
     let itemCount = await ocrItemCount(mat2canvas(countMat), countPoints);
     console.log(item.itemName + ": " + itemCount);
