@@ -32,6 +32,7 @@ const items = [
       "itemCategory": "small_arms",
       "numberProduced": 40,
       "damageType": "Deals light kinetic damage",
+      "extraIcon": "light_kinetic",
       "isTeched": false,
       "isMpfCraftable": true,
       "cost": {
@@ -90,6 +91,7 @@ const items = [
       "itemCategory": "small_arms",
       "numberProduced": 40,
       "damageType": "Deals light kinetic damage",
+      "extraIcon": "light_kinetic",
       "isTeched": false,
       "isMpfCraftable": true,
       "cost": {
@@ -261,6 +263,7 @@ const items = [
       "itemCategory": "small_arms",
       "numberProduced": 40,
       "damageType": "Deals light kinetic damage",
+      "extraIcon": "light_kinetic",
       "isTeched": false,
       "isMpfCraftable": true,
       "cost": {
@@ -356,6 +359,7 @@ const items = [
       "itemCategory": "small_arms",
       "numberProduced": 40,
       "damageType": "Deals light kinetic damage",
+      "extraIcon": "light_kinetic",
       "isTeched": false,
       "isMpfCraftable": true,
       "cost": {
@@ -395,6 +399,7 @@ const items = [
       "itemCategory": "small_arms",
       "numberProduced": 40,
       "damageType": "Deals light kinetic damage",
+      "extraIcon": "light_kinetic",
       "isTeched": false,
       "isMpfCraftable": true,
       "cost": {
@@ -490,6 +495,7 @@ const items = [
       "itemCategory": "small_arms",
       "numberProduced": 20,
       "damageType": "Deals light kinetic damage",
+      "extraIcon": "light_kinetic",
       "isTeched": false,
       "isMpfCraftable": true,
       "cost": {
@@ -549,6 +555,7 @@ const items = [
       "itemCategory": "small_arms",
       "numberProduced": 10,
       "damageType": "Deals light kinetic damage",
+      "extraIcon": "light_kinetic",
       "isTeched": false,
       "isMpfCraftable": true,
       "cost": {
@@ -605,6 +612,7 @@ const items = [
       "itemName": "12.7mm",
       "itemDesc": "Standard ammunition for all machine guns, including vehicle mounted weapons like those on the half-track and battle tank.",
       "itemCategory": "small_arms",
+      "extraIcon": "heavy_kinetic",
       "numberProduced": 20,
       "isTeched": false,
       "isMpfCraftable": true,
@@ -683,8 +691,9 @@ const items = [
       "itemDesc": "Standard ammunition for anti-tank rifles.",
       "itemCategory": "heavy_arms",
       "numberProduced": 10,
-      "damageType": "Deals anti-tank explosive damage",
+      "damageType": "Deals anti-tank explosive damage", // TODO this is kinetic damage https://foxhole.fandom.com/wiki/20mm
       "damageDesc": "Can penetrate armored vehicles",
+      "extraIcon": "at_kinetic",
       "vehiclePen": "Damage to the sides and rear of armored vehicles have a higher chance to penetrate at close range and at direct angles.",
       "isTeched": false,
       "isMpfCraftable": true,
@@ -725,6 +734,7 @@ const items = [
       "numberProduced": 20,
       "damageType": "Deals explosive damage",
       "damageDesc": "Can penetrate armored vehicles",
+      "extraIcon": "explosive",
       "vehiclePen": "Damage to the sides and rear of armored vehicles have a higher chance to penetrate at close range and at direct angles.",
       "isTeched": false,
       "isMpfCraftable": true,
@@ -747,6 +757,7 @@ const items = [
       "numberProduced": 20,
       "damageType": "Deals explosive damage",
       "damageDesc": "Can penetrate armored vehicles",
+      "extraIcon": "explosive",
       "vehiclePen": "Damage to the sides and rear of armored vehicles have a higher chance to penetrate at close range and at direct angles.",
       "isTeched": false,
       "isMpfCraftable": true,
@@ -769,6 +780,7 @@ const items = [
       "numberProduced": 20,
       "damageType": "Deals armor piercing damage",
       "damageDesc": "Can penetrate armored vehicles",
+      "extraIcon": "armour_piercing",
       "vehiclePen": "Damage to the sides and rear of armored vehicles have a higher chance to penetrate at close range and at direct angles.",
       "vehiclePenChance": "High chance to penetrate armored vehicles.",
       "isTeched": false,
@@ -792,6 +804,7 @@ const items = [
       "ammoUsed": "R.P.G. Shell",
       "damageType": "Deals explosive damage",
       "damageDesc": "Can penetrate armored vehicles",
+      "extraIcon": "explosive",
       "vehiclePen": "Damage to the sides and rear of armored vehicles have a higher chance to penetrate at close range and at direct angles.",
       "numberProduced": 5,
       "isTeched": true,
@@ -885,6 +898,7 @@ const items = [
       "isMpfCraftable": true,
       "damageType": "Deals armor piercing damage",
       "damageDesc": "Can penetrate armored vehicles",
+      "extraIcon": "armour_piercing",
       "vehiclePen": "Damage to the sides and rear of armored vehicles have a higher chance to penetrate at close range and at direct angles.",
       "vehiclePenChance": "High chance to penetrate armored vehicles.",
       "cost": {
@@ -929,6 +943,7 @@ const items = [
       "numberProduced": 15,
       "damageType": "Deals armor piercing damage",
       "damageDesc": "Can penetrate armored vehicles",
+      "extraIcon": "armour_piercing",
       "vehiclePen": "Damage to the sides and rear of armored vehicles have a higher chance to penetrate at close range and at direct angles.",
       "vehiclePenChance": "High chance to penetrate armored vehicles.",
       "isTeched": false,
@@ -995,6 +1010,7 @@ const items = [
       "itemCategory": "heavy_arms",
       "damageType": "Deals armor piercing damage",
       "damageDesc": "Can penetrate armored vehicles",
+      "extraIcon": "armour_piercing",
       "vehiclePen": "High chance to penetrate armored vehicles.",
       "numberProduced": 15,
       "isTeched": false,
@@ -1039,6 +1055,7 @@ const items = [
       "numberProduced": 15,
       "damageType": "Deals high explosive damage",
       "damageDesc": "Reduced damage against trenches",
+      "extraIcon": "high_explosive",
       "isTeched": false,
       "isMpfCraftable": true,
       "cost": {
@@ -1061,6 +1078,7 @@ const items = [
       "isTeched": true,
       "damageType": "Deals shrapnel damage",
       "damageDesc": "Always causes target to bleed",
+      "extraIcon": "shrapnel",
       "isMpfCraftable": true,
       "cost": {
         "bmat": 60,
@@ -1078,6 +1096,7 @@ const items = [
       "itemName": "Mortar Flare Shell",
       "itemDesc": "A shell that ignites midair and illuminates a large area, revealing enemy targets.",
       "itemCategory": "heavy_arms",
+      "extraIcon": "flare",
       "numberProduced": 15,
       "isTeched": true,
       "isMpfCraftable": true,
@@ -1100,6 +1119,7 @@ const items = [
       "numberProduced": 5,
       "damageType": "Deals high explosive damage",
       "damageDesc": "Reduced damage against trenches",
+      "extraIcon": "high_explosive",
       "isTeched": false,
       "isMpfCraftable": true,
       "cost": {
@@ -1121,6 +1141,7 @@ const items = [
       "numberProduced": 5,
       "damageType": "Deals high explosive damage",
       "damageDesc": "Reduced damage against trenches",
+      "extraIcon": "high_explosive",
       "isTeched": false,
       "isMpfCraftable": true,
       "cost": {
@@ -1141,6 +1162,7 @@ const items = [
       "itemCategory": "heavy_arms",
       "numberProduced": 5,
       "damageType": "Deals demolition damage",
+      "extraIcon": "demolition",
       "isTeched": false,
       "isMpfCraftable": true,
       "cost": {
@@ -1164,6 +1186,7 @@ const items = [
       "isTeched": true,
       "damageType": "Deals poisonous gas damage",
       "damageDesc": "Causes damage over time",
+      "extraIcon": "gas",
       "isMpfCraftable": true,
       "cost": {
         "bmat": 140
@@ -1183,6 +1206,7 @@ const items = [
       "numberProduced": 25,
       "damageType": "Deals shrapnel damage",
       "damageDesc": "Always causes target to bleed",
+      "extraIcon": "shrapnel",
       "isTeched": false,
       "isMpfCraftable": true,
       "cost": {
@@ -1202,6 +1226,7 @@ const items = [
       "itemCategory": "heavy_arms",
       "itemClass": "Grenade",
       "damageType": "Deals light kinetic damage",
+      "extraIcon": "light_kinetic",
       "numberProduced": 20,
       "isTeched": false,
       "isMpfCraftable": true,
@@ -1224,6 +1249,7 @@ const items = [
       "itemClass": "HE Grenade",
       "numberProduced": 25,
       "damageType": "Deals explosive damage",
+      "extraIcon": "explosive",
       "isTeched": false,
       "isMpfCraftable": true,
       "cost": {
@@ -1245,6 +1271,7 @@ const items = [
       "numberProduced": 10,
       "damageType": "Deals anti-tank explosive damage",
       "damageDesc": "High chance of disabling Track subsystem",
+      "extraIcon": "at_explosive",
       "isTeched": false,
       "isMpfCraftable": true,
       "cost": {
@@ -1265,6 +1292,7 @@ const items = [
       "itemClass": "Anti-Tank Grenade",
       "damageType": "Deals anti-tank explosive damage",
       "damageDesc": "High chance of disabling Track subsystem",
+      "extraIcon": "at_explosive",
       "numberProduced": 15,
       "isTeched": true,
       "isMpfCraftable": true,
@@ -1305,6 +1333,7 @@ const items = [
       "itemCategory": "heavy_arms",
       "numberProduced": 5,
       "damageType": "Deals demolition damage",
+      "extraIcon": "high_explosive",
       "isTeched": false,
       "isMpfCraftable": false,
       "cost": {
@@ -1551,6 +1580,7 @@ const items = [
       "isTeched": true,
       "damageType": "Deals demolition damage",
       "damageDesc": "Destroys obstacles that can otherwise only be dismantled with Wrenches",
+      "extraIcon": "demolition",
       "cost": {
         "bmat": 100,
         "emat": 40
@@ -1572,6 +1602,7 @@ const items = [
       "isMpfCraftable": false,
       "isTeched": true,
       "damageType": "Deals demolition damage",
+      "extraIcon": "demolition",
       "cost": {
         "bmat": 100,
         "hemat": 15
@@ -1592,6 +1623,7 @@ const items = [
       "numberProduced": 10,
       "damageType": "Deal anti-tank explosive damage",
       "damageDesc": "Always disables the track subsystem",
+      "extraIcon": "at_explosive",
       "isMpfCraftable": false,
       "isTeched": false,
       "cost": {
@@ -3581,7 +3613,7 @@ const items = [
     }
   ];
 
-const damage_types = {
+const extra_icon = {
   "light_kinetic": {
     "label": "Light Kinetic",
     "labelLong": "Deals light kinetic damage",
