@@ -3325,6 +3325,7 @@ const items = [
       "itemClass": "Colonial Engineering Uniform",
       "itemDesc": "Engineers are the bones of the Mesean Republic. They are outfitted with a heavy bag and belts for easy access to tools and handheld materials.",
       "itemCategory": "uniforms",
+      "extraIcon": "engineer",
       "outfitBuffs": [
         "8 backpack slots",
         "Materials have reduced encumberance"
@@ -3347,6 +3348,7 @@ const items = [
       "itemClass": "Colonial Grenade Uniform",
       "itemDesc": "Of the most distinguished divisions of the Legion are the Grenadiers. They are outfitted with specialized satchels and pockets for maximizing their capacity to hail explosives.",
       "itemCategory": "uniforms",
+      "extraIcon": "grenade",
       "outfitBuffs": [
         "6 backpack slots",
         "Grenades stack",
@@ -3370,6 +3372,7 @@ const items = [
       "itemClass": "Colonial Medic Uniform",
       "itemDesc": "For medics of the Legion, this uniform has a plethora of pockets and bags designed to carry and deploy first aid gear easily.",
       "itemCategory": "uniforms",
+      "extraIcon": "medic",
       "outfitBuffs": [
         "6 backpack slots",
         "Bandages and Blood Plasma stack",
@@ -3393,6 +3396,7 @@ const items = [
       "itemClass": "Colonial Rain Uniform",
       "itemDesc": "Quite accustomed to the temperate climates of the south, Colonials wear this oilcloth jacket paired with thick boots to operate at high efficiency in all but the heaviest storms.",
       "itemCategory": "uniforms",
+      "extraIcon": "rain",
       "outfitBuffs": [
         "6 backpack slots",
         "Kinetic weapon light ammunition stacks",
@@ -3416,6 +3420,7 @@ const items = [
       "itemClass": "Colonial Scout Uniform",
       "itemDesc": "Legion scouts are deployed on the most dangerous missions. Their gear is lightweight, sturdy and well-suited for extended operations in rugged terrain.",
       "itemCategory": "uniforms",
+      "extraIcon": "scout",
       "outfitBuffs": [
         "5 backpack slots",
         "High chance of not being detected by enemy intelligence"
@@ -3438,6 +3443,7 @@ const items = [
       "itemClass": "Colonial Snow Uniform",
       "itemDesc": "Unaccustomed to the cold, Legionaries must always adapt. This heavy topcoat is designed to mitigate the effects of cold while still allowing for optimal mobility and combat effectiveness.",
       "itemCategory": "uniforms",
+      "extraIcon": "snow",
       "outfitBuffs": [
         "6 backpack slots",
         "Kinetic weapon light ammunition stacks",
@@ -3461,6 +3467,7 @@ const items = [
       "itemClass": "Colonial Tank Uniform",
       "itemDesc": "Nothing compares to the efficiency and destructive capabilities of the Colonial armor devision. Tank crew are provided with sturdy coveralls and satchel belts for easy access to essential tools required for tank maintenance and operation.",
       "itemCategory": "uniforms",
+      "extraIcon": "tank",
       "outfitBuffs": [
         "7 backpack slots",
         "Gas Mask Filters stack",
@@ -3486,6 +3493,7 @@ const items = [
       "itemClass": "Warden Heavy Ammo Uniform",
       "itemDesc": "Warden specialists require a uniform designed to optimize their capacity to haul a variety of heavy ammunition.",
       "itemCategory": "uniforms",
+      "extraIcon": "ammo",
       "outfitBuffs": [
         "8 backpack slots",
         "Heavy ammunition has reduced encumbrance"
@@ -3508,6 +3516,7 @@ const items = [
       "itemClass": "Warden Engineering Uniform",
       "itemDesc": "Caovish engineers are legendary in song and stature. They wear specialized uniforms, outfitted with belts and bags for easy access to tools and handheld materials.",
       "itemCategory": "uniforms",
+      "extraIcon": "engineer",
       "outfitBuffs": [
         "8 backpack slots",
         "Materials have reduced encumbrance"
@@ -3530,6 +3539,7 @@ const items = [
       "itemClass": "Warden Medic Uniform",
       "itemDesc": "Physicians in the Warden army are unmatched and this uniform has a plethora of pockets and bags designed to carry and deploy first aid gear easily.",
       "itemCategory": "uniforms",
+      "extraIcon": "medic",
       "outfitBuffs": [
         "6 backpack slots",
         "Bandages and Blood Plasma stack",
@@ -3553,6 +3563,7 @@ const items = [
       "itemClass": "Warden Scout Uniform",
       "itemDesc": "the Warden army relies on outriders to provide and recieve vital intelligence. Their gear is sturdy and well-suited for extended operations in rugged terrain and inclement weather.",
       "itemCategory": "uniforms",
+      "extraIcon": "scout",
       "outfitBuffs": [
         "5 backpack slots",
         "High chance of not being detected by enemy intelligence",
@@ -3576,6 +3587,7 @@ const items = [
       "itemClass": "Warden Snow Uniform",
       "itemDesc": "Born and bred in the northern cold, this heavy parka protects Warden infantry from all but the worst blizzards.",
       "itemCategory": "uniforms",
+      "extraIcon": "snow",
       "outfitBuffs": [
         "6 backpack slots",
         "Kinetic weapon light ammunition stacks",
@@ -3599,6 +3611,7 @@ const items = [
       "itemClass": "Warden Tank Uniform",
       "itemDesc": "Caovish armor is unmatched in its design and resilience. All crew are provided with a sturdy boilersuit and satchel belts to access essential tools required for tank maintenance and operation.",
       "itemCategory": "uniforms",
+      "extraIcon": "tank",
       "outfitBuffs": [
         "7 backpack slots",
         "Gas Mask Filters stack",
@@ -3721,7 +3734,7 @@ const items = [
     },
   ];
 
-const extra_icon = {
+const extra_icons = {
   "light_kinetic": {
     "label": "Light Kinetic",
     "labelLong": "Deals light kinetic damage",
@@ -3776,5 +3789,37 @@ const extra_icon = {
     "label": "Anti-Tank Explosive",
     "labelLong": "Deals anti-tank explosive damage",
     "imgPath": "icons/items/subtypeat.png"
+  },
+  "engineer": {
+    "label": "Engineer Uniform",
+    "imgPath": "icons/items/subtypeengineer.png"
+  },
+  "medic": {
+    "label": "Medic Uniform",
+    "imgPath": "icons/items/subtypemedic.png"
+  },
+  "scout": {
+    "label": "Scout Uniform",
+    "imgPath": "icons/items/subtypescout.png"
+  },
+  "tank": {
+    "label": "Tank Uniform",
+    "imgPath": "icons/items/subtypetank.png"
+  },
+  "snow": {
+    "label": "Snow Uniform",
+    "imgPath": "icons/items/subtypesnow.png"
+  },
+  "rain": {
+    "label": "Rain Uniform",
+    "imgPath": "icons/items/subtyperain.png"
+  },
+  "grenade": {
+    "label": "Grenade Uniform",
+    "imgPath": "icons/items/subtypegrenade.png"
+  },
+  "ammo": {
+    "label": "Heavy Ammo Uniform",
+    "imgPath": "icons/items/subtypeammo.png"
   }
 }
