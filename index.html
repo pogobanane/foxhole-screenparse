@@ -33,7 +33,12 @@
         <img id="imageSrc" alt="No Image" />
         <div class="caption">imageSrc <input type="file" id="fileInputSrc" name="file" /></div>
       </div>
+      <input type="radio" id="colonialButton" name="faction" value="colonial">
+      <label for="colonialButton">Colonial</label><br>
+      <input type="radio" id="wardenButton" name="faction" value="warden" checked="checked">
+      <label for="wardenButton">Warden</label><br>
       <button id="run" onclick="run();">Run it</button>
+
       <div class="inputoutput">
         <canvas id="canvasItem"  style="background-color: black;"></canvas>
         <div class="caption">canvasItem</div>

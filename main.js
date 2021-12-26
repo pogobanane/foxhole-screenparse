@@ -333,7 +333,7 @@ const getImgPath = (imgPath) => {
   }
 }
 
-const countItems = async (iconSizePx) => {
+const countItems = async (faction, iconSizePx) => {
   let found = [];
   let image = cv.imread('imageSrc');
   var screenshot = new cv.Mat();
@@ -357,6 +357,10 @@ const countItems = async (iconSizePx) => {
     if (typeof item.imgPath === 'undefined') {
       continue;
     }
+    if (!item.faction.includes(faction)) {
+      continue;
+    }
+
     let perfStart = performance.now();
     console.log("Searching " + item.itemName + "...");
     let icon = await loadImage(getImgPath(item.imgPath));
@@ -466,6 +470,14 @@ const domListAppend = async (item, confidence, iconRendered, iconFound, countFou
   list.appendChild(li);
 }
 
+const getFaction = async () => {
+  if (document.getElementById('colonialButton').checked) {
+    return 'colonial';
+  } else if (document.getElementById('wardenButton').checked) {
+    return 'warden';
+  }
+}
+
 const run = async () => {
   console.log("run");
   var width = 0;
@@ -481,7 +493,8 @@ const run = async () => {
     width = 32;
   }
   console.warn('run: width ', width);
+  let faction = await getFaction();
   //prepareItem('imageTempl', 'canvasItem', width);
   //imgmatch('imageSrc', 'canvasItem', 'canvasImgmatch', width);
-  await countItems(width);
+  await countItems(faction, width);
 }
