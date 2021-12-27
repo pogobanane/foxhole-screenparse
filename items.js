@@ -55,6 +55,10 @@ const items = [
       "numberProduced": 20,
       "isTeched": true,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 2,
+        "cratesIdeal": 8,
+      },
       "cost": {
         "bmat": 60
       }
@@ -94,6 +98,10 @@ const items = [
       "extraIcon": "light_kinetic",
       "isTeched": false,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 2,
+        "cratesIdeal": 6,
+      },
       "cost": {
         "bmat": 40
       }
@@ -113,6 +121,10 @@ const items = [
       "numberProduced": 20,
       "isTeched": false,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 1,
+        "cratesIdeal": 12,
+      },
       "cost": {
         "bmat": 100
       }
@@ -132,6 +144,10 @@ const items = [
       "numberProduced": 20,
       "isTeched": true,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 2,
+        "cratesIdeal": 10,
+      },
       "cost": {
         "bmat": 140
       }
@@ -266,6 +282,10 @@ const items = [
       "extraIcon": "light_kinetic",
       "isTeched": false,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 1,
+        "cratesIdeal": 12,
+      },
       "cost": {
         "bmat": 80
       }
@@ -285,6 +305,10 @@ const items = [
       "numberProduced": 20,
       "isTeched": true,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 3,
+        "cratesIdeal": 12,
+      },
       "cost": {
         "bmat": 120
       }
@@ -304,6 +328,10 @@ const items = [
       "numberProduced": 20,
       "isTeched": true,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 3,
+        "cratesIdeal": 12,
+      },
       "cost": {
         "bmat": 120
       }
@@ -362,6 +390,10 @@ const items = [
       "extraIcon": "light_kinetic",
       "isTeched": false,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 3,
+        "cratesIdeal": 12,
+      },
       "cost": {
         "bmat": 80
       }
@@ -421,6 +453,10 @@ const items = [
       "numberProduced": 10,
       "isTeched": true,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 2,
+        "cratesIdeal": 24,
+      },
       "cost": {
         "bmat": 165
       }
@@ -440,6 +476,10 @@ const items = [
       "numberProduced": 10,
       "isTeched": true,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 3,
+        "cratesIdeal": 20,
+      },
       "cost": {
         "bmat": 165
       }
@@ -498,6 +538,10 @@ const items = [
       "extraIcon": "light_kinetic",
       "isTeched": false,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 2,
+        "cratesIdeal": 16,
+      },
       "cost": {
         "bmat": 120
       }
@@ -616,6 +660,10 @@ const items = [
       "numberProduced": 20,
       "isTeched": false,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 3,
+        "cratesIdeal": 12,
+      },
       "cost": {
         "bmat": 100
       }
@@ -635,6 +683,10 @@ const items = [
       "numberProduced": 10,
       "isTeched": true,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 3,
+        "cratesIdeal": 12,
+      },
       "cost": {
         "bmat": 120
       }
@@ -675,6 +727,10 @@ const items = [
       "numberProduced": 5,
       "isTeched": true,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 4,
+        "cratesIdeal": 14,
+      },
       "cost": {
         "bmat": 150
       }
@@ -697,6 +753,10 @@ const items = [
       "vehiclePen": "Damage to the sides and rear of armored vehicles have a higher chance to penetrate at close range and at direct angles.",
       "isTeched": false,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 4,
+        "cratesIdeal": 30,
+      },
       "cost": {
         "bmat": 100
       }
@@ -738,6 +798,10 @@ const items = [
       "vehiclePen": "Damage to the sides and rear of armored vehicles have a higher chance to penetrate at close range and at direct angles.",
       "isTeched": false,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 3,
+        "cratesIdeal": 8,
+      },
       "cost": {
         "bmat": 80,
         "emat": 20
@@ -761,6 +825,10 @@ const items = [
       "vehiclePen": "Damage to the sides and rear of armored vehicles have a higher chance to penetrate at close range and at direct angles.",
       "isTeched": false,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 7,
+        "cratesIdeal": 10,
+      },
       "cost": {
         "bmat": 160,
         "emat": 120
@@ -785,6 +853,10 @@ const items = [
       "vehiclePenChance": "High chance to penetrate armored vehicles.",
       "isTeched": false,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 8,
+        "cratesIdeal": 10,
+      },
       "cost": {
         "bmat": 120,
         "emat": 120
@@ -809,6 +881,10 @@ const items = [
       "numberProduced": 5,
       "isTeched": true,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 4,
+        "cratesIdeal": 6,
+      },
       "cost": {
         "bmat": 100,
         "rmat": 25
@@ -853,6 +929,10 @@ const items = [
       "vehiclePen": "Damage to the sides and rear of armored vehicles have a higher chance to penetrate at close range and at direct angles.",
       "isTeched": false,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 4,
+        "cratesIdeal": 20,
+      },
       "cost": {
         "bmat": 60,
         "emat": 75
@@ -971,6 +1051,10 @@ const items = [
       "numberProduced": 5,
       "isTeched": true,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 7,
+        "cratesIdeal": 8,
+      },
       "cost": {
         "bmat": 100,
         "rmat": 25
@@ -994,6 +1078,10 @@ const items = [
       "numberProduced": 5,
       "isTeched": true,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 5,
+        "cratesIdeal": 6,
+      },
       "cost": {
         "bmat": 200
       }
@@ -1015,6 +1103,10 @@ const items = [
       "numberProduced": 15,
       "isTeched": false,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 5,
+        "cratesIdeal": 12,
+      },
       "cost": {
         "bmat": 60,
         "emat": 75
@@ -1036,6 +1128,10 @@ const items = [
       "numberProduced": 5,
       "isTeched": true,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 5,
+        "cratesIdeal": 10,
+      },
       "cost": {
         "bmat": 100,
         "rmat": 25
@@ -1058,6 +1154,10 @@ const items = [
       "extraIcon": "high_explosive",
       "isTeched": false,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 6,
+        "cratesIdeal": 12,
+      },
       "cost": {
         "bmat": 60,
         "emat": 35
@@ -1080,6 +1180,10 @@ const items = [
       "damageDesc": "Always causes target to bleed",
       "extraIcon": "shrapnel",
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 6,
+        "cratesIdeal": 10,
+      },
       "cost": {
         "bmat": 60,
         "emat": 15
@@ -1100,6 +1204,10 @@ const items = [
       "numberProduced": 15,
       "isTeched": true,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 5,
+        "cratesIdeal": 30,
+      },
       "cost": {
         "bmat": 60,
         "emat": 10
@@ -1122,6 +1230,10 @@ const items = [
       "extraIcon": "high_explosive",
       "isTeched": false,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 5,
+        "cratesIdeal": 40,
+      },
       "cost": {
         "bmat": 60,
         "emat": 15
@@ -1144,6 +1256,10 @@ const items = [
       "extraIcon": "high_explosive",
       "isTeched": false,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 9,
+        "cratesIdeal": 40,
+      },
       "cost": {
         "bmat": 120,
         "hemat": 10
@@ -1165,6 +1281,10 @@ const items = [
       "extraIcon": "demolition",
       "isTeched": false,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 9,
+        "cratesIdeal": 8,
+      },
       "cost": {
         "bmat": 120,
         "hemat": 25
@@ -1188,6 +1308,10 @@ const items = [
       "damageDesc": "Causes damage over time",
       "extraIcon": "gas",
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 1,
+        "cratesIdeal": 30,
+      },
       "cost": {
         "bmat": 140
       }
@@ -1230,6 +1354,10 @@ const items = [
       "numberProduced": 20,
       "isTeched": false,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 2,
+        "cratesIdeal": 10,
+      },
       "cost": {
         "bmat": 100,
         "emat": 20
@@ -1252,6 +1380,10 @@ const items = [
       "extraIcon": "explosive",
       "isTeched": false,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 2,
+        "cratesIdeal": 30,
+      },
       "cost": {
         "bmat": 100,
         "emat": 10
@@ -1274,6 +1406,10 @@ const items = [
       "extraIcon": "at_explosive",
       "isTeched": false,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 1,
+        "cratesIdeal": 12,
+      },
       "cost": {
         "bmat": 50,
         "emat": 50
@@ -1296,6 +1432,10 @@ const items = [
       "numberProduced": 15,
       "isTeched": true,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 2,
+        "cratesIdeal": 12,
+      },
       "cost": {
         "bmat": 100,
         "emat": 50
@@ -1379,6 +1519,10 @@ const items = [
       "numberProduced": 5,
       "isTeched": true,
       "isMpfCraftable": true,
+      "supplyPyramid": {
+        "priority": 4,
+        "cratesIdeal": 6,
+      },
       "cost": {
         "bmat": 150
       }
@@ -1397,6 +1541,10 @@ const items = [
       "numberProduced": 10,
       "isMpfCraftable": false,
       "isTeched": false,
+      "supplyPyramid": {
+        "priority": 6,
+        "cratesIdeal": 6,
+      },
       "cost": {
         "bmat": 200
       }
@@ -1433,6 +1581,10 @@ const items = [
       "numberProduced": 5,
       "isMpfCraftable": false,
       "isTeched": true,
+      "supplyPyramid": {
+        "priority": 5,
+        "cratesIdeal": 8,
+      },
       "cost": {
         "bmat": 75
       }
@@ -1451,6 +1603,10 @@ const items = [
       "numberProduced": 20,
       "isMpfCraftable": false,
       "isTeched": true,
+      "supplyPyramid": {
+        "priority": 1,
+        "cratesIdeal": 10,
+      },
       "cost": {
         "bmat": 160
       }
@@ -1469,6 +1625,10 @@ const items = [
       "numberProduced": 20,
       "isMpfCraftable": false,
       "isTeched": false,
+      "supplyPyramid": {
+        "priority": 1,
+        "cratesIdeal": 14,
+      },
       "cost": {
         "bmat": 100
       }
@@ -1487,6 +1647,10 @@ const items = [
       "numberProduced": 5,
       "isMpfCraftable": false,
       "isTeched": false,
+      "supplyPyramid": {
+        "priority": 4,
+        "cratesIdeal": 4,
+      },
       "cost": {
         "bmat": 75
       }
@@ -1505,6 +1669,10 @@ const items = [
       "numberProduced": 5,
       "isMpfCraftable": false,
       "isTeched": false,
+      "supplyPyramid": {
+        "priority": 6,
+        "cratesIdeal": 10,
+      },
       "cost": {
         "bmat": 100
       }
@@ -1523,6 +1691,10 @@ const items = [
       "numberProduced": 5,
       "isMpfCraftable": false,
       "isTeched": true,
+      "supplyPyramid": {
+        "priority": 10,
+        "cratesIdeal": 8,
+      },
       "cost": {
         "bmat": 150
       }
@@ -1542,6 +1714,10 @@ const items = [
       "numberProduced": 20,
       "isMpfCraftable": false,
       "isTeched": true,
+      "supplyPyramid": {
+        "priority": 1,
+        "cratesIdeal": 10,
+      },
       "cost": {
         "bmat": 40
       }
@@ -1560,6 +1736,10 @@ const items = [
       "numberProduced": 5,
       "isMpfCraftable": false,
       "isTeched": false,
+      "supplyPyramid": {
+        "priority": 3,
+        "cratesIdeal": 6,
+      },
       "cost": {
         "bmat": 100
       }
@@ -1603,6 +1783,10 @@ const items = [
       "isTeched": true,
       "damageType": "Deals demolition damage",
       "extraIcon": "demolition",
+      "supplyPyramid": {
+        "priority": 8,
+        "cratesIdeal": 16,
+      },
       "cost": {
         "bmat": 100,
         "hemat": 15
@@ -1626,6 +1810,10 @@ const items = [
       "extraIcon": "at_explosive",
       "isMpfCraftable": false,
       "isTeched": false,
+      "supplyPyramid": {
+        "priority": 4,
+        "cratesIdeal": 18,
+      },
       "cost": {
         "bmat": 100,
         "emat": 10
@@ -1681,6 +1869,10 @@ const items = [
       "numberProduced": 10,
       "isMpfCraftable": false,
       "isTeched": false,
+      "supplyPyramid": {
+        "priority": 1,
+        "cratesIdeal": 60,
+      },
       "cost": {
         "bmat": 80
       }
@@ -1699,6 +1891,10 @@ const items = [
       "numberProduced": 80,
       "isMpfCraftable": false,
       "isTeched": false,
+      "supplyPyramid": {
+        "priority": 1,
+        "cratesIdeal": 10,
+      },
       "cost": {
         "bmat": 160
       }
@@ -1717,6 +1913,10 @@ const items = [
       "numberProduced": 10,
       "isMpfCraftable": false,
       "isTeched": true,
+      "supplyPyramid": {
+        "priority": 1,
+        "cratesIdeal": 10,
+      },
       "cost": {
         "bmat": 60
       }
@@ -1735,6 +1935,10 @@ const items = [
       "numberProduced": 10,
       "isMpfCraftable": false,
       "isTeched": true,
+      "supplyPyramid": {
+        "priority": 2,
+        "cratesIdeal": 6,
+      },
       "cost": {
         "bmat": 80
       }
@@ -1753,6 +1957,10 @@ const items = [
       "numberProduced": 80,
       "isMpfCraftable": false,
       "isTeched": false,
+      "supplyPyramid": {
+        "priority": 2,
+        "cratesIdeal": 4,
+      },
       "cost": {
         "bmat": 80
       }
@@ -1771,6 +1979,10 @@ const items = [
       "numberProduced": 150,
       "isMpfCraftable": false,
       "isTeched": true,
+      "supplyPyramid": {
+        "priority": 4,
+        "cratesIdeal": 4,
+      },
       "cost": {
         "bmat": 75
       }
@@ -1789,6 +2001,10 @@ const items = [
       "numberProduced": 150,
       "isMpfCraftable": false,
       "isTeched": true,
+      "supplyPyramid": {
+        "priority": 7,
+        "cratesIdeal": 12,
+      },
       "cost": {
         "bmat": 75
       }
@@ -3635,6 +3851,10 @@ const items = [
       "itemName": "Basic Materials",
       "itemCategory": "refined",
       "numberProduced": 100,
+      "supplyPyramid": {
+        "priority": 1,
+        "cratesIdeal": 60,
+      },
     },
     {
       "displayId": 1,
