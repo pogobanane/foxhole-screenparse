@@ -353,7 +353,7 @@ const countItems = async (faction, iconSizePx) => {
   // filter items by faction to reduce amount of similar looking items
 	
   for (let item of items) {
-    //item = items[31];
+    //item = items[0];
     if (typeof item.imgPath === 'undefined') {
       continue;
     }
@@ -382,6 +382,7 @@ const countItems = async (faction, iconSizePx) => {
     if (best.confidence < 0.9) {
       console.info("Matching: " + (perfMatched - perfStart) + "ms");
       domListAppend(item, best.confidence, iconMat, matchedMat);
+      found.push({ "name": item.itemName, "count": 0 });
       continue;
     }
 
@@ -409,9 +410,11 @@ const countItems = async (faction, iconSizePx) => {
     let perfOCRed = performance.now();
     console.info("Matching: " + (perfMatched - perfStart) + "ms, OCR: " + (perfOCRed - perfMatched) + "ms");
     domListAppend(item, best.confidence, iconMat, matchedMat, countMat, itemCount);
+    //break;
   }
 
   console.info(found);
+  return found;
 };
 
 // returns dom object of canvas
@@ -470,6 +473,14 @@ const domListAppend = async (item, confidence, iconRendered, iconFound, countFou
   list.appendChild(li);
 }
 
+const printCSV = async (findings) => {
+  let text = "";
+  for (const found of findings) {
+    text += "" + found.name + ";" + found.count + "\n";
+  }
+  document.getElementById('preformatted').textContent = text;
+}
+
 const getFaction = async () => {
   if (document.getElementById('colonialButton').checked) {
     return 'colonial';
@@ -496,5 +507,6 @@ const run = async () => {
   let faction = await getFaction();
   //prepareItem('imageTempl', 'canvasItem', width);
   //imgmatch('imageSrc', 'canvasItem', 'canvasImgmatch', width);
-  await countItems(faction, width);
+  let findings = await countItems(faction, width);
+  await printCSV(findings);
 }

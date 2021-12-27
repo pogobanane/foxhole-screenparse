@@ -26,7 +26,7 @@
       Choose a screenshot of foxhole showing a stockpile. Without uploading the screenshot to the cloud, your browser then parses the screenshot and returns a list of items in the stockpile together with the amount of crates stored. 
     </p>
     <p>
-      Current state: Supports 1920x1080p screenshots only. Only a limited set of items is recognized for now. Some similar looking items (uniforms and some rifles) are error prone. 
+      Current state: Supports 1920x1080p screenshots only. Vehicles and shippables (containers, paletts) are not supported. 
     </p>
     <div>
       <div class="inputoutput">
@@ -38,7 +38,9 @@
       <input type="radio" id="wardenButton" name="faction" value="warden" checked="checked">
       <label for="wardenButton">Warden</label><br>
       <button id="run" onclick="run();">Run it</button>
-
+      
+      <pre id='preformatted'>
+      </pre>
       <div class="inputoutput">
         <canvas id="canvasItem"  style="background-color: black;"></canvas>
         <div class="caption">canvasItem</div>
