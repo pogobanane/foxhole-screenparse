@@ -474,14 +474,34 @@ const domListAppend = async (item, confidence, iconRendered, iconFound, countFou
 }
 
 const printCSV = async (findings) => {
+  let sortedItems = items.sort((a, b) => {
+    if (typeof a.supplyPyramid === 'undefined') {
+      return 1;
+    }
+    if (typeof b.supplyPyramid === 'undefined') {
+      return -1;
+    }
+    return a.supplyPyramid.priority - b.supplyPyramid.priority;
+  });
   let names = "";
   let crates = "";
-  for (const found of findings) {
+  let pyramid = "";
+  for (const item of sortedItems) {
+    let found = findings.find((finding) => { return item.itemName === finding.name; });
+    if (typeof found === 'undefined') {
+      continue;
+    }
     names += "" + found.name + "\n";
     crates += "" + found.count + "\n";
+    if (typeof item.supplyPyramid === 'undefined') {
+      pyramid += "\n";
+    } else {
+      pyramid += "" + item.supplyPyramid.cratesIdeal + "\n";
+    }
   }
   document.getElementById('preformattedNames').textContent = names;
   document.getElementById('preformattedCrates').textContent = crates;
+  document.getElementById('preformattedPyramid').textContent = pyramid;
 }
 
 const getFaction = async () => {
@@ -494,6 +514,7 @@ const getFaction = async () => {
 
 const run = async () => {
   console.log("run");
+  // TODO reset preformatted and ordered list
   var width = 0;
   if (false) {
     let src = cv.imread('imageSrc');
