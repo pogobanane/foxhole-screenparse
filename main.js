@@ -329,7 +329,7 @@ const getImgPath = (imgPath) => {
   if (imgPath.startsWith('http')) {
     return imgPath;
   } else {
-    return 'https://assets.foxhole.tools/' + imgPath;
+    return 'https://raw.githubusercontent.com/foxholetools/assets/master/dist/' + imgPath;
   }
 }
 
