@@ -39,8 +39,25 @@
       <label for="wardenButton">Warden</label><br>
       <button id="run" onclick="run();">Run it</button>
       
-      <pre id='preformatted'>
-      </pre>
+      <table>
+	<tr>
+	  <th>
+	    itemName
+	  </th>
+	  <th>
+	    crates
+	  </th>
+	<tr>
+          <td>
+	    <pre id='preformattedNames'>
+            </pre>
+	  </td>
+          <td>
+	    <pre id='preformattedCrates'>
+            </pre>
+	  </td>
+	</tr>
+      </table>
       <div class="inputoutput">
         <canvas id="canvasItem"  style="background-color: black;"></canvas>
         <div class="caption">canvasItem</div>

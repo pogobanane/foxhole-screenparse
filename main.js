@@ -474,11 +474,14 @@ const domListAppend = async (item, confidence, iconRendered, iconFound, countFou
 }
 
 const printCSV = async (findings) => {
-  let text = "";
+  let names = "";
+  let crates = "";
   for (const found of findings) {
-    text += "" + found.name + ";" + found.count + "\n";
+    names += "" + found.name + "\n";
+    crates += "" + found.count + "\n";
   }
-  document.getElementById('preformatted').textContent = text;
+  document.getElementById('preformattedNames').textContent = names;
+  document.getElementById('preformattedCrates').textContent = crates;
 }
 
 const getFaction = async () => {
