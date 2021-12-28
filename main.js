@@ -504,6 +504,7 @@ const printCSV = async (findings) => {
   let names = "";
   let crates = "";
   let pyramid = "";
+  let pyramidPrio = "";
   for (const item of sortedItems) {
     let found = findings.find((finding) => { return item.itemName === finding.name; });
     if (typeof found === 'undefined') {
@@ -513,13 +514,16 @@ const printCSV = async (findings) => {
     crates += "" + found.count + "\n";
     if (typeof item.supplyPyramid === 'undefined') {
       pyramid += "\n";
+      pyramidPrio += "\n";
     } else {
       pyramid += "" + item.supplyPyramid.cratesIdeal + "\n";
+      pyramidPrio += "" + item.supplyPyramid.priority + "\n";
     }
   }
   document.getElementById('preformattedNames').textContent = names;
   document.getElementById('preformattedCrates').textContent = crates;
   document.getElementById('preformattedPyramid').textContent = pyramid;
+  document.getElementById('preformattedPyramidPriority').textContent = pyramidPrio;
 }
 
 const removeAllChildNodes = (parent) => {
@@ -542,6 +546,7 @@ const run = async () => {
   removeAllChildNodes(document.getElementById('preformattedNames'));
   removeAllChildNodes(document.getElementById('preformattedCrates'));
   removeAllChildNodes(document.getElementById('preformattedPyramid'));
+  removeAllChildNodes(document.getElementById('preformattedPyramidPriority'));
   var width = 0;
   if (false) {
     let src = cv.imread('imageSrc');
