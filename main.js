@@ -219,20 +219,23 @@ const ocr = async (domCanvas) => {
   const word = result.data.words[seaportIdx];
   const width = seaport2Icon(word.bbox.x1 - word.bbox.x0);
 
-  //const markWord = (word) => {
-  //  console.log(word);
-  //  console.log("icon width should be ", seaport2Icon(word.bbox.x1 - word.bbox.x0));
-  //  drawRect(domCanvas, word.bbox.x0, word.bbox.y0, word.bbox.x1, word.bbox.y1);
-  //}
-  //markWord(result.data.words[seaportIdx]);
-  //markWord(result.data.words[seaportIdx+1]);
-  //markWord(result.data.words[seaportIdx+2]);
-  //markWord(result.data.words[seaportIdx+3]);
-  //markWord(result.data.words[seaportIdx+4]);
-  //markWord(result.data.words[seaportIdx+5]);
-  //markWord(result.data.words[seaportIdx+6]);
+  const markWord = async (word) => {
+    console.log(word);
+    console.log("icon width should be ", seaport2Icon(word.bbox.x1 - word.bbox.x0));
+    //let debugCanvas = document.getElementById('canvasImgmatch');
+    let debugMat = cv.imread('canvasImgmatch');
+    await drawRect(debugMat, word.bbox.x0, word.bbox.y0, word.bbox.x1, word.bbox.y1);
+    cv.imshow('canvasImgmatch', debugMat);
+    debugMat.delete();
+  }
+  await markWord(result.data.words[seaportIdx]);
+  await markWord(result.data.words[seaportIdx+1]);
+  await markWord(result.data.words[seaportIdx+2]);
+  await markWord(result.data.words[seaportIdx+3]);
+  await markWord(result.data.words[seaportIdx+4]);
+  await markWord(result.data.words[seaportIdx+5]);
+  await markWord(result.data.words[seaportIdx+6]);
   await worker.terminate();
-
   return width;
 }
 
@@ -276,6 +279,9 @@ const postprocessSeaport = async (matIn) => {
 
 // pixel on fhd
 const seaport2Icon = (width) => {
+  // icon 29?@ 1600x900,  seaport 40?
+  // icon 32 @ 1920x1080, seaport 51
+  // icon 43 @ 2560x1440, seaport 66
   // icon.width / seaport.width = x / width
   const f = 32.0 * width / 51.0;
   return Math.round(f);
@@ -370,9 +376,9 @@ const countItems = async (faction, iconSizePx) => {
     }
 
     const countPoints = itemCountPos(box.x, box.y, iconSizePx);
-    let debugShot = cv.imread('imageSrc');
-    drawRect(debugShot, best.x0, best.y0, best.x1, best.y1);
-    drawRect(debugShot, countPoints.x0, countPoints.y0, countPoints.x1, countPoints.y1);
+    let debugShot = cv.imread('canvasImgmatch');
+    await drawRect(debugShot, best.x0, best.y0, best.x1, best.y1);
+    await drawRect(debugShot, countPoints.x0, countPoints.y0, countPoints.x1, countPoints.y1);
     cv.imshow('canvasImgmatch', debugShot);
     debugShot.delete();
 
@@ -524,9 +530,10 @@ const run = async () => {
   removeAllChildNodes(document.getElementById('preformattedPyramidPriority'));
   removeAllChildNodes(document.getElementById('preformattedLimit'));
   var width = 0;
-  if (false) {
+  if (true) {
     let src = cv.imread('imageSrc');
     let canvasOCRMat = await postprocessSeaport(src);
+    cv.imshow('canvasImgmatch', src);
     src.delete();
     await drawRect(canvasOCRMat, 90, 90, 100, 100);
     let perfStart = performance.now();
@@ -535,10 +542,11 @@ const run = async () => {
     let perfOCRed = performance.now();
     console.info("Seaport OCR: " + (perfOCRed - perfStart) + "ms");
   } else {
-    width = 32;
+    width = 32; // 1920x1080
+    //width = 43; // 2560x1440
   }
   console.warn('run: width ', width);
   let faction = await getFaction();
-  let findings = await countItems(faction, width);
-  await printCSV(findings);
+  //let findings = await countItems(faction, width);
+  //await printCSV(findings);
 }
