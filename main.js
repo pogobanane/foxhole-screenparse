@@ -504,6 +504,12 @@ const printCSV = async (findings) => {
   document.getElementById('preformattedPyramid').textContent = pyramid;
 }
 
+const removeAllChildNodes = (parent) => {
+  while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+
 const getFaction = async () => {
   if (document.getElementById('colonialButton').checked) {
     return 'colonial';
@@ -514,7 +520,10 @@ const getFaction = async () => {
 
 const run = async () => {
   console.log("run");
-  // TODO reset preformatted and ordered list
+  removeAllChildNodes(document.getElementById('itemlist'));
+  removeAllChildNodes(document.getElementById('preformattedNames'));
+  removeAllChildNodes(document.getElementById('preformattedCrates'));
+  removeAllChildNodes(document.getElementById('preformattedPyramid'));
   var width = 0;
   if (false) {
     let src = cv.imread('imageSrc');
@@ -529,8 +538,6 @@ const run = async () => {
   }
   console.warn('run: width ', width);
   let faction = await getFaction();
-  //prepareItem('imageTempl', 'canvasItem', width);
-  //imgmatch('imageSrc', 'canvasItem', 'canvasImgmatch', width);
   let findings = await countItems(faction, width);
   await printCSV(findings);
 }
