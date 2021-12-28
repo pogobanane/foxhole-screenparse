@@ -189,40 +189,6 @@ const drawRect = async (matIn, x0, y0, x1, y1) => {
   cv.rectangle(matIn, point, size, color, 1, cv.LINE_8, 0);
 }
 
-const ocrItemCount = async (domElem, points) => {
-  const worker = Tesseract.createWorker({
-    logger: m => console.debug(m)
-  });
-
-  await worker.load();
-  await worker.loadLanguage('eng');
-  await worker.initialize('eng', Tesseract.OEM.TESSERACT_ONLY);
-  const params = {
-    //'tessedit_ocr_engine_mode': 0,
-    //'tessedit_pageseg_mode': 8,
-    //'tessedit_ocr_engine_mode': Tesseract.OEM.TESSERACT_ONLY,
-    'tessedit_pageseg_mode': Tesseract.PSM.SINGLE_WORD,
-    'tessedit_char_whitelist': '0123456789',
-    // 'tessjs_create_osd': '1'
-    //'tessjs_create_tsv': '1'
-  };
-  await worker.setParameters(params);
-  const options = { rectangle: { 
-          top: points.x0, 
-          left: points.y0, 
-          width: Math.abs(points.x1 - points.x0), 
-          height: Math.abs(points.y1 - points.y0)
-  }};
-  const result = await worker.recognize(domElem); //, options);
-  console.debug(result);
-  console.debug(result.data.text);
-
-  const itemCount = parseInt(result.data.text);
-
-  return itemCount;
-  
-}
-
 // works: tesseract --oem 0 --psm 11 -l "eng" fhq-seaport-curve1.png cmd -c tessedit_write_images=T
 // returns: width an item icon should have in pixels
 const ocr = async (domCanvas) => {
@@ -347,6 +313,8 @@ const getImgPath = (imgPath) => {
 }
 
 const countItems = async (faction, iconSizePx) => {
+  let tesseract = new OCR();
+  await tesseract.init();
   let found = [];
   let image = cv.imread('imageSrc');
   var screenshot = new cv.Mat();
@@ -420,7 +388,7 @@ const countItems = async (faction, iconSizePx) => {
     let dsize = new cv.Size(countBox.width*4.0, countBox.height*4.0);
     cv.resize(countSmallMat, countMat, dsize, 0, 0, cv.INTER_CUBIC);
     countSmallMat.delete();
-    let itemCount = await ocrItemCount(mat2canvas(countMat), countPoints);
+    let itemCount = await tesseract.itemCount(mat2canvas(countMat), countPoints);
     console.log(item.itemName + ": " + itemCount);
     found.push({ "name": item.itemName, "count": itemCount });
     let perfOCRed = performance.now();
