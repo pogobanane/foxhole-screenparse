@@ -505,6 +505,7 @@ const printCSV = async (findings) => {
   let crates = "";
   let pyramid = "";
   let pyramidPrio = "";
+  let limit = "";
   for (const item of sortedItems) {
     let found = findings.find((finding) => { return item.itemName === finding.name; });
     if (typeof found === 'undefined') {
@@ -519,11 +520,17 @@ const printCSV = async (findings) => {
       pyramid += "" + item.supplyPyramid.cratesIdeal + "\n";
       pyramidPrio += "" + item.supplyPyramid.priority + "\n";
     }
+    if (typeof item.stockpileLimitPrivate === 'undefined') {
+      limit += "\n";
+    } else {
+      limit += "" + item.stockpileLimitPrivate + "\n";
+    }
   }
   document.getElementById('preformattedNames').textContent = names;
   document.getElementById('preformattedCrates').textContent = crates;
   document.getElementById('preformattedPyramid').textContent = pyramid;
   document.getElementById('preformattedPyramidPriority').textContent = pyramidPrio;
+  document.getElementById('preformattedLimit').textContent = limit;
 }
 
 const removeAllChildNodes = (parent) => {
@@ -547,6 +554,7 @@ const run = async () => {
   removeAllChildNodes(document.getElementById('preformattedCrates'));
   removeAllChildNodes(document.getElementById('preformattedPyramid'));
   removeAllChildNodes(document.getElementById('preformattedPyramidPriority'));
+  removeAllChildNodes(document.getElementById('preformattedLimit'));
   var width = 0;
   if (false) {
     let src = cv.imread('imageSrc');
