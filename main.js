@@ -530,7 +530,7 @@ const run = async () => {
   removeAllChildNodes(document.getElementById('preformattedPyramidPriority'));
   removeAllChildNodes(document.getElementById('preformattedLimit'));
   var width = 0;
-  if (true) {
+  if (false) {
     let src = cv.imread('imageSrc');
     let canvasOCRMat = await postprocessSeaport(src);
     cv.imshow('canvasImgmatch', src);
@@ -544,9 +544,84 @@ const run = async () => {
   } else {
     width = 32; // 1920x1080
     //width = 43; // 2560x1440
+    width = 27;
   }
   console.warn('run: width ', width);
   let faction = await getFaction();
-  //let findings = await countItems(faction, width);
-  //await printCSV(findings);
+  let findings = await countItems(faction, width);
+  await printCSV(findings);
+}
+
+const calibrateFind = async (screenshotMat, itemName, iconSizePx) => {
+    //let item = items.find((item) => { return item.itemName == 'Soldier Supplies'; });
+    let item = items.find((item) => { return item.itemName == itemName; });
+    console.log("Searching " + item.itemName + " at " + iconSizePx + "px...");
+    let icon = await loadImage(getImgPath(item.imgPath));
+    let iconUnprocessedMat = cv.imread(icon);
+    let iconMat = await prepareItem(iconUnprocessedMat, item, iconSizePx);
+    iconUnprocessedMat.delete();
+    cv.imshow('canvasItem', iconMat);
+    let matches = await imgmatch(screenshotMat, iconMat);
+    let perfMatched = performance.now();
+    let best = matches[0];
+    console.info("Confidence: " + best.confidence);
+
+    //await drawRect(debugShot, best.x0, best.y0, best.x1, best.y1);
+    //cv.imshow('canvasImgmatch', debugShot);
+  return best;
+}
+
+const calibrateFindMax = async (screenshot, itemName, from, to, step) => {
+  let maxC = 0.0;
+  let maxPx = 0;
+  let best = null;
+  for (let iconSizePx = from; iconSizePx <= to; iconSizePx += step) {
+    //console.log('testing px size ', iconSizePx);
+    let current = await calibrateFind(screenshot, itemName, iconSizePx);
+    if (current.confidence > maxC) {
+      maxC = current.confidence;
+      maxPx = iconSizePx;
+      best = current;
+    }
+  }
+  best['iconSizePx'] = maxPx;
+  return best;
+}
+
+const calibrate = async () => {
+  let image = cv.imread('imageSrc');
+  var screenshot = new cv.Mat();
+  cv.cvtColor(image, screenshot, cv.COLOR_RGBA2GRAY, 0);
+  image.delete();
+  const coarse = 4;
+  // 7 coarse searches
+  let shirt1 = await calibrateFindMax(screenshot, 'Soldier Supplies', 25, 50, coarse);
+  // 7 fine searches
+  let shirt2 = await calibrateFindMax(screenshot, 'Soldier Supplies', 
+    shirt1.iconSizePx - coarse + 1, 
+    shirt1.iconSizePx + coarse - 1, 
+    1);
+  let bsups = await calibrateFindMax(screenshot, 'Bunker Supplies', 
+    shirt2.iconSizePx - coarse + 1, 
+    shirt2.iconSizePx + coarse - 1,
+    1);
+
+  let ydiff = 
+    (bsups.y0 + bsups.y1) / 2.0 - 
+    (shirt2.y0 + shirt2.y1) / 2.0;
+  ydiff = Math.abs(ydiff);
+  let xdiff = 
+    (bsups.x0 + bsups.x1) / 2.0 - 
+    (shirt2.x0 + shirt2.x1) / 2.0;
+  if (ydiff > 1 || shirt2.confidence < 0.8) {
+    window.alert('Could not find stockpile on screenshot. (ydiff ' + ydiff + ', sconf ' + shirt2.confidence + ')');
+  }
+  console.log(shirt2);
+  console.log(bsups);
+  console.log('distance px y ' + ydiff + ' x ' + xdiff);
+  let b = 32.0 / 196.0 * xdiff; // 32px at a=196 (1080p)
+  console.log('calculated iconSizePx ' + b);
+  b = Math.round(b);
+  console.log('calculated iconSizePx ' + b);
+  screenshot.delete();
 }
