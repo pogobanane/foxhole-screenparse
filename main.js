@@ -1,19 +1,25 @@
 var prepareItemCache = {};
 
+// return new mat
 const addCrate = async (scaledItemMat, itemSizePx) => {
   let icon = await loadImage(getImgPath('icons/menus/filtercrates.png'));
   let step1 = cv.imread(icon);
-  return addExtraDecor(scaledItemMat, step1, 'botright', itemSizePx);
+  let ret = await addExtraDecor(scaledItemMat, step1, 'botright', itemSizePx);
+  step1.delete();
+  return ret;
 }
 
+// return new mat
 const addExtraIcon = async (scaledItemMat, item, itemSizePx) => {
   if (typeof item.extraIcon === 'undefined') {
-    return scaledItemMat;
+    return scaledItemMat.clone();
   }
   let imgPath = extra_icons[item.extraIcon].imgPath;
   let icon = await loadImage(getImgPath(imgPath));
   let step1 = cv.imread(icon);
-  return addExtraDecor(scaledItemMat, step1, 'topleft', itemSizePx);
+  let ret = await addExtraDecor(scaledItemMat, step1, 'topleft', itemSizePx);
+  step1.delete();
+  return ret;
 }
 
 // return new mat with added crate
@@ -76,10 +82,15 @@ const addExtraDecor = async (scaledItemMat, decorMat, position, itemSizePx) => {
   cv.add(background2, step5, background3, emptyMask, background1.type());
   cv.multiply(planes.get(2), alphaMask, step5, 1.0/3.0, planes.get(0).type());
   cv.add(background3, step5, background4, emptyMask, background1.type());
+
+  step2.delete(); step3.delete(); step4.delete(); step5.delete(); emptyMask.delete();
+  planes.delete(); alphaMask.delete(); alphaMaskInv.delete(); maxVal.delete(); 
+  oneVal.delete(); 
+  background1.delete(); background2.delete(); background3.delete();
+
   return background4;
 }
 
-// TODO bake in: demage type icons / uniform purpose
 // returns mat of processed item
 const prepareItem = async (inMat, item, itemSizePx) => {
   let step = new cv.Mat();
@@ -116,7 +127,12 @@ const prepareItem = async (inMat, item, itemSizePx) => {
   cv.resize(gray, dst, dsize, 0, 0, cv.INTER_AREA);
   let crated = await addCrate(dst, itemSizePx);
   let extraIconed = await addExtraIcon(crated, item, itemSizePx);
-  step.delete(); mask.delete();
+  step.delete(); dst.delete(); rgbaPlanes.delete(); step2.delete(); nilVal.delete(); 
+  maxVal.delete(); 
+  alphaMask.delete(); 
+  mask.delete(); 
+  gray.delete(); 
+  crated.delete();
   return extraIconed;
 }
 
@@ -124,7 +140,7 @@ const imgmatch = async (haystackMat, needleMat) => {
   let dst = new cv.Mat();
   let mask = new cv.Mat();
   let foo = new cv.Mat();
-  let buffer = cv.matchTemplate(haystackMat, needleMat, dst, cv.TM_CCOEFF_NORMED, mask);
+  cv.matchTemplate(haystackMat, needleMat, dst, cv.TM_CCOEFF_NORMED, mask);
   let best = null;
   let matches = [];
   for (let i = 0; i <= 20; i++){
@@ -142,7 +158,7 @@ const imgmatch = async (haystackMat, needleMat) => {
       "y1": maxPoint.y + needleMat.rows
     });
   }
-  dst.delete(); mask.delete();
+  dst.delete(); mask.delete(); foo.delete(); 
   return matches;
 }
 
@@ -173,9 +189,6 @@ const drawRect = async (matIn, x0, y0, x1, y1) => {
   cv.rectangle(matIn, point, size, color, 1, cv.LINE_8, 0);
 }
 
-// TODO upscale
-// 4 is often misinterpreted as 11. It thinks that there are two overlapping 1s.
-// Use symbols instead and if some overlap, let only the most confident one win.
 const ocrItemCount = async (domElem, points) => {
   const worker = Tesseract.createWorker({
     logger: m => console.debug(m)
@@ -338,6 +351,7 @@ const countItems = async (faction, iconSizePx) => {
   let image = cv.imread('imageSrc');
   var screenshot = new cv.Mat();
   cv.cvtColor(image, screenshot, cv.COLOR_RGBA2GRAY, 0);
+  image.delete();
   // TODO quartering the search canvas quarters the matching time.
   //let image = cv.imread('imageSrc');
   //let origScreenshot = new cv.Mat();
@@ -366,6 +380,7 @@ const countItems = async (faction, iconSizePx) => {
     let icon = await loadImage(getImgPath(item.imgPath));
     let iconUnprocessedMat = cv.imread(icon);
     let iconMat = await prepareItem(iconUnprocessedMat, item, iconSizePx);
+    iconUnprocessedMat.delete();
     cv.imshow('canvasItem', iconMat);
     let matches = await imgmatch(screenshot, iconMat);
     let perfMatched = performance.now();
@@ -391,6 +406,7 @@ const countItems = async (faction, iconSizePx) => {
     drawRect(debugShot, best.x0, best.y0, best.x1, best.y1);
     drawRect(debugShot, countPoints.x0, countPoints.y0, countPoints.x1, countPoints.y1);
     cv.imshow('canvasImgmatch', debugShot);
+    debugShot.delete();
 
     const countBox = points2point(countPoints);
     rect = new cv.Rect(
@@ -403,16 +419,18 @@ const countItems = async (faction, iconSizePx) => {
     let countMat = new cv.Mat();
     let dsize = new cv.Size(countBox.width*4.0, countBox.height*4.0);
     cv.resize(countSmallMat, countMat, dsize, 0, 0, cv.INTER_CUBIC);
-    //let itemCount = await ocrItemCount('imageSrc', countPoints);
+    countSmallMat.delete();
     let itemCount = await ocrItemCount(mat2canvas(countMat), countPoints);
     console.log(item.itemName + ": " + itemCount);
     found.push({ "name": item.itemName, "count": itemCount });
     let perfOCRed = performance.now();
     console.info("Matching: " + (perfMatched - perfStart) + "ms, OCR: " + (perfOCRed - perfMatched) + "ms");
     domListAppend(item, best.confidence, iconMat, matchedMat, countMat, itemCount);
+    iconMat.delete(); countMat.delete(); matchedMat.delete();
     //break;
   }
 
+  screenshot.delete();
   console.info(found);
   return found;
 };
@@ -528,9 +546,11 @@ const run = async () => {
   if (false) {
     let src = cv.imread('imageSrc');
     let canvasOCRMat = await postprocessSeaport(src);
+    src.delete();
     await drawRect(canvasOCRMat, 90, 90, 100, 100);
     let perfStart = performance.now();
     width = await ocr(mat2canvas(canvasOCRMat));
+    canvasOCRMat.delete();
     let perfOCRed = performance.now();
     console.info("Seaport OCR: " + (perfOCRed - perfStart) + "ms");
   } else {
