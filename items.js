@@ -13,6 +13,7 @@ const items = [
       "itemClass": "Pistol",
       "ammoUsed": "8mm",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -31,6 +32,7 @@ const items = [
       "itemDesc": "Standard ammunition for pistols.",
       "itemCategory": "small_arms",
       "numberProduced": 40,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals light kinetic damage",
       "extraIcon": "light_kinetic",
       "isTeched": false,
@@ -53,6 +55,7 @@ const items = [
       "itemClass": "Revolver",
       "ammoUsed": ".44",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "supplyPyramid": {
@@ -76,6 +79,7 @@ const items = [
       "itemClass": "Heavy Rifle",
       "ammoUsed": ".44",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -94,6 +98,7 @@ const items = [
       "itemDesc": "Standard ammunition for revolvers.",
       "itemCategory": "small_arms",
       "numberProduced": 40,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals light kinetic damage",
       "extraIcon": "light_kinetic",
       "isTeched": false,
@@ -119,6 +124,7 @@ const items = [
       "itemClass": "Rifle",
       "ammoUsed": "7.62mm",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": false,
       "isMpfCraftable": true,
       "supplyPyramid": {
@@ -142,6 +148,7 @@ const items = [
       "itemClass": "Rifle",
       "ammoUsed": "7.62mm",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "supplyPyramid": {
@@ -165,6 +172,7 @@ const items = [
       "itemClass": "Long Rifle",
       "ammoUsed": "7.62mm",
       "numberProduced": 15,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -184,6 +192,7 @@ const items = [
       "itemClass": "Rifle",
       "ammoUsed": "7.62mm",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -203,6 +212,7 @@ const items = [
       "itemClass": "Rifle",
       "ammoUsed": "7.62mm",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": false,
       "isMpfCraftable": true,
       "cost": {
@@ -222,6 +232,7 @@ const items = [
       "itemClass": "Rifle",
       "ammoUsed": "7.62mm",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": false,
       "isMpfCraftable": true,
       "cost": {
@@ -241,6 +252,7 @@ const items = [
       "itemClass": "Long Rifle",
       "ammoUsed": "7.62mm",
       "numberProduced": 15,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -260,6 +272,7 @@ const items = [
       "itemClass": "Heavy Rifle",
       "ammoUsed": "7.62mm",
       "numberProduced": 15,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -278,6 +291,7 @@ const items = [
       "itemDesc": "Standard ammunition for rifles.",
       "itemCategory": "small_arms",
       "numberProduced": 40,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals light kinetic damage",
       "extraIcon": "light_kinetic",
       "isTeched": false,
@@ -303,6 +317,7 @@ const items = [
       "itemClass": "Submachine Gun",
       "ammoUsed": "9mm SMG",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "supplyPyramid": {
@@ -326,6 +341,7 @@ const items = [
       "itemClass": "Submachine Gun",
       "ammoUsed": "9mm SMG",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "supplyPyramid": {
@@ -349,6 +365,7 @@ const items = [
       "itemClass": "Submachine Gun",
       "ammoUsed": "9mm SMG",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -368,6 +385,7 @@ const items = [
       "itemClass": "Submachine Gun",
       "ammoUsed": "9mm SMG",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -386,6 +404,7 @@ const items = [
       "itemDesc": "Standard ammunition for submachine guns.",
       "itemCategory": "small_arms",
       "numberProduced": 40,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals light kinetic damage",
       "extraIcon": "light_kinetic",
       "isTeched": false,
@@ -412,6 +431,7 @@ const items = [
       "itemClass": "Shotgun",
       "ammoUsed": "Buckshot",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -430,6 +450,7 @@ const items = [
       "itemDesc": "Standard ammunition for Shotguns.",
       "itemCategory": "small_arms",
       "numberProduced": 40,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals light kinetic damage",
       "extraIcon": "light_kinetic",
       "isTeched": false,
@@ -451,6 +472,7 @@ const items = [
       "itemClass": "Assault Rifle",
       "ammoUsed": "7.92mm",
       "numberProduced": 10,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "supplyPyramid": {
@@ -474,6 +496,7 @@ const items = [
       "itemClass": "Assault Rifle",
       "ammoUsed": "7.92mm",
       "numberProduced": 10,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "supplyPyramid": {
@@ -497,6 +520,7 @@ const items = [
       "itemClass": "Light Machine Gun",
       "ammoUsed": "12.7mm",
       "numberProduced": 10,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -516,6 +540,7 @@ const items = [
       "itemClass": "Assault Rifle",
       "ammoUsed": "7.92mm",
       "numberProduced": 10,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -534,6 +559,7 @@ const items = [
       "itemDesc": "Standard ammunition for storm rifles, light machine guns, and armored cars.",
       "itemCategory": "small_arms",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals light kinetic damage",
       "extraIcon": "light_kinetic",
       "isTeched": false,
@@ -559,6 +585,7 @@ const items = [
       "itemClass": "Sniper Rifle",
       "ammoUsed": "8.5mm",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -579,6 +606,7 @@ const items = [
       "itemClass": "Sniper Rifle",
       "ammoUsed": "8.5mm",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -598,6 +626,7 @@ const items = [
       "itemDesc": "Standard ammunition for sniper rifles.",
       "itemCategory": "small_arms",
       "numberProduced": 10,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals light kinetic damage",
       "extraIcon": "light_kinetic",
       "isTeched": false,
@@ -619,6 +648,7 @@ const items = [
       "itemClass": "Machine Gun",
       "ammoUsed": "12.7mm",
       "numberProduced": 10,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "damageType": "Deals heavy kinetic damage",
@@ -639,6 +669,7 @@ const items = [
       "itemClass": "Machine Gun",
       "ammoUsed": "12.7mm",
       "numberProduced": 10,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -658,6 +689,7 @@ const items = [
       "itemCategory": "small_arms",
       "extraIcon": "heavy_kinetic",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": false,
       "isMpfCraftable": true,
       "supplyPyramid": {
@@ -681,6 +713,7 @@ const items = [
       "itemCategory": "small_arms",
       "itemClass": "Smoke Grenade",
       "numberProduced": 10,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "supplyPyramid": {
@@ -706,6 +739,7 @@ const items = [
       "ammoUsed": "20mm",
       "isMountable": true,
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -725,6 +759,7 @@ const items = [
       "itemClass": "Anti-Tank Rifle",
       "ammoUsed": "20mm",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "supplyPyramid": {
@@ -747,6 +782,7 @@ const items = [
       "itemDesc": "Standard ammunition for anti-tank rifles.",
       "itemCategory": "heavy_arms",
       "numberProduced": 10,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals anti-tank explosive damage", // TODO this is kinetic damage https://foxhole.fandom.com/wiki/20mm
       "damageDesc": "Can penetrate armored vehicles",
       "extraIcon": "at_kinetic",
@@ -774,6 +810,7 @@ const items = [
       "itemClass": "Infantry Support Gun",
       "ammoUsed": "30mm",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -792,6 +829,7 @@ const items = [
       "itemDesc": "Standard explosive shell for small vehicles or infantry weapons.",
       "itemCategory": "heavy_arms",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals explosive damage",
       "damageDesc": "Can penetrate armored vehicles",
       "extraIcon": "explosive",
@@ -819,6 +857,7 @@ const items = [
       "itemDesc": "Standard payload for light tanks.",
       "itemCategory": "heavy_arms",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals explosive damage",
       "damageDesc": "Can penetrate armored vehicles",
       "extraIcon": "explosive",
@@ -846,6 +885,7 @@ const items = [
       "itemDesc": "An anti-tank shell that's effective against penetrating tank armor.",
       "itemCategory": "heavy_arms",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals armor piercing damage",
       "damageDesc": "Can penetrate armored vehicles",
       "extraIcon": "armour_piercing",
@@ -879,6 +919,7 @@ const items = [
       "extraIcon": "explosive",
       "vehiclePen": "Damage to the sides and rear of armored vehicles have a higher chance to penetrate at close range and at direct angles.",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "supplyPyramid": {
@@ -902,6 +943,7 @@ const items = [
       "itemDesc": "This unique duel-barrelled RPG launcher can fire two RPG shells in relatively quick succession. This increase in firepower makes it nearly impossible for a single soldier to operate without the support of a sturdy mount.",
       "itemCategory": "heavy_arms",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals explosive damage",
       "damageDesc": "Can penetrate armored vehicles",
       "vehiclePen": "Damage to the sides and rear of armored vehicles have a higher chance to penetrate at close range and at direct angles.",
@@ -924,6 +966,7 @@ const items = [
       "itemDesc": "An explosive projectile fired from an R.P.G.",
       "itemCategory": "heavy_arms",
       "numberProduced": 15,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals explosive damage",
       "damageDesc": "Can penetrate armored vehicles",
       "vehiclePen": "Damage to the sides and rear of armored vehicles have a higher chance to penetrate at close range and at direct angles.",
@@ -951,6 +994,7 @@ const items = [
       "itemClass": "Anti-Tank RPG",
       "ammoUsed": "A.T.R.P.G. Shell",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "damageType": "Deals armor piercing damage",
@@ -974,6 +1018,7 @@ const items = [
       "itemCategory": "heavy_arms",
       "itemClass": "Anti-Tank RPG",
       "numberProduced": 15,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "damageType": "Deals armor piercing damage",
@@ -999,6 +1044,7 @@ const items = [
       "itemClass": "Anti-Tank RPG",
       "ammoUsed": "A.T.R.P.G. Shell",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "damageType": "Deals armor piercing damage",
@@ -1021,6 +1067,7 @@ const items = [
       "itemDesc": "An anti-tank projectile fired from an R.P.G.",
       "itemCategory": "heavy_arms",
       "numberProduced": 15,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals armor piercing damage",
       "damageDesc": "Can penetrate armored vehicles",
       "extraIcon": "armour_piercing",
@@ -1049,6 +1096,7 @@ const items = [
       "damageDesc": "Can penetrate armored vehicles",
       "vehiclePen": "High chance to penetrate armored vehicles.",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "supplyPyramid": {
@@ -1076,6 +1124,7 @@ const items = [
       "damageDesc": "Can penetrate armored vehicles",
       "vehiclePen": "High chance to penetrate armored vehicles.",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "supplyPyramid": {
@@ -1101,6 +1150,7 @@ const items = [
       "extraIcon": "armour_piercing",
       "vehiclePen": "High chance to penetrate armored vehicles.",
       "numberProduced": 15,
+      "stockpileLimitPrivate": 100,
       "isTeched": false,
       "isMpfCraftable": true,
       "supplyPyramid": {
@@ -1126,6 +1176,7 @@ const items = [
       "itemClass": "Mortar",
       "ammoUsed": "Mortar Shell, Mortar Shrapnel Shell, Mortar Flare Shell",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "supplyPyramid": {
@@ -1149,6 +1200,7 @@ const items = [
       "itemDesc": "An explosive projectile fired from a mortar.",
       "itemCategory": "heavy_arms",
       "numberProduced": 15,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals high explosive damage",
       "damageDesc": "Reduced damage against trenches",
       "extraIcon": "high_explosive",
@@ -1175,6 +1227,7 @@ const items = [
       "itemDesc": "A shell that explodes into shrapnel on impact, devastating nearby infantry.",
       "itemCategory": "heavy_arms",
       "numberProduced": 15,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "damageType": "Deals shrapnel damage",
       "damageDesc": "Always causes target to bleed",
@@ -1202,6 +1255,7 @@ const items = [
       "itemCategory": "heavy_arms",
       "extraIcon": "flare",
       "numberProduced": 15,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "supplyPyramid": {
@@ -1225,6 +1279,7 @@ const items = [
       "itemDesc": "Payload for light artillery weapons.",
       "itemCategory": "heavy_arms",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals high explosive damage",
       "damageDesc": "Reduced damage against trenches",
       "extraIcon": "high_explosive",
@@ -1251,6 +1306,7 @@ const items = [
       "itemDesc": "Payload for heavy artillery weapons.",
       "itemCategory": "heavy_arms",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals high explosive damage",
       "damageDesc": "Reduced damage against trenches",
       "extraIcon": "high_explosive",
@@ -1277,6 +1333,7 @@ const items = [
       "itemDesc": "A shell that is launched over short distances by a spigot mortar.",
       "itemCategory": "heavy_arms",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals demolition damage",
       "extraIcon": "demolition",
       "isTeched": false,
@@ -1303,6 +1360,7 @@ const items = [
       "itemCategory": "heavy_arms",
       "itemClass": "Gas Grenade",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "damageType": "Deals poisonous gas damage",
       "damageDesc": "Causes damage over time",
@@ -1328,6 +1386,7 @@ const items = [
       "itemCategory": "heavy_arms",
       "itemClass": "Grenade",
       "numberProduced": 25,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals shrapnel damage",
       "damageDesc": "Always causes target to bleed",
       "extraIcon": "shrapnel",
@@ -1352,6 +1411,7 @@ const items = [
       "damageType": "Deals light kinetic damage",
       "extraIcon": "light_kinetic",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": false,
       "isMpfCraftable": true,
       "supplyPyramid": {
@@ -1376,6 +1436,7 @@ const items = [
       "itemCategory": "heavy_arms",
       "itemClass": "HE Grenade",
       "numberProduced": 25,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals explosive damage",
       "extraIcon": "explosive",
       "isTeched": false,
@@ -1401,6 +1462,7 @@ const items = [
       "itemDesc": "An adherable grenade designed to penetrate heavy tank armor. The sticky bomb can only be thrown a short distance and is ineffective against structures.",
       "itemCategory": "heavy_arms",
       "numberProduced": 10,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals anti-tank explosive damage",
       "damageDesc": "High chance of disabling Track subsystem",
       "extraIcon": "at_explosive",
@@ -1430,6 +1492,7 @@ const items = [
       "damageDesc": "High chance of disabling Track subsystem",
       "extraIcon": "at_explosive",
       "numberProduced": 15,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "supplyPyramid": {
@@ -1453,6 +1516,7 @@ const items = [
       "itemDesc": "The payload for ballistic rockets. A high yield bomb that delivers over 3 tons of TNT and is capable of leveling an entire village or town block.",
       "itemCategory": "heavy_arms",
       "numberProduced": 1,
+      "stockpileLimitPrivate": 100,
       "isTeched": false,
       "isMpfCraftable": false,
       "cost": {
@@ -1472,6 +1536,7 @@ const items = [
       "itemDesc": "Payload for the storm cannon.",
       "itemCategory": "heavy_arms",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deals demolition damage",
       "extraIcon": "high_explosive",
       "isTeched": false,
@@ -1496,6 +1561,7 @@ const items = [
       "highVelocityBonus": "Equipped with a high velocity barrel that deals 50% extra damage per shot.",
       "ammoUsed": "12.7mm",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -1517,6 +1583,7 @@ const items = [
       "ammoUsed": "12.7mm",
       "isMountable": true,
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "supplyPyramid": {
@@ -1539,6 +1606,7 @@ const items = [
       "itemDesc": "A tool for digging trenches and other entrenched structures.",
       "itemCategory": "utilities",
       "numberProduced": 10,
+      "stockpileLimitPrivate": 100,
       "isMpfCraftable": false,
       "isTeched": false,
       "supplyPyramid": {
@@ -1562,6 +1630,7 @@ const items = [
       "itemCategory": "utilities",
       "isMpfCraftable": false,
       "numberProduced": 10,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "cost": {
         "bmat": 200
@@ -1579,6 +1648,7 @@ const items = [
       "itemDesc": "An optical instrument used for viewing distant objects.",
       "itemCategory": "utilities",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "isMpfCraftable": false,
       "isTeched": true,
       "supplyPyramid": {
@@ -1601,6 +1671,7 @@ const items = [
       "itemDesc": "Protects against poison gas.",
       "itemCategory": "utilities",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isMpfCraftable": false,
       "isTeched": true,
       "supplyPyramid": {
@@ -1623,6 +1694,7 @@ const items = [
       "itemDesc": "When attached to a gas mask, this filter provides fresh air to the wearer.",
       "itemCategory": "utilities",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isMpfCraftable": false,
       "isTeched": false,
       "supplyPyramid": {
@@ -1645,6 +1717,7 @@ const items = [
       "itemDesc": "A multipurpose tool. Can be used to dismantle mines/barbed wire and unlock vehicles.",
       "itemCategory": "utilities",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "isMpfCraftable": false,
       "isTeched": false,
       "supplyPyramid": {
@@ -1667,6 +1740,7 @@ const items = [
       "itemDesc": "Receives map intelligence updates.",
       "itemCategory": "utilities",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "isMpfCraftable": false,
       "isTeched": false,
       "supplyPyramid": {
@@ -1689,6 +1763,7 @@ const items = [
       "itemDesc": "Automatically gathers map intel periodically when equipped. The radio backpack is also used to transmit other sensitive information across long distances.",
       "itemCategory": "utilities",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "isMpfCraftable": false,
       "isTeched": true,
       "supplyPyramid": {
@@ -1712,6 +1787,7 @@ const items = [
       "itemCategory": "utilities",
       "itemClass": "Bayonet",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isMpfCraftable": false,
       "isTeched": true,
       "supplyPyramid": {
@@ -1734,6 +1810,7 @@ const items = [
       "itemDesc": "A mount point for deployable infantry weapons and equipment.",
       "itemCategory": "utilities",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "isMpfCraftable": false,
       "isTeched": false,
       "supplyPyramid": {
@@ -1756,6 +1833,7 @@ const items = [
       "itemCategory": "utilities",
       "itemClass": "Explosive",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "isMpfCraftable": false,
       "isTeched": true,
       "damageType": "Deals demolition damage",
@@ -1779,6 +1857,7 @@ const items = [
       "itemCategory": "utilities",
       "itemClass": "Satchel Charge",
       "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
       "isMpfCraftable": false,
       "isTeched": true,
       "damageType": "Deals demolition damage",
@@ -1805,6 +1884,7 @@ const items = [
       "itemCategory": "utilities",
       "itemClass": "Anti-Tank Mine",
       "numberProduced": 10,
+      "stockpileLimitPrivate": 100,
       "damageType": "Deal anti-tank explosive damage",
       "damageDesc": "Always disables the track subsystem",
       "extraIcon": "at_explosive",
@@ -1831,6 +1911,7 @@ const items = [
       "itemDesc": "A booster engine that provides thrust for launching ballistic rockets to long distant targets.",
       "itemCategory": "utilities",
       "numberProduced": 1,
+      "stockpileLimitPrivate": 100,
       "isMpfCraftable": false,
       "isTeched": true,
       "cost": {
@@ -1849,6 +1930,7 @@ const items = [
       "itemDesc": "A device used to intercept enemy radio broadcasts transmitted from nearby sources.",
       "itemCategory": "utilities",
       "numberProduced": 3,
+      "stockpileLimitPrivate": 100,
       "isMpfCraftable": false,
       "isTeched": true,
       "cost": {
@@ -1867,6 +1949,7 @@ const items = [
       "itemDesc": "A standard issue set of supplies for foot soldiers. Bases must be stockpiled with soldier supplies in order for players to spawn.",
       "itemCategory": "medical",
       "numberProduced": 10,
+      "stockpileLimitPrivate": 100,
       "isMpfCraftable": false,
       "isTeched": false,
       "supplyPyramid": {
@@ -1889,6 +1972,7 @@ const items = [
       "itemDesc": "Used to stem bleeding.",
       "itemCategory": "medical",
       "numberProduced": 80,
+      "stockpileLimitPrivate": 100,
       "isMpfCraftable": false,
       "isTeched": false,
       "supplyPyramid": {
@@ -1911,6 +1995,7 @@ const items = [
       "itemDesc": "Used by medics to heal other soldiers.",
       "itemCategory": "medical",
       "numberProduced": 10,
+      "stockpileLimitPrivate": 100,
       "isMpfCraftable": false,
       "isTeched": true,
       "supplyPyramid": {
@@ -1933,6 +2018,7 @@ const items = [
       "itemDesc": "Used by medics to revive wounded soldiers.",
       "itemCategory": "medical",
       "numberProduced": 10,
+      "stockpileLimitPrivate": 100,
       "isMpfCraftable": false,
       "isTeched": true,
       "supplyPyramid": {
@@ -1955,6 +2041,7 @@ const items = [
       "itemDesc": "A blood component used to treat wounded soldiers on the battlefield.",
       "itemCategory": "medical",
       "numberProduced": 80,
+      "stockpileLimitPrivate": 100,
       "isMpfCraftable": false,
       "isTeched": false,
       "supplyPyramid": {
@@ -1977,6 +2064,7 @@ const items = [
       "itemDesc": "Supplies for maintaining structures. Store at bases to prevent decay on surrounding structures.",
       "itemCategory": "supplies",
       "numberProduced": 150,
+      "stockpileLimitPrivate": 100,
       "isMpfCraftable": false,
       "isTeched": true,
       "supplyPyramid": {
@@ -1999,6 +2087,7 @@ const items = [
       "itemDesc": "Supplies for maintaining structures. Store at bases to prevent decay on surrounding bunker/trench structures when garrison supplies are not available.",
       "itemCategory": "supplies",
       "numberProduced": 150,
+      "stockpileLimitPrivate": 100,
       "isMpfCraftable": false,
       "isTeched": true,
       "supplyPyramid": {
@@ -3547,6 +3636,7 @@ const items = [
         "Materials have reduced encumberance"
       ],
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -3571,6 +3661,7 @@ const items = [
         "Grenades have reduced encumberance"
       ],
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -3595,6 +3686,7 @@ const items = [
         "First Aid Kits and Trauma Kits have reduced encumberance"
       ],
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -3619,6 +3711,7 @@ const items = [
         "High resistance to Rain Storms"
       ],
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -3642,6 +3735,7 @@ const items = [
         "High chance of not being detected by enemy intelligence"
       ],
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -3666,6 +3760,7 @@ const items = [
         "Low resistance to Snow Storms"
       ],
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -3690,6 +3785,7 @@ const items = [
         "Basic Materials have reduced encumbrance"
       ],
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -3715,6 +3811,7 @@ const items = [
         "Heavy ammunition has reduced encumbrance"
       ],
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -3738,6 +3835,7 @@ const items = [
         "Materials have reduced encumbrance"
       ],
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -3762,6 +3860,7 @@ const items = [
         "First Aid Kits and Trauma Kits have reduced encumbrance"
       ],
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -3786,6 +3885,7 @@ const items = [
         "Low resistance to Snow Storms"
       ],
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -3810,6 +3910,7 @@ const items = [
         "High resistance to Snow Storms"
       ],
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -3834,6 +3935,7 @@ const items = [
         "Basic Materials have reduced encumbrance"
       ],
       "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -3851,6 +3953,7 @@ const items = [
       "itemName": "Basic Materials",
       "itemCategory": "refined",
       "numberProduced": 100,
+      "stockpileLimitPrivate": 300,
       "supplyPyramid": {
         "priority": 1,
         "cratesIdeal": 60,
@@ -3867,6 +3970,7 @@ const items = [
       "itemName": "Diesel",
       "itemCategory": "refined",
       "numberProduced": 1,
+      "stockpileLimitPrivate": 100,
     },
     {
       "displayId": 2,
@@ -3879,6 +3983,7 @@ const items = [
       "itemName": "Explosive Materials",
       "itemCategory": "refined",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 300,
     },
     {
       "displayId": 3,
@@ -3891,6 +3996,7 @@ const items = [
       "itemName": "Refined Materials",
       "itemCategory": "refined",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 300,
     },
     {
       "displayId": 4,
@@ -3903,6 +4009,7 @@ const items = [
       "itemName": "Heavy Explosive Materials",
       "itemCategory": "refined",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 300,
     },
     {
       "displayId": 5,
@@ -3915,6 +4022,7 @@ const items = [
       "itemName": "Petrol",
       "itemCategory": "refined",
       "numberProduced": 1,
+      "stockpileLimitPrivate": 100,
     },
     {
       "displayId": 6,
@@ -3927,6 +4035,7 @@ const items = [
       "itemName": "Aluminum Alloy",
       "itemCategory": "refined",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 300,
     },
     {
       "displayId": 7,
@@ -3939,6 +4048,7 @@ const items = [
       "itemName": "Iron Alloy",
       "itemCategory": "refined",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 300,
     },
     {
       "displayId": 8,
@@ -3951,6 +4061,7 @@ const items = [
       "itemName": "Copper Alloy",
       "itemCategory": "refined",
       "numberProduced": 20,
+      "stockpileLimitPrivate": 300,
     },
   ];
 
