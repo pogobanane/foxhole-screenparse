@@ -1,5 +1,5 @@
 # foxhole-screenparse
-https://pogobanane.github.io/foxhole-screenparse/
+https://pogobanane.de/foxhole-screenparse/
 
 Foxhole-screenparse parses contents of stockpiles into machine-readable lists which can be used in spreadsheets for logistics planning. 
 It uses a naive image processing approach using openCVs template matching and tesseract for OCR/text recognition. 
