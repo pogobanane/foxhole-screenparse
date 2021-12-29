@@ -323,6 +323,17 @@ const getImgPath = (imgPath) => {
   }
 }
 
+const confidentEnough = (confidence, item) => {
+  if (item.itemName == 'Sampo Auto-Rifle 77') {
+    console.log('foo');
+  }
+  if (['Rifle', 'Long Rifle'].includes(item.itemClass)) {
+    return confidence > 0.95;
+  } else {
+    return confidence > 0.9;
+  }
+}
+
 // expects the stockpileBox to already been drawn into the canvasImgmatch
 const countItems = async (faction, iconSizePx, stockpileBox) => {
   let tesseract = new OCR();
@@ -385,7 +396,7 @@ const countItems = async (faction, iconSizePx, stockpileBox) => {
             box.height
           );
     let matchedMat = stockpileMat.roi(rect);
-    if (best.confidence < 0.9) {
+    if (!confidentEnough(best.confidence, item)) {
       console.info("Matching: " + (perfMatched - perfStart) + "ms");
       domListAppend(item, best.confidence, iconMat, matchedMat);
       found.push({ "name": item.itemName, "count": 0 });
@@ -564,12 +575,17 @@ const run = async () => {
   //  //width = 43; // 2560x1440
   //  width = 27;
   //}
+
   let cal = await calibrate();
+  //let cal = {
+    //'itemSizePx': 32,
+    //'stockpileBox': new cv.Rect(0, 0, 495, 258)
+  //};
   if (cal == null) {
     console.warn("Width is null");
     return;
   }
-  console.warn('calibration returned itemSizePx ', cal.itemSizePx);
+  console.warn('calibration ', cal);
   let faction = await getFaction();
   let findings = await countItems(faction, cal.itemSizePx, cal.stockpileBox);
   await printCSV(findings);
@@ -655,7 +671,8 @@ const calibrate = async () => {
   console.log('distance px y ' + ydiff + ' x ' + xdiff);
   let itemSizePx = 32.0 / 196.0 * xdiff; // 32px at a=196 (1080p)
   console.log('calculated iconSizePx ' + itemSizePx);
-  rect.height = screenshot.rows - rect.y // till the bottom
+  rect.height = screenshot.rows - rect.y; // till the bottom
+  rect.width = Math.min(screenshot.cols - rect.x, rect.width);
   croppedMat.delete();
   screenshot.delete();
   return {
