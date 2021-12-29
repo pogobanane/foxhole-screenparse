@@ -308,7 +308,12 @@ const loadImageToCanvas = async function(url, domCanvas) {
   canvas.width = img.width;
   canvas.height = img.height;
   ctx.drawImage(img, 0, 0, img.width, img.height);
-};
+}
+
+const clearCanvas = async (domCanvas) => {
+  const context = domCanvas.getContext('2d');
+  context.clearRect(0, 0, domCanvas.width, domCanvas.height);
+}
 
 const getImgPath = (imgPath) => {
   if (imgPath.startsWith('http')) {
@@ -318,7 +323,8 @@ const getImgPath = (imgPath) => {
   }
 }
 
-const countItems = async (faction, iconSizePx) => {
+// expects the stockpileBox to already been drawn into the canvasImgmatch
+const countItems = async (faction, iconSizePx, stockpileBox) => {
   let tesseract = new OCR();
   await tesseract.init();
   let found = [];
@@ -326,6 +332,17 @@ const countItems = async (faction, iconSizePx) => {
   var screenshot = new cv.Mat();
   cv.cvtColor(image, screenshot, cv.COLOR_RGBA2GRAY, 0);
   image.delete();
+  let rect = new cv.Rect(
+          stockpileBox.x, 
+          stockpileBox.y, 
+          stockpileBox.width,
+          stockpileBox.height,
+        );
+  console.log(rect);
+  let stockpileMat = screenshot.roi(rect);
+  console.log('rectified');
+  cv.imshow('canvasImgmatch', stockpileMat);
+  screenshot.delete();
   // TODO quartering the search canvas quarters the matching time.
   //let image = cv.imread('imageSrc');
   //let origScreenshot = new cv.Mat();
@@ -356,7 +373,7 @@ const countItems = async (faction, iconSizePx) => {
     let iconMat = await prepareItem(iconUnprocessedMat, item, iconSizePx);
     iconUnprocessedMat.delete();
     cv.imshow('canvasItem', iconMat);
-    let matches = await imgmatch(screenshot, iconMat);
+    let matches = await imgmatch(stockpileMat, iconMat);
     let perfMatched = performance.now();
     let best = matches[0];
     console.info("Confidence: " + best.confidence);
@@ -367,7 +384,7 @@ const countItems = async (faction, iconSizePx) => {
             box.width,
             box.height
           );
-    let matchedMat = screenshot.roi(rect);
+    let matchedMat = stockpileMat.roi(rect);
     if (best.confidence < 0.9) {
       console.info("Matching: " + (perfMatched - perfStart) + "ms");
       domListAppend(item, best.confidence, iconMat, matchedMat);
@@ -389,7 +406,7 @@ const countItems = async (faction, iconSizePx) => {
             countBox.width,
             countBox.height
           );
-    let countSmallMat = screenshot.roi(rect);
+    let countSmallMat = stockpileMat.roi(rect);
     let countMat = new cv.Mat();
     let dsize = new cv.Size(countBox.width*4.0, countBox.height*4.0);
     cv.resize(countSmallMat, countMat, dsize, 0, 0, cv.INTER_CUBIC);
@@ -404,7 +421,7 @@ const countItems = async (faction, iconSizePx) => {
     //break;
   }
 
-  screenshot.delete();
+  stockpileMat.delete();
   console.info(found);
   return found;
 };
@@ -529,26 +546,32 @@ const run = async () => {
   removeAllChildNodes(document.getElementById('preformattedPyramid'));
   removeAllChildNodes(document.getElementById('preformattedPyramidPriority'));
   removeAllChildNodes(document.getElementById('preformattedLimit'));
-  var width = 0;
-  if (false) {
-    let src = cv.imread('imageSrc');
-    let canvasOCRMat = await postprocessSeaport(src);
-    cv.imshow('canvasImgmatch', src);
-    src.delete();
-    await drawRect(canvasOCRMat, 90, 90, 100, 100);
-    let perfStart = performance.now();
-    width = await ocr(mat2canvas(canvasOCRMat));
-    canvasOCRMat.delete();
-    let perfOCRed = performance.now();
-    console.info("Seaport OCR: " + (perfOCRed - perfStart) + "ms");
-  } else {
-    width = 32; // 1920x1080
-    //width = 43; // 2560x1440
-    width = 27;
+  await clearCanvas(document.getElementById('canvasImgmatch'));
+  //var width = null;
+  //if (false) {
+  //  let src = cv.imread('imageSrc');
+  //  let canvasOCRMat = await postprocessSeaport(src);
+  //  cv.imshow('canvasImgmatch', src);
+  //  src.delete();
+  //  await drawRect(canvasOCRMat, 90, 90, 100, 100);
+  //  let perfStart = performance.now();
+  //  width = await ocr(mat2canvas(canvasOCRMat));
+  //  canvasOCRMat.delete();
+  //  let perfOCRed = performance.now();
+  //  console.info("Seaport OCR: " + (perfOCRed - perfStart) + "ms");
+  //} else {
+  //  width = 32; // 1920x1080
+  //  //width = 43; // 2560x1440
+  //  width = 27;
+  //}
+  let cal = await calibrate();
+  if (cal == null) {
+    console.warn("Width is null");
+    return;
   }
-  console.warn('run: width ', width);
+  console.warn('calibration returned itemSizePx ', cal.itemSizePx);
   let faction = await getFaction();
-  let findings = await countItems(faction, width);
+  let findings = await countItems(faction, cal.itemSizePx, cal.stockpileBox);
   await printCSV(findings);
 }
 
@@ -596,12 +619,20 @@ const calibrate = async () => {
   const coarse = 4;
   // 7 coarse searches
   let shirt1 = await calibrateFindMax(screenshot, 'Soldier Supplies', 25, 50, coarse);
+  const box = points2point(shirt1);
+  let rect = new cv.Rect(
+          box.x - box.height, 
+          box.y - box.width, 
+          box.width * 15.0,
+          box.height * 3.0,
+        );
+  let croppedMat = screenshot.roi(rect);
   // 7 fine searches
-  let shirt2 = await calibrateFindMax(screenshot, 'Soldier Supplies', 
+  let shirt2 = await calibrateFindMax(croppedMat, 'Soldier Supplies', 
     shirt1.iconSizePx - coarse + 1, 
     shirt1.iconSizePx + coarse - 1, 
     1);
-  let bsups = await calibrateFindMax(screenshot, 'Bunker Supplies', 
+  let bsups = await calibrateFindMax(croppedMat, 'Bunker Supplies', 
     shirt2.iconSizePx - coarse + 1, 
     shirt2.iconSizePx + coarse - 1,
     1);
@@ -615,13 +646,20 @@ const calibrate = async () => {
     (shirt2.x0 + shirt2.x1) / 2.0;
   if (ydiff > 1 || shirt2.confidence < 0.8) {
     window.alert('Could not find stockpile on screenshot. (ydiff ' + ydiff + ', sconf ' + shirt2.confidence + ')');
+    croppedMat.delete();
+    screenshot.delete();
+    return null;
   }
   console.log(shirt2);
   console.log(bsups);
   console.log('distance px y ' + ydiff + ' x ' + xdiff);
-  let b = 32.0 / 196.0 * xdiff; // 32px at a=196 (1080p)
-  console.log('calculated iconSizePx ' + b);
-  b = Math.round(b);
-  console.log('calculated iconSizePx ' + b);
+  let itemSizePx = 32.0 / 196.0 * xdiff; // 32px at a=196 (1080p)
+  console.log('calculated iconSizePx ' + itemSizePx);
+  rect.height = screenshot.rows - rect.y // till the bottom
+  croppedMat.delete();
   screenshot.delete();
+  return {
+    'itemSizePx': Math.round(itemSizePx),
+    'stockpileBox': rect,
+  };
 }
