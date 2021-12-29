@@ -117,7 +117,7 @@ const items = [
         "warden"
       ],
       "imgName": "No_2_Loughcaster.png",
-      "imgPath": "icons/items/rifleitem.png",
+      "imgPath": "icons/items/riflew.png",
       "itemName": "No.2 Loughcaster",
       "itemDesc": "Standard-issue Warden rifle. This bolt-action firearm is as robust as they come and has seen over a century of use on the battlefield.",
       "itemCategory": "small_arms",
