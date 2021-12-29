@@ -175,8 +175,8 @@ const points2point = (points) => {
 const box2bounds = (box, sourceMat) => {
   let x0 = Math.max(box.x, 0);
   let y0 = Math.max(box.y, 0);
-  let width = Math.min(box.width, sourceMat.cols - box.x);
-  let height = Math.min(box.height, sourceMat.rows - box.y);
+  let width = Math.min(box.width, sourceMat.cols - x0);
+  let height = Math.min(box.height, sourceMat.rows - y0);
   return { x: x0, y: y0, width: width, height: height };
 }
 
