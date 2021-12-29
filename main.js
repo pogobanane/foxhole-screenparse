@@ -172,6 +172,14 @@ const points2point = (points) => {
   return { x: x0, y: y0, width: width, height: height };
 }
 
+const box2bounds = (box, sourceMat) => {
+  let x0 = Math.max(box.x, 0);
+  let y0 = Math.max(box.y, 0);
+  let width = Math.min(box.width, sourceMat.cols - box.x);
+  let height = Math.min(box.height, sourceMat.rows - box.y);
+  return { x: x0, y: y0, width: width, height: height };
+}
+
 // expects coords of corner with smallest coords (as from points2point)
 const itemCountPos = (_x0, _y0, iconSizePx) => {
   const x0 = _x0 + 1.4 * iconSizePx;
@@ -635,12 +643,17 @@ const calibrate = async () => {
   const coarse = 4;
   // 7 coarse searches
   let shirt1 = await calibrateFindMax(screenshot, 'Soldier Supplies', 25, 50, coarse);
-  const box = points2point(shirt1);
+  let box = points2point(shirt1, screenshot);
+  box.x = box.x - box.height;
+  box.y = box.y - box.width;
+  box.width = box.width * 15.0;
+  box.height = box.height * 3.0;
+  box = box2bounds(box, screenshot);
   let rect = new cv.Rect(
-          box.x - box.height, 
-          box.y - box.width, 
-          box.width * 15.0,
-          box.height * 3.0,
+          box.x,
+          box.y,
+          box.width,
+          box.height,
         );
   let croppedMat = screenshot.roi(rect);
   // 7 fine searches
@@ -660,8 +673,8 @@ const calibrate = async () => {
   let xdiff = 
     (bsups.x0 + bsups.x1) / 2.0 - 
     (shirt2.x0 + shirt2.x1) / 2.0;
-  if (ydiff > 1 || shirt2.confidence < 0.8) {
-    window.alert('Could not find stockpile on screenshot. (ydiff ' + ydiff + ', sconf ' + shirt2.confidence + ')');
+  if (ydiff > 1 || bsups.confidence < 0.9) {
+    window.alert('Could not find stockpile on screenshot. (ydiff ' + ydiff + ', sconf ' + bsups.confidence.toFixed(2) + ')');
     croppedMat.delete();
     screenshot.delete();
     return null;
@@ -671,6 +684,8 @@ const calibrate = async () => {
   console.log('distance px y ' + ydiff + ' x ' + xdiff);
   let itemSizePx = 32.0 / 196.0 * xdiff; // 32px at a=196 (1080p)
   console.log('calculated iconSizePx ' + itemSizePx);
+  rect.x = Math.max(rect.x, 0);
+  rect.y = Math.max(rect.y, 0);
   rect.height = screenshot.rows - rect.y; // till the bottom
   rect.width = Math.min(screenshot.cols - rect.x, rect.width);
   croppedMat.delete();
