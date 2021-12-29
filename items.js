@@ -712,6 +712,7 @@ const items = [
       "itemDesc": "A standard smoke grenade designed for concealing allied movement or screening the enemy's vision.",
       "itemCategory": "small_arms",
       "itemClass": "Smoke Grenade",
+      "extraIcon": "smoke",
       "numberProduced": 10,
       "stockpileLimitPrivate": 100,
       "isTeched": true,
@@ -965,6 +966,7 @@ const items = [
       "itemName": "R.P.G Shell",
       "itemDesc": "An explosive projectile fired from an R.P.G.",
       "itemCategory": "heavy_arms",
+      "extraIcon": "explosive",
       "numberProduced": 15,
       "stockpileLimitPrivate": 100,
       "damageType": "Deals explosive damage",
@@ -1091,6 +1093,7 @@ const items = [
       "itemDesc": "The pride of the Warden anti-armored arsenal, the Bonesaw Mk.3 has one job; to cut through heavy metal plating of Colonial tanks.",
       "itemCategory": "heavy_arms",
       "itemClass": "Anti-Tank RPG",
+      "extraIcon": "armour_piercing",
       "ammoUsed": "A.T.R.P.G. Indirect Shell",
       "damageType": "Deals armor piercing damage",
       "damageDesc": "Can penetrate armored vehicles",
@@ -1119,6 +1122,7 @@ const items = [
       "itemDesc": "This variant of the Bonesaw MK.3 is specially designed for use with tripod mounts. This affords it with increased stability and maximum potential range.",
       "itemCategory": "heavy_arms",
       "itemClass": "Anti-Tank RPG",
+      "extraIcon": "armour_piercing",
       "ammoUsed": "A.T.R.P.G. Indirect Shell",
       "damageType": "Deals armor piercing damage",
       "damageDesc": "Can penetrate armored vehicles",
@@ -4066,6 +4070,11 @@ const items = [
   ];
 
 const extra_icons = {
+  "smoke": {
+    "label": "Smoke",
+    "labelLong": "Creates Smoke",
+    "imgPath": "icons/items/subtypesmk.png"
+  },
   "light_kinetic": {
     "label": "Light Kinetic",
     "labelLong": "Deals light kinetic damage",
