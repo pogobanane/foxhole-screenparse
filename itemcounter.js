@@ -1,7 +1,7 @@
 class ItemCounter {
   constructor(tmpCanvas, progressCallback = (progress)=>{}, currentTemplate = null, visualizationCanvas = null, domList = null) {
     this.tmpCanvas = tmpCanvas; // scratchpad canvas element (should be display: none)
-    this.progressCallback = progressCallback; // somewhat like ({percent, step, steps, description, error}) => {}
+    this.progress = new Progress(progressCallback);
     this.currentTemplate = currentTemplate; // template used for current matching
     this.visCanvas = visualizationCanvas; // visualization of detected items
     this.domList = domList; // list of debug info for items
@@ -18,7 +18,7 @@ class ItemCounter {
   async count(imageElem) {
     if (this.faction == null) {
       console.error('faction undefined');
-      this.progressCallback({'error': 'Choose a faction'});
+      this.progress.error('Choose a faction');
       return null;
     }
 
@@ -70,6 +70,7 @@ class ItemCounter {
       screenshot.delete();
       return null;
     }
+    // 7 searches
     let bsups = await this.calibrateFindMax(croppedMat, 'Bunker Supplies', 
       shirt2.iconSizePx - coarse + 1, 
       shirt2.iconSizePx + coarse - 1,
@@ -88,8 +89,7 @@ class ItemCounter {
       (bsups.x0 + bsups.x1) / 2.0 - 
       (shirt2.x0 + shirt2.x1) / 2.0;
     if (ydiff > 1 || bsups.confidence < 0.9) {
-      this.progressCallback({'error': 'Could not find stockpile on screenshot. (ydiff ' + ydiff + ', sconf ' + bsups.confidence.toFixed(2) + ')'});
-      this
+      this.progress.error('Could not find stockpile on screenshot. (ydiff ' + ydiff + ', sconf ' + bsups.confidence.toFixed(2) + ')');
       croppedMat.delete();
       screenshot.delete();
       return null;
@@ -117,7 +117,7 @@ class ItemCounter {
     let best = null;
     for (let iconSizePx = from; iconSizePx <= to; iconSizePx += step) {
       if (this.abort) {
-        this.progressCallback({'description': 'Aborted'});
+        this.progress.error('Aborted');
         return null;
       }
       //console.log('testing px size ', iconSizePx);
@@ -137,7 +137,7 @@ class ItemCounter {
     let item = items.find((item) => { return item.itemName == itemName; });
     let message = "Searching " + item.itemName + " at " + iconSizePx + "px...";
     console.log(message);
-    this.progressCallback({'percent': 0.0, 'step': 1, 'steps': 2, 'description': 'Calibration: ' + message});
+    this.progress.step1('Calibration: ' + message);
     let icon = await loadImage(getImgPath(item.imgPath));
     let iconUnprocessedMat = cv.imread(icon);
     let iconMat = await prepareItem(iconUnprocessedMat, item, iconSizePx);
@@ -182,12 +182,12 @@ class ItemCounter {
     for (let item of items) {
       //item = items[0];
       if (this.abort) {
-        this.progressCallback({'description': 'Aborted'});
+        this.progress.error('Aborted');
         stockpileMat.delete();
         return null;
       }
       i++;
-      this.progressCallback({'percent': 1.0 * i / items.length, 'step': 2, 'steps': 2, 'description': 'Searching ' + item.itemName});
+      this.progress.step2('Searching ' + item.itemName);
 
       if (typeof item.imgPath === 'undefined') {
         continue;
@@ -316,6 +316,58 @@ class ItemCounter {
     canvas.height = img.height;
     ctx.drawImage(img, 0, 0, img.width, img.height);
     return canvas;
+  }
+}
+
+class Progress {
+  constructor(progressCallback) {
+    this.callback = progressCallback; // (progress) => {}: inform other component about progress
+    this._progress = 0;
+    this._total = 0;
+    this.percent = 0.0;
+    this.step = 0; // 0 = not even started
+    this.steps = 2;
+    this.description = '';
+    this.error = null; 
+  }
+
+  _callback() {
+    this.percent = 1.0 * this._progress / this._total;
+    this.callback({
+      'percent': this.percent,
+      'step': this.step,
+      'steps': this.steps,
+      'description': this.description,
+      'error': this.error,
+    });
+  }
+
+  error(message) {
+    this.error = message;
+    this._callback();
+  }
+
+  // advance percentage by one step
+  step1(description) {
+    if (this.step !== 1) {
+      this.step = 1;
+      this._progress = 0;
+      this._total = 7 + 7 + 7;
+    }
+    this._progress++;
+    this.description = description;
+    this._callback();
+  }
+
+  step2(description) {
+    if (this.step !== 2) {
+      this.step = 2;
+      this._progress = 0;
+      this._total = items.length;
+    }
+    this._progress++;
+    this.description = description;
+    this._callback();
   }
 }
 
