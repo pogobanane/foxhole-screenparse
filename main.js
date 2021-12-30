@@ -77,8 +77,20 @@ const run = async () => {
   await clearCanvas(document.getElementById('canvasImgmatch'));
 
   let tmpCanvas = document.getElementById('canvasTmp');
-  let progressCb = (progress) => { 
+  let progressCb = (progress) => {
     console.warn(progress); // TODO do smth with it
+    let roundedPercent = Math.ceil(progress.percent * 100);
+    if(roundedPercent > 0 && roundedPercent < 100) {
+      document.getElementById('progressBar').parentElement.hidden = false;
+      document.getElementById('resultCard').hidden = false;
+    }
+    document.getElementById('progressBar').setAttribute("style", "width: " + roundedPercent + "%;");
+    document.getElementById('progressBar').setAttribute("ariaValueNow", roundedPercent);
+    document.getElementById('progressBar').innerHTML = roundedPercent + "%";
+    if(roundedPercent === 100) {
+      document.getElementById('progressBar').parentElement.hidden = true;
+      document.getElementById('resultTable').hidden = false;
+    }
   };
   let currentTemplate = document.getElementById('canvasItem');
   let visualizationCanvas = document.getElementById('canvasImgmatch');
