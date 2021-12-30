@@ -502,6 +502,7 @@ const domListAppend = async (item, confidence, iconRendered, iconFound, countFou
 }
 
 const printCSV = async (findings) => {
+  // TODO this order is not strong enough and prone to reodering by the interpreter
   let sortedItems = items.sort((a, b) => {
     if (typeof a.supplyPyramid === 'undefined') {
       return 1;
@@ -584,114 +585,32 @@ const run = async () => {
   //  width = 27;
   //}
 
-  let cal = await calibrate();
-  //let cal = {
-    //'itemSizePx': 32,
-    //'stockpileBox': new cv.Rect(0, 0, 495, 258)
-  //};
-  if (cal == null) {
-    console.warn("Width is null");
-    return;
-  }
-  console.warn('calibration ', cal);
-  let faction = await getFaction();
-  let findings = await countItems(faction, cal.itemSizePx, cal.stockpileBox);
-  await printCSV(findings);
-}
+  //let cal = await calibrate();
+  ////let cal = {
+  //  //'itemSizePx': 32,
+  //  //'stockpileBox': new cv.Rect(0, 0, 495, 258)
+  ////};
+  //if (cal == null) {
+  //  console.warn("Width is null");
+  //  return;
+  //}
+  //console.warn('calibration ', cal);
+  //let faction = await getFaction();
+  //let findings = await countItems(faction, cal.itemSizePx, cal.stockpileBox);
 
-const calibrateFind = async (screenshotMat, itemName, iconSizePx) => {
-    //let item = items.find((item) => { return item.itemName == 'Soldier Supplies'; });
-    let item = items.find((item) => { return item.itemName == itemName; });
-    console.log("Searching " + item.itemName + " at " + iconSizePx + "px...");
-    let icon = await loadImage(getImgPath(item.imgPath));
-    let iconUnprocessedMat = cv.imread(icon);
-    let iconMat = await prepareItem(iconUnprocessedMat, item, iconSizePx);
-    iconUnprocessedMat.delete();
-    cv.imshow('canvasItem', iconMat);
-    let matches = await imgmatch(screenshotMat, iconMat);
-    let perfMatched = performance.now();
-    let best = matches[0];
-    console.info("Confidence: " + best.confidence);
-
-    //await drawRect(debugShot, best.x0, best.y0, best.x1, best.y1);
-    //cv.imshow('canvasImgmatch', debugShot);
-  return best;
-}
-
-const calibrateFindMax = async (screenshot, itemName, from, to, step) => {
-  let maxC = 0.0;
-  let maxPx = 0;
-  let best = null;
-  for (let iconSizePx = from; iconSizePx <= to; iconSizePx += step) {
-    //console.log('testing px size ', iconSizePx);
-    let current = await calibrateFind(screenshot, itemName, iconSizePx);
-    if (current.confidence > maxC) {
-      maxC = current.confidence;
-      maxPx = iconSizePx;
-      best = current;
-    }
-  }
-  best['iconSizePx'] = maxPx;
-  return best;
-}
-
-const calibrate = async () => {
-  let image = cv.imread('imageSrc');
-  var screenshot = new cv.Mat();
-  cv.cvtColor(image, screenshot, cv.COLOR_RGBA2GRAY, 0);
-  image.delete();
-  const coarse = 4;
-  // 7 coarse searches
-  let shirt1 = await calibrateFindMax(screenshot, 'Soldier Supplies', 25, 50, coarse);
-  let box = points2point(shirt1, screenshot);
-  box.x = box.x - box.height;
-  box.y = box.y - box.width;
-  box.width = box.width * 15.0;
-  box.height = box.height * 3.0;
-  box = box2bounds(box, screenshot);
-  let rect = new cv.Rect(
-          box.x,
-          box.y,
-          box.width,
-          box.height,
-        );
-  let croppedMat = screenshot.roi(rect);
-  // 7 fine searches
-  let shirt2 = await calibrateFindMax(croppedMat, 'Soldier Supplies', 
-    shirt1.iconSizePx - coarse + 1, 
-    shirt1.iconSizePx + coarse - 1, 
-    1);
-  let bsups = await calibrateFindMax(croppedMat, 'Bunker Supplies', 
-    shirt2.iconSizePx - coarse + 1, 
-    shirt2.iconSizePx + coarse - 1,
-    1);
-
-  let ydiff = 
-    (bsups.y0 + bsups.y1) / 2.0 - 
-    (shirt2.y0 + shirt2.y1) / 2.0;
-  ydiff = Math.abs(ydiff);
-  let xdiff = 
-    (bsups.x0 + bsups.x1) / 2.0 - 
-    (shirt2.x0 + shirt2.x1) / 2.0;
-  if (ydiff > 1 || bsups.confidence < 0.9) {
-    window.alert('Could not find stockpile on screenshot. (ydiff ' + ydiff + ', sconf ' + bsups.confidence.toFixed(2) + ')');
-    croppedMat.delete();
-    screenshot.delete();
-    return null;
-  }
-  console.log(shirt2);
-  console.log(bsups);
-  console.log('distance px y ' + ydiff + ' x ' + xdiff);
-  let itemSizePx = 32.0 / 196.0 * xdiff; // 32px at a=196 (1080p)
-  console.log('calculated iconSizePx ' + itemSizePx);
-  rect.x = Math.max(rect.x, 0);
-  rect.y = Math.max(rect.y, 0);
-  rect.height = screenshot.rows - rect.y; // till the bottom
-  rect.width = Math.min(screenshot.cols - rect.x, rect.width);
-  croppedMat.delete();
-  screenshot.delete();
-  return {
-    'itemSizePx': Math.round(itemSizePx),
-    'stockpileBox': rect,
+  let tmpCanvas = document.getElementById('canvasTmp');
+  let progressCb = (progress) => { 
+    // TODO
   };
+  let currentTemplate = document.getElementById('canvasItem');
+  let visualizationCanvas = document.getElementById('canvasImgmatch');
+  let itemcounter = new ItemCounter(tmpCanvas, progressCb, currentTemplate, visualizationCanvas);
+  itemcounter.setFaction(await getFaction());
+
+  let fileselector = document.getElementById('fileInputSrc');
+  let screenshotUrl = URL.createObjectURL(fileselector.files[0]);
+  let screenshot = await loadImage(screenshotUrl);
+  let findings = await itemcounter.count(screenshot); // takes long
+
+  await printCSV(findings);
 }
