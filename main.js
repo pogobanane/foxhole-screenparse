@@ -342,108 +342,6 @@ const confidentEnough = (confidence, item) => {
   }
 }
 
-// expects the stockpileBox to already been drawn into the canvasImgmatch
-const countItems = async (faction, iconSizePx, stockpileBox) => {
-  let tesseract = new OCR();
-  await tesseract.init();
-  let found = [];
-  let image = cv.imread('imageSrc');
-  var screenshot = new cv.Mat();
-  cv.cvtColor(image, screenshot, cv.COLOR_RGBA2GRAY, 0);
-  image.delete();
-  let rect = new cv.Rect(
-          stockpileBox.x, 
-          stockpileBox.y, 
-          stockpileBox.width,
-          stockpileBox.height,
-        );
-  console.log(rect);
-  let stockpileMat = screenshot.roi(rect);
-  console.log('rectified');
-  cv.imshow('canvasImgmatch', stockpileMat);
-  screenshot.delete();
-  // TODO quartering the search canvas quarters the matching time.
-  //let image = cv.imread('imageSrc');
-  //let origScreenshot = new cv.Mat();
-  //cv.cvtColor(image, origScreenshot, cv.COLOR_RGBA2GRAY, 0);
-  //let rect = new cv.Rect(
-  //        720, 
-  //        0, 
-  //        403,
-  //        1080 
-  //      );
-  //var screenshot = origScreenshot.roi(rect);
-  // TODO try reverse lookup: align at SS, GS, BS; get fist item icon and search in icon db
-  // filter items by faction to reduce amount of similar looking items
-	
-  for (let item of items) {
-    //item = items[0];
-    if (typeof item.imgPath === 'undefined') {
-      continue;
-    }
-    if (!item.faction.includes(faction)) {
-      continue;
-    }
-
-    let perfStart = performance.now();
-    console.log("Searching " + item.itemName + "...");
-    let icon = await loadImage(getImgPath(item.imgPath));
-    let iconUnprocessedMat = cv.imread(icon);
-    let iconMat = await prepareItem(iconUnprocessedMat, item, iconSizePx);
-    iconUnprocessedMat.delete();
-    cv.imshow('canvasItem', iconMat);
-    let matches = await imgmatch(stockpileMat, iconMat);
-    let perfMatched = performance.now();
-    let best = matches[0];
-    console.info("Confidence: " + best.confidence);
-    const box = points2point(best);
-    let rect = new cv.Rect(
-            box.x, 
-            box.y, 
-            box.width,
-            box.height
-          );
-    let matchedMat = stockpileMat.roi(rect);
-    if (!confidentEnough(best.confidence, item)) {
-      console.info("Matching: " + (perfMatched - perfStart) + "ms");
-      domListAppend(item, best.confidence, iconMat, matchedMat);
-      found.push({ "name": item.itemName, "count": 0 });
-      continue;
-    }
-
-    const countPoints = itemCountPos(box.x, box.y, iconSizePx);
-    let debugShot = cv.imread('canvasImgmatch');
-    await drawRect(debugShot, best.x0, best.y0, best.x1, best.y1);
-    await drawRect(debugShot, countPoints.x0, countPoints.y0, countPoints.x1, countPoints.y1);
-    cv.imshow('canvasImgmatch', debugShot);
-    debugShot.delete();
-
-    const countBox = points2point(countPoints);
-    rect = new cv.Rect(
-            countBox.x, 
-            countBox.y, 
-            countBox.width,
-            countBox.height
-          );
-    let countSmallMat = stockpileMat.roi(rect);
-    let countMat = new cv.Mat();
-    let dsize = new cv.Size(countBox.width*4.0, countBox.height*4.0);
-    cv.resize(countSmallMat, countMat, dsize, 0, 0, cv.INTER_CUBIC);
-    countSmallMat.delete();
-    let itemCount = await tesseract.itemCount(mat2canvas(countMat), countPoints);
-    console.log(item.itemName + ": " + itemCount);
-    found.push({ "name": item.itemName, "count": itemCount });
-    let perfOCRed = performance.now();
-    console.info("Matching: " + (perfMatched - perfStart) + "ms, OCR: " + (perfOCRed - perfMatched) + "ms");
-    domListAppend(item, best.confidence, iconMat, matchedMat, countMat, itemCount);
-    iconMat.delete(); countMat.delete(); matchedMat.delete();
-    //break;
-  }
-
-  stockpileMat.delete();
-  console.info(found);
-  return found;
-};
 
 // returns dom object of canvas
 const mat2canvas = (mat) => {
@@ -459,46 +357,6 @@ const img2canvas = (img) => {
   canvas.height = img.height;
   ctx.drawImage(img, 0, 0, img.width, img.height);
   return canvas;
-}
-
-const domListAppend = async (item, confidence, iconRendered, iconFound, countFound, countRead) => {
-  let list = document.getElementById("itemlist");
-  let li = document.createElement("li");
-  li.setAttribute("style", "position: inline-block;");
-
-  let canvas = document.createElement("canvas");
-  cv.imshow(canvas, iconRendered);
-  li.appendChild(canvas);
-
-  if (typeof iconFound !== 'undefined') {
-    canvas = document.createElement("canvas");
-    cv.imshow(canvas, iconFound);
-    li.appendChild(canvas);
-  }
-
-  if (typeof countFound !== 'undefined') {
-    canvas = document.createElement("canvas");
-    cv.imshow(canvas, countFound);
-    li.appendChild(canvas);
-  }
-
-  if (typeof countRead !== 'undefined') {
-    text = document.createTextNode(" " + countRead + " crates - ");
-    li.appendChild(text);
-  } else {
-    text = document.createTextNode(" no crates - ");
-    li.appendChild(text);
-  }
-
-  text = document.createTextNode(item.itemName);
-  li.appendChild(text);
-  
-  if (typeof confidence !== 'undefined') {
-    text = document.createTextNode(" (" + confidence.toFixed(2) + ")");
-    li.appendChild(text);
-  }
-
-  list.appendChild(li);
 }
 
 const printCSV = async (findings) => {
@@ -604,7 +462,8 @@ const run = async () => {
   };
   let currentTemplate = document.getElementById('canvasItem');
   let visualizationCanvas = document.getElementById('canvasImgmatch');
-  let itemcounter = new ItemCounter(tmpCanvas, progressCb, currentTemplate, visualizationCanvas);
+  let list = document.getElementById("itemlist");
+  let itemcounter = new ItemCounter(tmpCanvas, progressCb, currentTemplate, visualizationCanvas, list);
   itemcounter.setFaction(await getFaction());
 
   let fileselector = document.getElementById('fileInputSrc');
