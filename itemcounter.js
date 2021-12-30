@@ -187,6 +187,9 @@ class ItemCounter {
         return null;
       }
       i++;
+      let roundedPercent = Math.ceil(100 * i / items.length);
+      document.getElementById('progressBar').setAttribute("style", "width: " + roundedPercent + "%;");
+      document.getElementById('progressBar').innerHTML = roundedPercent + "%";
       this.progressCallback({'percent': 1.0 * i / items.length, 'step': 2, 'steps': 2, 'description': 'Searching ' + item.itemName});
 
       if (typeof item.imgPath === 'undefined') {
