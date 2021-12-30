@@ -10,14 +10,11 @@ class ItemCounter {
     this.screenshotImg = null;
   }
 
-  abort() {
-    this.abort = true;
-  }
-
   setFaction(faction) {
     this.faction = faction;
   }
 
+  // returns null on error
   async count(imageElem) {
     if (this.faction == null) {
       console.error('faction undefined');
@@ -46,6 +43,10 @@ class ItemCounter {
     const coarse = 4;
     // 7 coarse searches
     let shirt1 = await this.calibrateFindMax(screenshot, 'Soldier Supplies', 25, 50, coarse);
+    if (shirt1 === null) {
+      screenshot.delete();
+      return null;
+    }
     let box = points2point(shirt1, screenshot);
     box.x = box.x - box.height;
     box.y = box.y - box.width;
@@ -64,10 +65,20 @@ class ItemCounter {
       shirt1.iconSizePx - coarse + 1, 
       shirt1.iconSizePx + coarse - 1, 
       1);
+    if (shirt2 === null) {
+      croppedMat.delete();
+      screenshot.delete();
+      return null;
+    }
     let bsups = await this.calibrateFindMax(croppedMat, 'Bunker Supplies', 
       shirt2.iconSizePx - coarse + 1, 
       shirt2.iconSizePx + coarse - 1,
       1);
+    if (bsups === null) {
+      croppedMat.delete();
+      screenshot.delete();
+      return null;
+    }
   
     let ydiff = 
       (bsups.y0 + bsups.y1) / 2.0 - 
@@ -105,6 +116,10 @@ class ItemCounter {
     let maxPx = 0;
     let best = null;
     for (let iconSizePx = from; iconSizePx <= to; iconSizePx += step) {
+      if (this.abort) {
+        this.progressCallback({'description': 'Aborted'});
+        return null;
+      }
       //console.log('testing px size ', iconSizePx);
       let current = await this.calibrateFind(screenshot, itemName, iconSizePx);
       if (current.confidence > maxC) {
@@ -165,6 +180,12 @@ class ItemCounter {
   	
     for (let item of items) {
       //item = items[0];
+      if (this.abort) {
+        this.progressCallback({'description': 'Aborted'});
+        stockpileMat.delete();
+        return null;
+      }
+
       if (typeof item.imgPath === 'undefined') {
         continue;
       }

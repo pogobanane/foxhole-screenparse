@@ -1,3 +1,5 @@
+var itemcounter = null;
+
 const printCSV = async (findings) => {
   // TODO this order is not strong enough and prone to reodering by the interpreter
   let sortedItems = items.sort((a, b) => {
@@ -102,13 +104,20 @@ const run = async () => {
   let currentTemplate = document.getElementById('canvasItem');
   let visualizationCanvas = document.getElementById('canvasImgmatch');
   let list = document.getElementById("itemlist");
-  let itemcounter = new ItemCounter(tmpCanvas, progressCb, currentTemplate, visualizationCanvas, list);
+  itemcounter = new ItemCounter(tmpCanvas, progressCb, currentTemplate, visualizationCanvas, list);
   itemcounter.setFaction(await getFaction());
 
   let fileselector = document.getElementById('fileInputSrc');
   let screenshotUrl = URL.createObjectURL(fileselector.files[0]);
   let screenshot = await loadImage(screenshotUrl);
   let findings = await itemcounter.count(screenshot); // takes long
+  if (findings === null) {
+    return;
+  }
 
   await printCSV(findings);
+}
+
+const abort = () => {
+  itemcounter.abort = true;
 }
