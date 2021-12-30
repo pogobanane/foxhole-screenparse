@@ -78,7 +78,6 @@ const run = async () => {
 
   let tmpCanvas = document.getElementById('canvasTmp');
   let progressCb = (progress) => {
-    console.warn(progress); // TODO do smth with it
     let roundedPercent = Math.ceil(progress.percent * 100);
     if(roundedPercent > 0 && roundedPercent < 100) {
       document.getElementById('progressBar').parentElement.hidden = false;
