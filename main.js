@@ -5,6 +5,7 @@ const connect_file_img = (imageid, fileinputid) => {
   let inputElement = document.getElementById(fileinputid);
   inputElement.addEventListener('change', (e) => {
     imgElement.src = URL.createObjectURL(e.target.files[0]);
+    document.getElementById('imageSrc').removeAttribute("hidden");
   }, false);
 }
 
