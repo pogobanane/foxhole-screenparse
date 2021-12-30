@@ -1,5 +1,13 @@
 var itemcounter = null;
 
+const connect_file_img = (imageid, fileinputid) => {
+  let imgElement = document.getElementById(imageid);
+  let inputElement = document.getElementById(fileinputid);
+  inputElement.addEventListener('change', (e) => {
+    imgElement.src = URL.createObjectURL(e.target.files[0]);
+  }, false);
+}
+
 const printCSV = async (findings) => {
   // TODO this order is not strong enough and prone to reodering by the interpreter
   let sortedItems = items.sort((a, b) => {
@@ -66,36 +74,6 @@ const run = async () => {
   removeAllChildNodes(document.getElementById('preformattedPyramidPriority'));
   removeAllChildNodes(document.getElementById('preformattedLimit'));
   await clearCanvas(document.getElementById('canvasImgmatch'));
-  //var width = null;
-  //if (false) {
-  //  let src = cv.imread('imageSrc');
-  //  let canvasOCRMat = await postprocessSeaport(src);
-  //  cv.imshow('canvasImgmatch', src);
-  //  src.delete();
-  //  await drawRect(canvasOCRMat, 90, 90, 100, 100);
-  //  let perfStart = performance.now();
-  //  width = await ocr(mat2canvas(canvasOCRMat));
-  //  canvasOCRMat.delete();
-  //  let perfOCRed = performance.now();
-  //  console.info("Seaport OCR: " + (perfOCRed - perfStart) + "ms");
-  //} else {
-  //  width = 32; // 1920x1080
-  //  //width = 43; // 2560x1440
-  //  width = 27;
-  //}
-
-  //let cal = await calibrate();
-  ////let cal = {
-  //  //'itemSizePx': 32,
-  //  //'stockpileBox': new cv.Rect(0, 0, 495, 258)
-  ////};
-  //if (cal == null) {
-  //  console.warn("Width is null");
-  //  return;
-  //}
-  //console.warn('calibration ', cal);
-  //let faction = await getFaction();
-  //let findings = await countItems(faction, cal.itemSizePx, cal.stockpileBox);
 
   let tmpCanvas = document.getElementById('canvasTmp');
   let progressCb = (progress) => { 
