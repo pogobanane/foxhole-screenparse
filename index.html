@@ -18,44 +18,52 @@
       }
       .main {
         padding: 20px;
-        display: flexbox;
-        align-content: center;
       }
       .card {
         margin-top: 20px;
+        width: 50em;
       }
       .results {
         margin-top: 20px;
         width: 100%;
-        min-width: 35rem;
+        min-width: 50rem;
         border: 1px solid rgba(0,0,0,.125);
         border-radius: 0.25rem;
+      }
+      .row {
+        padding: 0;
+      }
+      .image-text {
+        display: flex;
       }
     </style>
   </head>
   <body>
-    <div class="main">
-      <div class="card" style="width: 35em;">
-        <div class="card-body">
-          <h5 class="card-title">Foxhole-Screenparse</h5>
-          <p class="card-text">
-            Choose a screenshot of foxhole showing a stockpile. Without uploading the screenshot to the cloud, 
-            your browser then parses the screenshot and returns a list of items in the stockpile together with 
-            the amount of crates stored.
-            <div class="alert alert-warning">
+    <div class="container">
+      <div class="row justify-content-md-center">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Foxhole-Screenparse</h5>
+            <div class="card-text">
+              <div class="image-text">
+                <p class="col-md-8">
+                  Choose a screenshot of foxhole showing a stockpile. Without uploading the screenshot to the cloud, 
+                  your browser then parses the screenshot and returns a list of items in the stockpile together with 
+                  the amount of crates stored.
+                </p>
+                <img src="example-screenshot.jpg" alt="Example screenshot" class="col-md-4" />
+              </div>
+            </div>
+            <div class="alert alert-warning mt-3">
               <b>Current state</b><br/>
               Screenshots of games in 1920x1080p resolution work best. Vehicles and shippables (containers, paletts) are not supported. 
             </div>
             <div class="alert alert-info">
               Please report detection errors at <a href="https://discord.gg/sZs5UZf">3SP#gloabl-hq-code-talk discord</a>.
             </div>
-          </p>
-          
+          </div>
         </div>
-      </div>
-      <div>
-        <div class="card" style="width: 35em;">
-          <img src="example-screenshot.jpg" alt="Example screenshot" style="width: 100%;" />
+        <div class="card">
           <div class="card-body">
             <h5 class="card-title">Analyze your screenshot</h5>
             <p class="card-text">
@@ -63,8 +71,8 @@
               Your Screenshot will not be uploaded. The script analyzes the image on your computer.
             </p>
             <div class="inputoutput">
-              <img id="imageSrc" alt="No Image" />
-              <div class="caption">imageSrc <input type="file" id="fileInputSrc" name="file" /></div>
+              <img id="imageSrc" alt="No Image" hidden/>
+              <div class="caption"><input type="file" id="fileInputSrc" name="file" /></div>
             </div>
             <br/>
             <input type="radio" id="colonialButton" name="faction" value="colonial">
@@ -76,8 +84,13 @@
             <button id="run" onclick="abort();" type="button" class="btn btn-danger">Abort</button>    
           </div>
         </div>
+      </div>
+      <div class="row justify-content-md-center" id="resultCard" hidden>
         <div class="results">
-          <table class="table">
+          <div class="progress m-2" hidden>
+            <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+          </div>
+          <table class="table" id="resultTable" hidden>
             <tr>
               <th>
                 itemName
@@ -132,6 +145,7 @@
             <div class="caption">canvasTmp</div>
           </div>
         </p>
+        </div>
       </div>
     </div>
     <script>
