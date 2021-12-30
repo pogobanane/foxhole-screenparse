@@ -137,7 +137,7 @@ class ItemCounter {
     let item = items.find((item) => { return item.itemName == itemName; });
     let message = "Searching " + item.itemName + " at " + iconSizePx + "px...";
     console.log(message);
-    this.progressCallback({'description': 'Calibration: ' + message});
+    this.progressCallback({'percent': 0.0, 'step': 1, 'steps': 2, 'description': 'Calibration: ' + message});
     let icon = await loadImage(getImgPath(item.imgPath));
     let iconUnprocessedMat = cv.imread(icon);
     let iconMat = await prepareItem(iconUnprocessedMat, item, iconSizePx);
@@ -178,6 +178,7 @@ class ItemCounter {
     }
     screenshot.delete();
   	
+    let i = 0;
     for (let item of items) {
       //item = items[0];
       if (this.abort) {
@@ -185,6 +186,8 @@ class ItemCounter {
         stockpileMat.delete();
         return null;
       }
+      i++;
+      this.progressCallback({'percent': 1.0 * i / items.length, 'step': 2, 'steps': 2, 'description': 'Searching ' + item.itemName});
 
       if (typeof item.imgPath === 'undefined') {
         continue;
@@ -195,7 +198,6 @@ class ItemCounter {
   
       let perfStart = performance.now();
       console.log("Searching " + item.itemName + "...");
-      this.progressCallback({'description': 'Searching ' + item.itemName});
       let icon = await loadImage(getImgPath(item.imgPath));
       let iconUnprocessedMat = cv.imread(icon);
       let iconMat = await prepareItem(iconUnprocessedMat, item, iconSizePx);
