@@ -25,3 +25,10 @@ The webpage has no backend, so just shove the files into some webroot or so.
 This project can use some work on the front-end. The frontend could be set up with proper compilation steps (react).
 
 While the output table is built to be exported into spreadsheets, the relevant spreadsheet functionality could directly be built into the website.
+
+## Extracting icons from mods
+
+- extract .pak 
+  - with github.com/panzi/u4pak or
+  - `cd C:...\UE_4.20\Engine\Binaries\Win64`; `UnrealPak.exe C:\Steam\steamapps\common\Foxhole\War\Content\Paks\War-WindowsNoEditor.pak -Extract [DESTINATION FOLDER]`
+- extract .png from .uasset with [UEViewer](https://www.gildor.org/en/projects/umodel) ([src](https://www.github.com/gildor2/UEViewer)]
