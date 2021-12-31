@@ -132,13 +132,34 @@ class ItemCounter {
     return best;
   }
 
+  async loadItemIcon(item, iconpack = 'default') {
+    if (iconpack !== 'default') {
+      if (!known_iconpacks.includes(iconpack)) {
+        console.error("Requesting item from unknown iconpack.");
+        return null;
+      }
+      let url = 'iconpacks/' + iconpack + '/' + item.imgUasset;
+      let response = await fetch(url);
+      if (response.ok) {
+        return await loadImage(URL.createObjectURL(await response.blob()));
+      } else if (response.status === 404) {
+        // this mod does not have this item. Fallback to default icons
+      } else {
+        console.error("Connection/server error?", response);
+        return null;
+      }
+    }
+
+    return await loadImage(getImgPath(item.imgPath));
+  }
+
   async calibrateFind(screenshotMat, itemName, iconSizePx) {
     //let item = items.find((item) => { return item.itemName == 'Soldier Supplies'; });
     let item = items.find((item) => { return item.itemName == itemName; });
     let message = "Searching " + item.itemName + " at " + iconSizePx + "px...";
     console.log(message);
     this.progress.step1('Calibration: ' + message);
-    let icon = await loadImage(getImgPath(item.imgPath));
+    let icon = await this.loadItemIcon(item, 'UILabelIcons2.0');
     let iconUnprocessedMat = cv.imread(icon);
     let iconMat = await prepareItem(iconUnprocessedMat, item, iconSizePx);
     iconUnprocessedMat.delete();
@@ -198,7 +219,7 @@ class ItemCounter {
   
       let perfStart = performance.now();
       console.log("Searching " + item.itemName + "...");
-      let icon = await loadImage(getImgPath(item.imgPath));
+      let icon = await this.loadItemIcon(item, 'UILabelIcons2.0');
       let iconUnprocessedMat = cv.imread(icon);
       let iconMat = await prepareItem(iconUnprocessedMat, item, iconSizePx);
       iconUnprocessedMat.delete();

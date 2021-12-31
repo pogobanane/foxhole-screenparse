@@ -4180,6 +4180,11 @@ const items = [
     },
   ];
 
+const known_iconpacks = [
+  "NewIcons3.0",
+  "UILabelIcons2.0"
+]
+
 const extra_icons = {
   "smoke": {
     "label": "Smoke",
