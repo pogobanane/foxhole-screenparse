@@ -8,6 +8,7 @@ class ItemCounter {
     this.abort = false;
     this.faction = null; // 'colonial' or 'warden'
     this.screenshotImg = null;
+    this.http404s = [];
   }
 
   setFaction(faction) {
@@ -139,14 +140,19 @@ class ItemCounter {
         return null;
       }
       let url = 'iconpacks/' + iconpack + '/' + item.imgUasset;
-      let response = await fetch(url);
-      if (response.ok) {
-        return await loadImage(URL.createObjectURL(await response.blob()));
-      } else if (response.status === 404) {
-        // this mod does not have this item. Fallback to default icons
+      if (this.http404s.includes(url)) {
+        // Quick fallback to default item
       } else {
-        console.error("Connection/server error?", response);
-        return null;
+        let response = await fetch(url);
+        if (response.ok) {
+          return await loadImage(URL.createObjectURL(await response.blob()));
+        } else if (response.status === 404) {
+          // this mod does not have this item. Fallback to default icons
+          this.http404s.push(url);
+        } else {
+          console.error("Connection/server error?", response);
+          return null;
+        }
       }
     }
 
