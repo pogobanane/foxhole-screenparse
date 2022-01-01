@@ -36,7 +36,7 @@ class ItemCounter {
       return null;
     }
     console.warn('calibration ', cal);
-    let findings = await this._countItems(cal.itemSizePx, cal.stockpileBox);
+    let findings = await this._countItems(cal);
     if (findings == null) {
       console.warn("Nothing found?");
       return null;
@@ -93,6 +93,7 @@ class ItemCounter {
       return null;
     }
   
+    // sanity check 1
     let ydiff = 
       (bsups.y0 + bsups.y1) / 2.0 - 
       (shirt2.y0 + shirt2.y1) / 2.0;
@@ -100,12 +101,13 @@ class ItemCounter {
     let xdiff = 
       (bsups.x0 + bsups.x1) / 2.0 - 
       (shirt2.x0 + shirt2.x1) / 2.0;
-    if (ydiff > 1 || bsups.confidence < 0.9) {
-      this.progress.error('Could not find stockpile on screenshot. (ydiff ' + ydiff + ', bconf ' + bsups.confidence.toFixed(2) + ')');
+    if (ydiff > 1) {
+      this.progress.error('Could not find stockpile on screenshot. (ydiff ' + ydiff + ')');
       croppedMat.delete();
       screenshot.delete();
       return null;
     }
+
     console.log(shirt2);
     console.log(bsups);
     console.log('distance px y ' + ydiff + ' x ' + xdiff);
@@ -119,6 +121,20 @@ class ItemCounter {
     shirtBox.x += box.x; // shirt coords in croppedMat to coords in screenshot
     shirtBox.y += box.y;
     let stockpileType = await this._detectStockpileType(screenshot, shirtBox);
+
+    // sanity check 2
+    if (bsups.confidence < 0.9) {
+      // we calibrated with crate icon. Lets try without. 
+      let match = await this.calibrateFind(croppedMat, 'Bunker Supplies', false, itemSizePx);
+      if (match.confidence < 0.9) {
+        this.progress.error('Could not find stockpile on screenshot. ' + 
+          '(bcconf ' + bsups.confidence.toFixed(2) + 
+          ' bconf ' + match.confidence +
+          ')');
+        return null;
+      }
+    }
+
     croppedMat.delete();
     screenshot.delete();
     return {
@@ -138,7 +154,7 @@ class ItemCounter {
         return null;
       }
       //console.log('testing px size ', iconSizePx);
-      let current = await this.calibrateFind(screenshot, itemName, iconSizePx);
+      let current = await this.calibrateFind(screenshot, itemName, true, iconSizePx);
       if (current.confidence > maxC) {
         maxC = current.confidence;
         maxPx = iconSizePx;
@@ -149,7 +165,7 @@ class ItemCounter {
     return best;
   }
 
-  async calibrateFind(screenshotMat, itemName, iconSizePx) {
+  async calibrateFind(screenshotMat, itemName, crated, iconSizePx) {
     //let item = items.find((item) => { return item.itemName == 'Soldier Supplies'; });
     let item = items.find((item) => { return item.itemName == itemName; });
     let message = "Searching " + item.itemName + " at " + iconSizePx + "px...";
@@ -157,7 +173,7 @@ class ItemCounter {
     this.progress.step1('Calibration: ' + message);
     let icon = await loadImage(getImgPath(item.imgPath));
     let iconUnprocessedMat = cv.imread(icon);
-    let iconMat = await prepareItem(iconUnprocessedMat, item, iconSizePx);
+    let iconMat = await prepareItem(iconUnprocessedMat, item, crated, iconSizePx);
     iconUnprocessedMat.delete();
     if (this.currentTemplate !== null) {
       cv.imshow(this.currentTemplate, iconMat);
@@ -209,18 +225,18 @@ class ItemCounter {
     }
   }
 
-  // expects the stockpileBox to already been drawn into the canvasImgmatch
-  async _countItems(iconSizePx, stockpileBox) {
+  // expects the calibration.stockpileBox to already been drawn into the canvasImgmatch
+  async _countItems(calibration) {
     let found = [];
     let image = cv.imread(this.screenshotImg);
     var screenshot = new cv.Mat();
     cv.cvtColor(image, screenshot, cv.COLOR_RGBA2GRAY, 0);
     image.delete();
     let rect = new cv.Rect(
-            stockpileBox.x, 
-            stockpileBox.y, 
-            stockpileBox.width,
-            stockpileBox.height,
+            calibration.stockpileBox.x, 
+            calibration.stockpileBox.y, 
+            calibration.stockpileBox.width,
+            calibration.stockpileBox.height,
           );
     console.log(rect);
     let stockpileMat = screenshot.roi(rect);
@@ -252,7 +268,8 @@ class ItemCounter {
       console.log("Searching " + item.itemName + "...");
       let icon = await loadImage(getImgPath(item.imgPath));
       let iconUnprocessedMat = cv.imread(icon);
-      let iconMat = await prepareItem(iconUnprocessedMat, item, iconSizePx);
+      let crated = calibration.stockpileType.crateBased;
+      let iconMat = await prepareItem(iconUnprocessedMat, item, crated, calibration.itemSizePx);
       iconUnprocessedMat.delete();
       if (this.currentTemplate !== null) {
         cv.imshow(this.currentTemplate, iconMat);
@@ -276,7 +293,7 @@ class ItemCounter {
         continue;
       }
   
-      const countPoints = itemCountPos(box.x, box.y, iconSizePx);
+      const countPoints = itemCountPos(box.x, box.y, calibration.itemSizePx);
       if (this.visCanvas !== null) {
         let debugShot = cv.imread(this.visCanvas);
         await drawRect(debugShot, best.x0, best.y0, best.x1, best.y1);
@@ -535,7 +552,7 @@ const addExtraDecor = async (scaledItemMat, decorMat, position, itemSizePx) => {
 }
 
 // returns mat of processed item
-const prepareItem = async (inMat, item, itemSizePx) => {
+const prepareItem = async (inMat, item, crated, itemSizePx) => {
   let step = new cv.Mat();
   let dst = new cv.Mat();
   let rgbaPlanes = new cv.MatVector();
@@ -568,14 +585,19 @@ const prepareItem = async (inMat, item, itemSizePx) => {
   let dsize = new cv.Size(itemSizePx, itemSizePx);
   // You can try more different parameters
   cv.resize(gray, dst, dsize, 0, 0, cv.INTER_AREA);
-  let crated = await addCrate(dst, itemSizePx);
-  let extraIconed = await addExtraIcon(crated, item, itemSizePx);
+  let withCrate;
+  if (crated) {
+    withCrate = await addCrate(dst, itemSizePx);
+  } else {
+    withCrate = dst.clone();
+  }
+  let extraIconed = await addExtraIcon(withCrate, item, itemSizePx);
   step.delete(); dst.delete(); rgbaPlanes.delete(); step2.delete(); nilVal.delete(); 
   maxVal.delete(); 
   alphaMask.delete(); 
   mask.delete(); 
   gray.delete(); 
-  crated.delete();
+  withCrate.delete();
   return extraIconed;
 }
 
