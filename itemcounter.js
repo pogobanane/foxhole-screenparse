@@ -8,6 +8,11 @@ class ItemCounter {
     this.abort = false;
     this.faction = null; // 'colonial' or 'warden'
     this.screenshotImg = null;
+    this.tesseract = new OCR();
+  }
+
+  async init() {
+    await this.tesseract.init();
   }
 
   setFaction(faction) {
@@ -32,7 +37,14 @@ class ItemCounter {
     }
     console.warn('calibration ', cal);
     let findings = await this._countItems(cal.itemSizePx, cal.stockpileBox);
-    return findings;
+    if (findings == null) {
+      console.warn("Nothing found?");
+      return null;
+    }
+    let ret = {};
+    ret.items = findings;
+    ret.stockpileType = cal.stockpileType;
+    return ret;
   }
 
   async _calibrate() {
@@ -89,7 +101,7 @@ class ItemCounter {
       (bsups.x0 + bsups.x1) / 2.0 - 
       (shirt2.x0 + shirt2.x1) / 2.0;
     if (ydiff > 1 || bsups.confidence < 0.9) {
-      this.progress.error('Could not find stockpile on screenshot. (ydiff ' + ydiff + ', sconf ' + bsups.confidence.toFixed(2) + ')');
+      this.progress.error('Could not find stockpile on screenshot. (ydiff ' + ydiff + ', bconf ' + bsups.confidence.toFixed(2) + ')');
       croppedMat.delete();
       screenshot.delete();
       return null;
@@ -103,11 +115,16 @@ class ItemCounter {
     rect.y = Math.max(rect.y, 0);
     rect.height = screenshot.rows - rect.y; // till the bottom
     rect.width = Math.min(screenshot.cols - rect.x, rect.width);
+    let shirtBox = points2point(shirt2, screenshot);
+    shirtBox.x += box.x; // shirt coords in croppedMat to coords in screenshot
+    shirtBox.y += box.y;
+    let stockpileType = await this._detectStockpileType(screenshot, shirtBox);
     croppedMat.delete();
     screenshot.delete();
     return {
       'itemSizePx': Math.round(itemSizePx),
       'stockpileBox': rect,
+      'stockpileType': stockpileType,
     };
   }
 
@@ -155,10 +172,45 @@ class ItemCounter {
     return best;
   }
 
+  // returns one of stockpile_types or 'unknown'
+  async _detectStockpileType(screenshot, shirtBox) {
+    let box = shirtBox;
+    box.x = box.x - box.height;
+    box.y = box.y - 1.5 * box.width;
+    box.width = box.width * 7.0;
+    box.height = box.height * 1.5;
+    box = box2bounds(box, screenshot);
+    let rect = new cv.Rect(
+            box.x,
+            box.y,
+            box.width,
+            box.height,
+          );
+    let croppedMat = screenshot.roi(rect);
+    let enlargedMat = new cv.Mat();
+    let dsize = new cv.Size(croppedMat.cols*4.0, croppedMat.rows*4.0);
+    cv.resize(croppedMat, enlargedMat, dsize, 0, 0, cv.INTER_CUBIC);
+    let postprocessedMat = await postprocessSeaport(enlargedMat);
+    if (this.visCanvas !== null) {
+      cv.imshow(this.visCanvas, postprocessedMat);
+    }
+    let text = await this.tesseract.detectSeaport(this._mat2canvas(postprocessedMat));
+    postprocessedMat.delete();
+    enlargedMat.delete();
+    croppedMat.delete();
+
+    let type = stockpile_types.find((s) => {
+      return text.includes(s);
+    });
+    if (typeof type === 'undefined') {
+      return 'unknown';
+    } else {
+      return type;
+    }
+  }
+
   // expects the stockpileBox to already been drawn into the canvasImgmatch
   async _countItems(iconSizePx, stockpileBox) {
-    let tesseract = new OCR();
-    await tesseract.init();
     let found = [];
     let image = cv.imread(this.screenshotImg);
     var screenshot = new cv.Mat();
@@ -245,7 +297,7 @@ class ItemCounter {
       let dsize = new cv.Size(countBox.width*4.0, countBox.height*4.0);
       cv.resize(countSmallMat, countMat, dsize, 0, 0, cv.INTER_CUBIC);
       countSmallMat.delete();
-      let itemCount = await tesseract.itemCount(this._mat2canvas(countMat), countPoints);
+      let itemCount = await this.tesseract.itemCount(this._mat2canvas(countMat), countPoints);
       console.log(item.itemName + ": " + itemCount);
       found.push({ "name": item.itemName, "count": itemCount });
       let perfOCRed = performance.now();
@@ -328,7 +380,7 @@ class Progress {
     this.step = 0; // 0 = not even started
     this.steps = 2;
     this.description = '';
-    this.error = null; 
+    this.errorMsg = null; 
   }
 
   _callback() {
@@ -338,12 +390,13 @@ class Progress {
       'step': this.step,
       'steps': this.steps,
       'description': this.description,
-      'error': this.error,
+      'error': this.errorMsg,
     });
   }
 
   error(message) {
     this.error = message;
+    console.error(message);
     this._callback();
   }
 

@@ -26,7 +26,7 @@ const printCSV = async (findings) => {
   let pyramidPrio = "";
   let limit = "";
   for (const item of sortedItems) {
-    let found = findings.find((finding) => { return item.itemName === finding.name; });
+    let found = findings.items.find((finding) => { return item.itemName === finding.name; });
     if (typeof found === 'undefined') {
       continue;
     }
@@ -95,6 +95,7 @@ const run = async () => {
   let visualizationCanvas = document.getElementById('canvasImgmatch');
   let list = document.getElementById("itemlist");
   itemcounter = new ItemCounter(tmpCanvas, progressCb, currentTemplate, visualizationCanvas, list);
+  await itemcounter.init();
   itemcounter.setFaction(await getFaction());
 
   let fileselector = document.getElementById('fileInputSrc');
@@ -103,6 +104,9 @@ const run = async () => {
   let findings = await itemcounter.count(screenshot); // takes long
   if (findings === null) {
     return;
+  }
+  if (findings.stockpileType === 'unknown') {
+    window.alert('Stockpile type unknown. Assuming a Seaport or Storage Depot...');
   }
 
   await printCSV(findings);

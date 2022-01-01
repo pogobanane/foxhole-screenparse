@@ -4163,3 +4163,8 @@ const extra_icons = {
     "imgPath": "icons/items/subtypeammo.png"
   }
 }
+
+const stockpile_types = [
+  "Seaport",
+  "Storage Depot",
+]
