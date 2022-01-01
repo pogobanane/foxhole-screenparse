@@ -105,6 +105,7 @@ const run = async () => {
   let screenshot = await loadImage(screenshotUrl);
   let findings = await itemcounter.count(screenshot); // takes long
   if (findings === null) {
+    window.alert('No stockpile found on screenshot.');
     return;
   }
   if (findings.stockpileType === null) {

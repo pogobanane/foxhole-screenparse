@@ -480,7 +480,7 @@ const confidentEnough = (confidence, item) => {
   if (['Rifle', 'Long Rifle'].includes(item.itemClass)) {
     return confidence > 0.95;
   } else {
-    return confidence > 0.9;
+    return confidence > 0.95;
   }
 }
 
@@ -570,7 +570,7 @@ const addExtraDecor = async (scaledItemMat, decorMat, position, itemSizePx) => {
   cv.multiply(scaledItemMat, alphaMaskInv, background1, 1.0, scaledItemMat.type());
   
   // apply alpha mask to each color and add it with factor 1/3 to background
-  let brightness = 0.9;
+  let brightness = 0.85;
   cv.multiply(planes.get(0), alphaMask, step5, 1.0/3.0*brightness, planes.get(0).type());
   cv.add(background1, step5, background2, emptyMask, background1.type());
   cv.multiply(planes.get(1), alphaMask, step5, 1.0/3.0*brightness, planes.get(0).type());
@@ -636,6 +636,7 @@ const imgmatch = async (haystackMat, needleMat) => {
   let mask = new cv.Mat();
   let foo = new cv.Mat();
   cv.matchTemplate(haystackMat, needleMat, dst, cv.TM_CCOEFF_NORMED, mask);
+  // good explanation of modes https://stackoverflow.com/questions/58158129/understanding-and-evaluating-template-matching-methods
   let best = null;
   let matches = [];
   for (let i = 0; i <= 20; i++){
