@@ -453,9 +453,10 @@ const addExtraDecor = async (scaledItemMat, decorMat, position, itemSizePx) => {
   let emptyMask = new cv.Mat();
   // @ itemSizePx=32
   // scale to 14x14px
+  // 19x19 px @ itemSizePx=43
   const length = Math.round(14.0 / 32.0 * itemSizePx);
   let dsize = new cv.Size(length, length);
-  cv.resize(decorMat, step3, dsize, 0, 0, cv.INTER_AREA);
+  cv.resize(decorMat, step3, dsize, 0, 0, cv.INTER_CUBIC);
   // px away from bottom and 1 from right
   let fillerColor = new cv.Scalar(0, 0, 0, 0);
 
@@ -489,7 +490,8 @@ const addExtraDecor = async (scaledItemMat, decorMat, position, itemSizePx) => {
   planes.get(0).convertTo(maxVal, -1, 0, 255);
   let oneVal = new cv.Mat();
   maxVal.convertTo(oneVal, cv.CV_32F, 0, 1);
-  planes.get(3).convertTo(alphaMask, cv.CV_32F, 1.0 / 256.0, 0);
+  let decorTransparency = 0.8;
+  planes.get(3).convertTo(alphaMask, cv.CV_32F, 1.0 / 256.0 * decorTransparency, 0);
   cv.subtract(oneVal, alphaMask, alphaMaskInv, new cv.Mat(), -1);
   let background1 = new cv.Mat();
   let background2 = new cv.Mat();
@@ -498,11 +500,12 @@ const addExtraDecor = async (scaledItemMat, decorMat, position, itemSizePx) => {
   cv.multiply(scaledItemMat, alphaMaskInv, background1, 1.0, scaledItemMat.type());
   
   // apply alpha mask to each color and add it with factor 1/3 to background
-  cv.multiply(planes.get(0), alphaMask, step5, 1.0/3.0, planes.get(0).type());
+  let brightness = 0.9;
+  cv.multiply(planes.get(0), alphaMask, step5, 1.0/3.0*brightness, planes.get(0).type());
   cv.add(background1, step5, background2, emptyMask, background1.type());
-  cv.multiply(planes.get(1), alphaMask, step5, 1.0/3.0, planes.get(0).type());
+  cv.multiply(planes.get(1), alphaMask, step5, 1.0/3.0*brightness, planes.get(0).type());
   cv.add(background2, step5, background3, emptyMask, background1.type());
-  cv.multiply(planes.get(2), alphaMask, step5, 1.0/3.0, planes.get(0).type());
+  cv.multiply(planes.get(2), alphaMask, step5, 1.0/3.0*brightness, planes.get(0).type());
   cv.add(background3, step5, background4, emptyMask, background1.type());
 
   step2.delete(); step3.delete(); step4.delete(); step5.delete(); emptyMask.delete();
@@ -520,6 +523,7 @@ const prepareItem = async (inMat, item, itemSizePx) => {
   let rgbaPlanes = new cv.MatVector();
   cv.split(inMat, rgbaPlanes);
   let step2 = new cv.Mat();
+  let step3 = new cv.Mat();
   let nilVal = new cv.Mat();
   rgbaPlanes.get(0).convertTo(nilVal, -1, 0, 0);
   let maxVal = new cv.Mat();
@@ -531,25 +535,19 @@ const prepareItem = async (inMat, item, itemSizePx) => {
   //cv.add(step2, step3, 254);
   rgbaPlanes.get(3).convertTo(alphaMask, cv.CV_32F, 1.0/256.0, 0);
   // bake alpha into R
-  cv.multiply(rgbaPlanes.get(0), alphaMask, step2, 1.0, rgbaPlanes.get(0).type());
-  rgbaPlanes.set(0, step2);
+  cv.multiply(rgbaPlanes.get(0), alphaMask, gray, 1.0/3.0, rgbaPlanes.get(0).type());
   // bake alpha into G
-  cv.multiply(rgbaPlanes.get(1), alphaMask, step2, 1.0, rgbaPlanes.get(0).type());
-  rgbaPlanes.set(1, step2);
+  cv.multiply(rgbaPlanes.get(1), alphaMask, step2, 1.0/3.0, rgbaPlanes.get(0).type());
+  cv.add(gray, step2, step3, mask, rgbaPlanes.get(0).type());
   // bake alpha into B
-  cv.multiply(rgbaPlanes.get(2), alphaMask, step2, 1.0, rgbaPlanes.get(0).type());
-  rgbaPlanes.set(2, step2);
-  // set transparency to 255 (none)
-  rgbaPlanes.set(3, maxVal);
-  // merge planes
-  cv.merge(rgbaPlanes, step);
-  cv.cvtColor(step, gray, cv.COLOR_RGBA2GRAY, 0); 
+  cv.multiply(rgbaPlanes.get(2), alphaMask, step2, 1.0/3.0, rgbaPlanes.get(0).type());
+  cv.add(step3, step2, gray, mask, rgbaPlanes.get(0).type());
   let dsize = new cv.Size(itemSizePx, itemSizePx);
-  // You can try more different parameters
   cv.resize(gray, dst, dsize, 0, 0, cv.INTER_AREA);
   let crated = await addCrate(dst, itemSizePx);
   let extraIconed = await addExtraIcon(crated, item, itemSizePx);
-  step.delete(); dst.delete(); rgbaPlanes.delete(); step2.delete(); nilVal.delete(); 
+  step.delete(); dst.delete(); rgbaPlanes.delete(); step2.delete(); step3.delete();
+  nilVal.delete(); 
   maxVal.delete(); 
   alphaMask.delete(); 
   mask.delete(); 
