@@ -18,6 +18,8 @@ Both of those libraries run directly in your browser using wasm and thelike.
 
 # Build / Deploy
 
+Clone this repository with all submodules: `git clone --recurse-submodules [repourl]`
+
 The webpage has no backend, so just shove the files into some webroot or so.
 
 # Conribute

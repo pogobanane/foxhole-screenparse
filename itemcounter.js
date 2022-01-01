@@ -144,7 +144,7 @@ class ItemCounter {
         console.error("Requesting item from unknown iconpack.");
         return null;
       }
-      let url = 'iconpacks/' + iconpack + '/' + item.imgUasset;
+      let url = 'iconpacks/mods/' + iconpack + '/' + item.imgUasset;
       if (this.http404s.includes(url)) {
         // Quick fallback to default item
       } else {
