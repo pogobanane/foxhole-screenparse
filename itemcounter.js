@@ -10,6 +10,11 @@ class ItemCounter {
     this.iconpack = null; // one of known_iconpacks
     this.screenshotImg = null;
     this.http404s = [];
+    this.tesseract = new OCR();
+  }
+
+  async init() {
+    await this.tesseract.init();
   }
 
   setFaction(faction) {
@@ -37,8 +42,15 @@ class ItemCounter {
       return null;
     }
     console.warn('calibration ', cal);
-    let findings = await this._countItems(cal.itemSizePx, cal.stockpileBox);
-    return findings;
+    let findings = await this._countItems(cal);
+    if (findings == null) {
+      console.warn("Nothing found?");
+      return null;
+    }
+    let ret = {};
+    ret.items = findings;
+    ret.stockpileType = cal.stockpileType;
+    return ret;
   }
 
   async _calibrate() {
@@ -87,6 +99,7 @@ class ItemCounter {
       return null;
     }
   
+    // sanity check 1
     let ydiff = 
       (bsups.y0 + bsups.y1) / 2.0 - 
       (shirt2.y0 + shirt2.y1) / 2.0;
@@ -94,12 +107,13 @@ class ItemCounter {
     let xdiff = 
       (bsups.x0 + bsups.x1) / 2.0 - 
       (shirt2.x0 + shirt2.x1) / 2.0;
-    if (ydiff > 1 || bsups.confidence < 0.9) {
-      this.progress.error('Could not find stockpile on screenshot. (ydiff ' + ydiff + ', sconf ' + bsups.confidence.toFixed(2) + ')');
+    if (ydiff > 1) {
+      this.progress.error('Could not find stockpile on screenshot. (ydiff ' + ydiff + ')');
       croppedMat.delete();
       screenshot.delete();
       return null;
     }
+
     console.log(shirt2);
     console.log(bsups);
     console.log('distance px y ' + ydiff + ' x ' + xdiff);
@@ -109,11 +123,30 @@ class ItemCounter {
     rect.y = Math.max(rect.y, 0);
     rect.height = screenshot.rows - rect.y; // till the bottom
     rect.width = Math.min(screenshot.cols - rect.x, rect.width);
+    let shirtBox = points2point(shirt2, screenshot);
+    shirtBox.x += box.x; // shirt coords in croppedMat to coords in screenshot
+    shirtBox.y += box.y;
+    let stockpileType = await this._detectStockpileType(screenshot, shirtBox);
+
+    // sanity check 2
+    if (bsups.confidence < 0.9) {
+      // we calibrated with crate icon. Lets try without. 
+      let match = await this.calibrateFind(croppedMat, 'Bunker Supplies', false, itemSizePx);
+      if (match.confidence < 0.9) {
+        this.progress.error('Could not find stockpile on screenshot. ' + 
+          '(bcconf ' + bsups.confidence.toFixed(2) + 
+          ' bconf ' + match.confidence +
+          ')');
+        return null;
+      }
+    }
+
     croppedMat.delete();
     screenshot.delete();
     return {
       'itemSizePx': Math.round(itemSizePx),
       'stockpileBox': rect,
+      'stockpileType': stockpileType,
     };
   }
 
@@ -127,7 +160,7 @@ class ItemCounter {
         return null;
       }
       //console.log('testing px size ', iconSizePx);
-      let current = await this.calibrateFind(screenshot, itemName, iconSizePx);
+      let current = await this.calibrateFind(screenshot, itemName, true, iconSizePx);
       if (current.confidence > maxC) {
         maxC = current.confidence;
         maxPx = iconSizePx;
@@ -164,7 +197,7 @@ class ItemCounter {
     return await loadImage(getImgPath(item.imgPath));
   }
 
-  async calibrateFind(screenshotMat, itemName, iconSizePx) {
+  async calibrateFind(screenshotMat, itemName, crated, iconSizePx) {
     //let item = items.find((item) => { return item.itemName == 'Soldier Supplies'; });
     let item = items.find((item) => { return item.itemName == itemName; });
     let message = "Searching " + item.itemName + " at " + iconSizePx + "px...";
@@ -172,7 +205,7 @@ class ItemCounter {
     this.progress.step1('Calibration: ' + message);
     let icon = await this.loadItemIcon(item, this.iconpack);
     let iconUnprocessedMat = cv.imread(icon);
-    let iconMat = await prepareItem(iconUnprocessedMat, item, iconSizePx);
+    let iconMat = await prepareItem(iconUnprocessedMat, item, crated, iconSizePx);
     iconUnprocessedMat.delete();
     if (this.currentTemplate !== null) {
       cv.imshow(this.currentTemplate, iconMat);
@@ -187,20 +220,55 @@ class ItemCounter {
     return best;
   }
 
-  // expects the stockpileBox to already been drawn into the canvasImgmatch
-  async _countItems(iconSizePx, stockpileBox) {
-    let tesseract = new OCR();
-    await tesseract.init();
+  // returns one of stockpile_types or null if unknown
+  async _detectStockpileType(screenshot, shirtBox) {
+    let box = shirtBox;
+    box.x = box.x - box.height;
+    box.y = box.y - 1.5 * box.width;
+    box.width = box.width * 7.0;
+    box.height = box.height * 1.5;
+    box = box2bounds(box, screenshot);
+    let rect = new cv.Rect(
+            box.x,
+            box.y,
+            box.width,
+            box.height,
+          );
+    let croppedMat = screenshot.roi(rect);
+    let enlargedMat = new cv.Mat();
+    let dsize = new cv.Size(croppedMat.cols*4.0, croppedMat.rows*4.0);
+    cv.resize(croppedMat, enlargedMat, dsize, 0, 0, cv.INTER_CUBIC);
+    let postprocessedMat = await postprocessSeaport(enlargedMat);
+    if (this.visCanvas !== null) {
+      cv.imshow(this.visCanvas, postprocessedMat);
+    }
+    let text = await this.tesseract.detectSeaport(this._mat2canvas(postprocessedMat));
+    postprocessedMat.delete();
+    enlargedMat.delete();
+    croppedMat.delete();
+
+    let type = stockpile_types.find((t) => {
+      return text.includes(t.label);
+    });
+    if (typeof type === 'undefined') {
+      return null;
+    } else {
+      return type;
+    }
+  }
+
+  // expects the calibration.stockpileBox to already been drawn into the canvasImgmatch
+  async _countItems(calibration) {
     let found = [];
     let image = cv.imread(this.screenshotImg);
     var screenshot = new cv.Mat();
     cv.cvtColor(image, screenshot, cv.COLOR_RGBA2GRAY, 0);
     image.delete();
     let rect = new cv.Rect(
-            stockpileBox.x, 
-            stockpileBox.y, 
-            stockpileBox.width,
-            stockpileBox.height,
+            calibration.stockpileBox.x, 
+            calibration.stockpileBox.y, 
+            calibration.stockpileBox.width,
+            calibration.stockpileBox.height,
           );
     console.log(rect);
     let stockpileMat = screenshot.roi(rect);
@@ -232,7 +300,8 @@ class ItemCounter {
       console.log("Searching " + item.itemName + "...");
       let icon = await this.loadItemIcon(item, this.iconpack);
       let iconUnprocessedMat = cv.imread(icon);
-      let iconMat = await prepareItem(iconUnprocessedMat, item, iconSizePx);
+      let crated = calibration.stockpileType.crateBased;
+      let iconMat = await prepareItem(iconUnprocessedMat, item, crated, calibration.itemSizePx);
       iconUnprocessedMat.delete();
       if (this.currentTemplate !== null) {
         cv.imshow(this.currentTemplate, iconMat);
@@ -256,7 +325,7 @@ class ItemCounter {
         continue;
       }
   
-      const countPoints = itemCountPos(box.x, box.y, iconSizePx);
+      const countPoints = itemCountPos(box.x, box.y, calibration.itemSizePx);
       if (this.visCanvas !== null) {
         let debugShot = cv.imread(this.visCanvas);
         await drawRect(debugShot, best.x0, best.y0, best.x1, best.y1);
@@ -277,7 +346,7 @@ class ItemCounter {
       let dsize = new cv.Size(countBox.width*4.0, countBox.height*4.0);
       cv.resize(countSmallMat, countMat, dsize, 0, 0, cv.INTER_CUBIC);
       countSmallMat.delete();
-      let itemCount = await tesseract.itemCount(this._mat2canvas(countMat), countPoints);
+      let itemCount = await this.tesseract.itemCount(this._mat2canvas(countMat), countPoints);
       console.log(item.itemName + ": " + itemCount);
       found.push({ "name": item.itemName, "count": itemCount });
       let perfOCRed = performance.now();
@@ -360,7 +429,7 @@ class Progress {
     this.step = 0; // 0 = not even started
     this.steps = 2;
     this.description = '';
-    this.error = null; 
+    this.errorMsg = null; 
   }
 
   _callback() {
@@ -370,12 +439,13 @@ class Progress {
       'step': this.step,
       'steps': this.steps,
       'description': this.description,
-      'error': this.error,
+      'error': this.errorMsg,
     });
   }
 
   error(message) {
     this.error = message;
+    console.error(message);
     this._callback();
   }
 
@@ -517,7 +587,7 @@ const addExtraDecor = async (scaledItemMat, decorMat, position, itemSizePx) => {
 }
 
 // returns mat of processed item
-const prepareItem = async (inMat, item, itemSizePx) => {
+const prepareItem = async (inMat, item, crated, itemSizePx) => {
   let step = new cv.Mat();
   let dst = new cv.Mat();
   let rgbaPlanes = new cv.MatVector();
@@ -544,15 +614,20 @@ const prepareItem = async (inMat, item, itemSizePx) => {
   cv.add(step3, step2, gray, mask, rgbaPlanes.get(0).type());
   let dsize = new cv.Size(itemSizePx, itemSizePx);
   cv.resize(gray, dst, dsize, 0, 0, cv.INTER_AREA);
-  let crated = await addCrate(dst, itemSizePx);
-  let extraIconed = await addExtraIcon(crated, item, itemSizePx);
+  let withCrate;
+  if (crated) {
+    withCrate = await addCrate(dst, itemSizePx);
+  } else {
+    withCrate = dst.clone();
+  }
+  let extraIconed = await addExtraIcon(withCrate, item, itemSizePx);
   step.delete(); dst.delete(); rgbaPlanes.delete(); step2.delete(); step3.delete();
   nilVal.delete(); 
   maxVal.delete(); 
   alphaMask.delete(); 
   mask.delete(); 
   gray.delete(); 
-  crated.delete();
+  withCrate.delete();
   return extraIconed;
 }
 

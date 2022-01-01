@@ -4280,3 +4280,18 @@ const extra_icons = {
     "imgPath": "icons/items/subtypeammo.png"
   }
 }
+
+const stockpile_types = [
+  {
+    "label": "Seaport",
+    "crateBased": true
+  },
+  {
+    "label": "Storage Depot",
+    "crateBased": true
+  },
+  {
+    "label": "Bunker Base",
+    "crateBased": false
+  }
+]
