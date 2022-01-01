@@ -66,3 +66,21 @@ class OCR {
     return result.data.text;
   }
 }
+
+// returns: matOut
+const postprocessSeaport = async (matIn) => {
+  let step = new cv.Mat();
+  let step2 = new cv.Mat();
+  //cv.cvtColor(matIn, step, cv.COLOR_RGBA2GRAY, 0);
+  //let lut = [];
+  //lut += interpolateArray([0, 0], 256/2);
+  //lut += interpolateArray([0, 7*(256/8)], 7*(256/8));
+  //lut += interpolateArray([7*(256/8), 255], 1*(256/8));
+  //console.log(lut);
+  //cv.LUT(src, lut, dst);
+  cv.threshold(matIn, step2, 0.75*256, 255, cv.THRESH_BINARY);
+  //cv.threshold(step, dst, 0.65*256, 0, cv.THRESH_TOZERO);
+  cv.bitwise_not(step2, step);
+  step2.delete();
+  return step;
+}
