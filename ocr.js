@@ -26,7 +26,7 @@ class OCR {
       //'tessedit_pageseg_mode': 8,
       //'tessedit_ocr_engine_mode': Tesseract.OEM.TESSERACT_ONLY,
       'tessedit_pageseg_mode': Tesseract.PSM.SINGLE_WORD,
-      'tessedit_char_whitelist': '0123456789',
+      'tessedit_char_whitelist': '0123456789k+',
       'tessjs_create_hocr': '0',
       'tessjs_create_tsv': '0'
       //'tessjs_create_osd': '1'
@@ -42,9 +42,7 @@ class OCR {
     console.debug(result);
     console.debug(result.data.text);
 
-    const itemCount = parseInt(result.data.text);
-
-    return itemCount;
+    return parseNKInt(result.data.text);
   }
 
   async detectSeaport(domElem) {
@@ -64,6 +62,16 @@ class OCR {
     console.debug(result.data.text);
 
     return result.data.text;
+  }
+}
+
+const parseNKInt = (string) => {
+  let str = string.replace(/(\r\n|\n|\r| )/g,"");
+  if (str.endsWith("k+")) {
+    let thousand = str.slice(0, -2);
+    return parseInt(thousand) * 1000;
+  } else {
+    return parseInt(str);
   }
 }
 
