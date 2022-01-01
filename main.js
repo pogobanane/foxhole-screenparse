@@ -94,7 +94,7 @@ const run = async () => {
   let currentTemplate = document.getElementById('canvasItem');
   let visualizationCanvas = document.getElementById('canvasImgmatch');
   let list = document.getElementById("itemlist");
-  itemcounter = new ItemCounter(tmpCanvas, progressCb, currentTemplate, visualizationCanvas, list, stockpile_types);
+  itemcounter = new ItemCounter(tmpCanvas, progressCb, currentTemplate, visualizationCanvas, list);
   await itemcounter.init();
   itemcounter.setFaction(await getFaction());
 
@@ -105,8 +105,11 @@ const run = async () => {
   if (findings === null) {
     return;
   }
-  if (findings.stockpileType === 'unknown') {
+  if (findings.stockpileType === null) {
     window.alert('Stockpile type unknown. Assuming a Seaport or Storage Depot...');
+  }
+  if (!findings.stockpileType.crateBased) {
+    window.alert('Stockpile is not crate based. Some Table columns are wrong.');
   }
 
   await printCSV(findings);

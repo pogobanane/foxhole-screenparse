@@ -1,11 +1,10 @@
 class ItemCounter {
-  constructor(tmpCanvas, progressCallback = (progress)=>{}, currentTemplate = null, visualizationCanvas = null, domList = null, stockpileTypes = stockpile_types) {
+  constructor(tmpCanvas, progressCallback = (progress)=>{}, currentTemplate = null, visualizationCanvas = null, domList = null) {
     this.tmpCanvas = tmpCanvas; // scratchpad canvas element (should be display: none)
     this.progress = new Progress(progressCallback);
     this.currentTemplate = currentTemplate; // template used for current matching
     this.visCanvas = visualizationCanvas; // visualization of detected items
     this.domList = domList; // list of debug info for items
-    this.stockpileTypes; // list of accepted stockpile types
     this.abort = false;
     this.faction = null; // 'colonial' or 'warden'
     this.screenshotImg = null;
@@ -173,7 +172,7 @@ class ItemCounter {
     return best;
   }
 
-  // returns one of stockpile_types or 'unknown'
+  // returns one of stockpile_types or null if unknown
   async _detectStockpileType(screenshot, shirtBox) {
     let box = shirtBox;
     box.x = box.x - box.height;
@@ -200,11 +199,11 @@ class ItemCounter {
     enlargedMat.delete();
     croppedMat.delete();
 
-    let type = stockpile_types.find((s) => {
-      return text.includes(s);
+    let type = stockpile_types.find((t) => {
+      return text.includes(t.label);
     });
     if (typeof type === 'undefined') {
-      return 'unknown';
+      return null;
     } else {
       return type;
     }

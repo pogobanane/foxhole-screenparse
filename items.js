@@ -4165,6 +4165,16 @@ const extra_icons = {
 }
 
 const stockpile_types = [
-  "Seaport",
-  "Storage Depot",
+  {
+    "label": "Seaport",
+    "crateBased": true
+  },
+  {
+    "label": "Storage Depot",
+    "crateBased": true
+  },
+  {
+    "label": "Bunker Base",
+    "crateBased": false
+  }
 ]
