@@ -1,10 +1,11 @@
 class ItemCounter {
-  constructor(tmpCanvas, progressCallback = (progress)=>{}, currentTemplate = null, visualizationCanvas = null, domList = null) {
+  constructor(tmpCanvas, progressCallback = (progress)=>{}, currentTemplate = null, visualizationCanvas = null, domList = null, stockpileTypes = stockpile_types) {
     this.tmpCanvas = tmpCanvas; // scratchpad canvas element (should be display: none)
     this.progress = new Progress(progressCallback);
     this.currentTemplate = currentTemplate; // template used for current matching
     this.visCanvas = visualizationCanvas; // visualization of detected items
     this.domList = domList; // list of debug info for items
+    this.stockpileTypes; // list of accepted stockpile types
     this.abort = false;
     this.faction = null; // 'colonial' or 'warden'
     this.screenshotImg = null;

@@ -94,7 +94,7 @@ const run = async () => {
   let currentTemplate = document.getElementById('canvasItem');
   let visualizationCanvas = document.getElementById('canvasImgmatch');
   let list = document.getElementById("itemlist");
-  itemcounter = new ItemCounter(tmpCanvas, progressCb, currentTemplate, visualizationCanvas, list);
+  itemcounter = new ItemCounter(tmpCanvas, progressCb, currentTemplate, visualizationCanvas, list, stockpile_types);
   await itemcounter.init();
   itemcounter.setFaction(await getFaction());
 
