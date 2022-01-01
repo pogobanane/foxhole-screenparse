@@ -96,6 +96,8 @@ const run = async () => {
   let list = document.getElementById("itemlist");
   itemcounter = new ItemCounter(tmpCanvas, progressCb, currentTemplate, visualizationCanvas, list);
   itemcounter.setFaction(await getFaction());
+  let iconpack = document.getElementById("iconpack-select").selectedOptions[0].value;
+  itemcounter.setIconpack(iconpack);
 
   let fileselector = document.getElementById('fileInputSrc');
   let screenshotUrl = URL.createObjectURL(fileselector.files[0]);
@@ -110,4 +112,16 @@ const run = async () => {
 
 const abort = () => {
   itemcounter.abort = true;
+}
+
+const loaded = async () => {
+  connect_file_img('imageSrc', 'fileInputSrc');
+
+  for (let pack of known_iconpacks) {
+    let option = document.createElement('option');
+    option.setAttribute('value', pack);
+    let label = document.createTextNode(pack + ' (experimental)');
+    option.appendChild(label);
+    document.getElementById('iconpack-select').appendChild(option);
+  }
 }

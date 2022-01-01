@@ -7,12 +7,17 @@ class ItemCounter {
     this.domList = domList; // list of debug info for items
     this.abort = false;
     this.faction = null; // 'colonial' or 'warden'
+    this.iconpack = null; // one of known_iconpacks
     this.screenshotImg = null;
     this.http404s = [];
   }
 
   setFaction(faction) {
     this.faction = faction;
+  }
+
+  setIconpack(iconpack) {
+    this.iconpack = iconpack;
   }
 
   // returns null on error
@@ -165,7 +170,7 @@ class ItemCounter {
     let message = "Searching " + item.itemName + " at " + iconSizePx + "px...";
     console.log(message);
     this.progress.step1('Calibration: ' + message);
-    let icon = await this.loadItemIcon(item, 'UILabelIcons2.0');
+    let icon = await this.loadItemIcon(item, this.iconpack);
     let iconUnprocessedMat = cv.imread(icon);
     let iconMat = await prepareItem(iconUnprocessedMat, item, iconSizePx);
     iconUnprocessedMat.delete();
@@ -225,7 +230,7 @@ class ItemCounter {
   
       let perfStart = performance.now();
       console.log("Searching " + item.itemName + "...");
-      let icon = await this.loadItemIcon(item, 'UILabelIcons2.0');
+      let icon = await this.loadItemIcon(item, this.iconpack);
       let iconUnprocessedMat = cv.imread(icon);
       let iconMat = await prepareItem(iconUnprocessedMat, item, iconSizePx);
       iconUnprocessedMat.delete();
