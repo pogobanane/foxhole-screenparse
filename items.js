@@ -3714,6 +3714,25 @@ const items = [
       }
     },
     {
+      "displayId": -1,
+      "faction": [
+        "colonial"
+      ],
+      "imgName": "",
+      "imgPath": "icons/uniforms/soldieruniformc.png",
+      "imgUasset": "ItemIcons/Uniforms/SoldierUniformCIcon.png",
+      "itemName": "Legionary Fatigues",
+      "itemClass": "Colonial Soldier Uniform",
+      "itemDesc": "Standard issue infantry uniform for the Colonial Legion, designed for general frontline warfare with ballistic weapons such as rifles and machine guns.",
+      "itemCategory": "uniforms",
+      "isCraftable": false,
+      "outfitBuffs": [
+        "8 backpack slots",
+        "Kinetic Firearms have reduced encumbrance",
+        "Light Kinetic Ammunition stacks"
+      ],
+    },
+    {
       "displayId": 0,
       "faction": [
         "colonial"
@@ -3893,8 +3912,25 @@ const items = [
         "bmat": 100
       }
     },
-
-    
+    {
+      "displayId": -2,
+      "faction": [
+        "warden"
+      ],
+      "imgName": "",
+      "imgPath": "icons/uniforms/soldieruniformw.png",
+      "imgUasset": "ItemIcons/Uniforms/SoldierUniformWIcon.png",
+      "itemName": "Infantry Battledress",
+      "itemClass": "Warden Soldier Uniform",
+      "itemDesc": "Most common Warden infantry uniform, designed for general frontline warfare with ballistic weapons such as rifles and machine guns.",
+      "itemCategory": "uniforms",
+      "isCraftable": false,
+      "outfitBuffs": [
+        "8 backpack slots",
+        "Kinetic Firearms have reduced encumbrance",
+        "Light Kinetic Ammunition stacks"
+      ],
+    },
     {
       "displayId": 7,
       "faction": [

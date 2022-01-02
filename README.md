@@ -13,7 +13,7 @@ Both of those libraries run directly in your browser using wasm and thelike.
 | Seaports/Storage Depots        | yes                   | yes                  |
 | Bunker Bases etc.              | partially             | yes                  |
 | Supports different resolutions | 1080p - 4k            | manual work required |
-| Supports modded item icons     | experimentally        | manual work required |
+| Supports modded item icons     | some                  | manual work required |
 | imaging tech                   | openCV, tesseract OCR | openCV               |
 | language                       | js                    | py                   |
 
