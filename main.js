@@ -127,8 +127,8 @@ const loaded = async () => {
 
   for (let pack of known_iconpacks) {
     let option = document.createElement('option');
-    option.setAttribute('value', pack);
-    let label = document.createTextNode(pack + ' (experimental)');
+    option.setAttribute('value', pack.name);
+    let label = document.createTextNode(pack.label);
     option.appendChild(label);
     document.getElementById('iconpack-select').appendChild(option);
   }

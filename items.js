@@ -4182,8 +4182,14 @@ const items = [
   ];
 
 const known_iconpacks = [
-  "NewIcons3.0",
-  "UILabelIcons2.0"
+  {
+    "name": "UILabelIcons2.0",
+    "label": "UILabelIcons2.0",
+  },
+  {
+    "name": "NewIcons3.0",
+    "label": "NewIcons3.0 (bad accuracy)",
+  }
 ]
 
 const extra_icons = {

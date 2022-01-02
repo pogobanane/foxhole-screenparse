@@ -7,7 +7,6 @@ class ItemCounter {
     this.domList = domList; // list of debug info for items
     this.abort = false;
     this.faction = null; // 'colonial' or 'warden'
-    this.iconpack = null; // one of known_iconpacks
     this.screenshotImg = null;
     this.http404s = [];
     this.tesseract = new OCR();
@@ -173,7 +172,10 @@ class ItemCounter {
 
   async loadItemIcon(item, iconpack = 'default') {
     if (iconpack !== 'default') {
-      if (!known_iconpacks.includes(iconpack)) {
+      let idx = known_iconpacks.findIndex((pack) => {
+        return pack.name == iconpack;
+      });
+      if (idx === -1) {
         console.error("Requesting item from unknown iconpack.");
         return null;
       }
@@ -318,7 +320,7 @@ class ItemCounter {
               box.height
             );
       let matchedMat = stockpileMat.roi(rect);
-      if (!confidentEnough(best.confidence, item)) {
+      if (!confidentEnough(best.confidence, item, calibration)) {
         console.info("Matching: " + (perfMatched - perfStart) + "ms");
         this._domListAppend(item, best.confidence, iconMat, matchedMat);
         found.push({ "name": item.itemName, "count": 0 });
@@ -473,14 +475,13 @@ class Progress {
   }
 }
 
-const confidentEnough = (confidence, item) => {
-  if (item.itemName == 'Sampo Auto-Rifle 77') {
-    console.log('foo');
-  }
+const confidentEnough = (confidence, item, calibration) => {
   if (['Rifle', 'Long Rifle'].includes(item.itemClass)) {
     return confidence > 0.95;
   } else {
-    return confidence > 0.95;
+    // 0.945 @ 32
+    // 0.89  @ 43
+    return confidence > -0.005000 * calibration.itemSizePx + 1.105;
   }
 }
 
