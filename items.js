@@ -4297,7 +4297,43 @@ const stockpile_types = [
     "crateBased": true
   },
   {
+    "label": "Keep",
+    "crateBased": false
+  },
+  {
+    "label": "Border Base",
+    "crateBased": false
+  },
+  {
     "label": "Bunker Base",
     "crateBased": false
-  }
+  },
+  {
+    "label": "Encampment",
+    "crateBased": false
+  },
+  {
+    "label": "Field Base",
+    "crateBased": false
+  },
+  {
+    "label": "Outpost",
+    "crateBased": false
+  },
+  {
+    "label": "Relic Base",
+    "crateBased": false
+  },
+  {
+    "label": "Safehouse",
+    "crateBased": false
+  },
+  { // Does this show on map?
+    "label": "Landing Ship",
+    "crateBased": false
+  },
+  {
+    "label": "Town Base",
+    "crateBased": false
+  },
 ]
