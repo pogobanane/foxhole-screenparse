@@ -1,0 +1,3 @@
+[submodule "iconpacks"]
+	path = iconpacks
+	url = https://github.com/pogobanane/foxhole-iconpacks.git

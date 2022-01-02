@@ -8,10 +8,20 @@ class ItemCounter {
     this.abort = false;
     this.faction = null; // 'colonial' or 'warden'
     this.screenshotImg = null;
+    this.http404s = [];
+    this.tesseract = new OCR();
+  }
+
+  async init() {
+    await this.tesseract.init();
   }
 
   setFaction(faction) {
     this.faction = faction;
+  }
+
+  setIconpack(iconpack) {
+    this.iconpack = iconpack;
   }
 
   // returns null on error
@@ -31,8 +41,15 @@ class ItemCounter {
       return null;
     }
     console.warn('calibration ', cal);
-    let findings = await this._countItems(cal.itemSizePx, cal.stockpileBox);
-    return findings;
+    let findings = await this._countItems(cal);
+    if (findings == null) {
+      console.warn("Nothing found?");
+      return null;
+    }
+    let ret = {};
+    ret.items = findings;
+    ret.stockpileType = cal.stockpileType;
+    return ret;
   }
 
   async _calibrate() {
@@ -81,6 +98,7 @@ class ItemCounter {
       return null;
     }
   
+    // sanity check 1
     let ydiff = 
       (bsups.y0 + bsups.y1) / 2.0 - 
       (shirt2.y0 + shirt2.y1) / 2.0;
@@ -88,12 +106,13 @@ class ItemCounter {
     let xdiff = 
       (bsups.x0 + bsups.x1) / 2.0 - 
       (shirt2.x0 + shirt2.x1) / 2.0;
-    if (ydiff > 1 || bsups.confidence < 0.9) {
-      this.progress.error('Could not find stockpile on screenshot. (ydiff ' + ydiff + ', sconf ' + bsups.confidence.toFixed(2) + ')');
+    if (ydiff > 1) {
+      this.progress.error('Could not find stockpile on screenshot. (ydiff ' + ydiff + ')');
       croppedMat.delete();
       screenshot.delete();
       return null;
     }
+
     console.log(shirt2);
     console.log(bsups);
     console.log('distance px y ' + ydiff + ' x ' + xdiff);
@@ -103,11 +122,30 @@ class ItemCounter {
     rect.y = Math.max(rect.y, 0);
     rect.height = screenshot.rows - rect.y; // till the bottom
     rect.width = Math.min(screenshot.cols - rect.x, rect.width);
+    let shirtBox = points2point(shirt2, screenshot);
+    shirtBox.x += box.x; // shirt coords in croppedMat to coords in screenshot
+    shirtBox.y += box.y;
+    let stockpileType = await this._detectStockpileType(screenshot, shirtBox);
+
+    // sanity check 2
+    if (bsups.confidence < 0.9) {
+      // we calibrated with crate icon. Lets try without. 
+      let match = await this.calibrateFind(croppedMat, 'Bunker Supplies', false, itemSizePx);
+      if (match.confidence < 0.9) {
+        this.progress.error('Could not find stockpile on screenshot. ' + 
+          '(bcconf ' + bsups.confidence.toFixed(2) + 
+          ' bconf ' + match.confidence +
+          ')');
+        return null;
+      }
+    }
+
     croppedMat.delete();
     screenshot.delete();
     return {
       'itemSizePx': Math.round(itemSizePx),
       'stockpileBox': rect,
+      'stockpileType': stockpileType,
     };
   }
 
@@ -121,7 +159,7 @@ class ItemCounter {
         return null;
       }
       //console.log('testing px size ', iconSizePx);
-      let current = await this.calibrateFind(screenshot, itemName, iconSizePx);
+      let current = await this.calibrateFind(screenshot, itemName, true, iconSizePx);
       if (current.confidence > maxC) {
         maxC = current.confidence;
         maxPx = iconSizePx;
@@ -132,15 +170,44 @@ class ItemCounter {
     return best;
   }
 
-  async calibrateFind(screenshotMat, itemName, iconSizePx) {
+  async loadItemIcon(item, iconpack = 'default') {
+    if (iconpack !== 'default') {
+      let idx = known_iconpacks.findIndex((pack) => {
+        return pack.name == iconpack;
+      });
+      if (idx === -1) {
+        console.error("Requesting item from unknown iconpack.");
+        return null;
+      }
+      let url = 'iconpacks/mods/' + iconpack + '/' + item.imgUasset;
+      if (this.http404s.includes(url)) {
+        // Quick fallback to default item
+      } else {
+        let response = await fetch(url);
+        if (response.ok) {
+          return await loadImage(URL.createObjectURL(await response.blob()));
+        } else if (response.status === 404) {
+          // this mod does not have this item. Fallback to default icons
+          this.http404s.push(url);
+        } else {
+          console.error("Connection/server error?", response);
+          return null;
+        }
+      }
+    }
+
+    return await loadImage(getImgPath(item.imgPath));
+  }
+
+  async calibrateFind(screenshotMat, itemName, crated, iconSizePx) {
     //let item = items.find((item) => { return item.itemName == 'Soldier Supplies'; });
     let item = items.find((item) => { return item.itemName == itemName; });
     let message = "Searching " + item.itemName + " at " + iconSizePx + "px...";
     console.log(message);
     this.progress.step1('Calibration: ' + message);
-    let icon = await loadImage(getImgPath(item.imgPath));
+    let icon = await this.loadItemIcon(item, this.iconpack);
     let iconUnprocessedMat = cv.imread(icon);
-    let iconMat = await prepareItem(iconUnprocessedMat, item, iconSizePx);
+    let iconMat = await prepareItem(iconUnprocessedMat, item, crated, iconSizePx);
     iconUnprocessedMat.delete();
     if (this.currentTemplate !== null) {
       cv.imshow(this.currentTemplate, iconMat);
@@ -155,20 +222,55 @@ class ItemCounter {
     return best;
   }
 
-  // expects the stockpileBox to already been drawn into the canvasImgmatch
-  async _countItems(iconSizePx, stockpileBox) {
-    let tesseract = new OCR();
-    await tesseract.init();
+  // returns one of stockpile_types or null if unknown
+  async _detectStockpileType(screenshot, shirtBox) {
+    let box = shirtBox;
+    box.x = box.x - box.height;
+    box.y = box.y - 1.5 * box.width;
+    box.width = box.width * 7.0;
+    box.height = box.height * 1.5;
+    box = box2bounds(box, screenshot);
+    let rect = new cv.Rect(
+            box.x,
+            box.y,
+            box.width,
+            box.height,
+          );
+    let croppedMat = screenshot.roi(rect);
+    let enlargedMat = new cv.Mat();
+    let dsize = new cv.Size(croppedMat.cols*4.0, croppedMat.rows*4.0);
+    cv.resize(croppedMat, enlargedMat, dsize, 0, 0, cv.INTER_CUBIC);
+    let postprocessedMat = await postprocessSeaport(enlargedMat);
+    if (this.visCanvas !== null) {
+      cv.imshow(this.visCanvas, postprocessedMat);
+    }
+    let text = await this.tesseract.detectSeaport(this._mat2canvas(postprocessedMat));
+    postprocessedMat.delete();
+    enlargedMat.delete();
+    croppedMat.delete();
+
+    let type = stockpile_types.find((t) => {
+      return text.includes(t.label);
+    });
+    if (typeof type === 'undefined') {
+      return null;
+    } else {
+      return type;
+    }
+  }
+
+  // expects the calibration.stockpileBox to already been drawn into the canvasImgmatch
+  async _countItems(calibration) {
     let found = [];
     let image = cv.imread(this.screenshotImg);
     var screenshot = new cv.Mat();
     cv.cvtColor(image, screenshot, cv.COLOR_RGBA2GRAY, 0);
     image.delete();
     let rect = new cv.Rect(
-            stockpileBox.x, 
-            stockpileBox.y, 
-            stockpileBox.width,
-            stockpileBox.height,
+            calibration.stockpileBox.x, 
+            calibration.stockpileBox.y, 
+            calibration.stockpileBox.width,
+            calibration.stockpileBox.height,
           );
     console.log(rect);
     let stockpileMat = screenshot.roi(rect);
@@ -198,9 +300,10 @@ class ItemCounter {
   
       let perfStart = performance.now();
       console.log("Searching " + item.itemName + "...");
-      let icon = await loadImage(getImgPath(item.imgPath));
+      let icon = await this.loadItemIcon(item, this.iconpack);
       let iconUnprocessedMat = cv.imread(icon);
-      let iconMat = await prepareItem(iconUnprocessedMat, item, iconSizePx);
+      let crated = calibration.stockpileType.crateBased;
+      let iconMat = await prepareItem(iconUnprocessedMat, item, crated, calibration.itemSizePx);
       iconUnprocessedMat.delete();
       if (this.currentTemplate !== null) {
         cv.imshow(this.currentTemplate, iconMat);
@@ -217,14 +320,14 @@ class ItemCounter {
               box.height
             );
       let matchedMat = stockpileMat.roi(rect);
-      if (!confidentEnough(best.confidence, item)) {
+      if (!confidentEnough(best.confidence, item, calibration)) {
         console.info("Matching: " + (perfMatched - perfStart) + "ms");
         this._domListAppend(item, best.confidence, iconMat, matchedMat);
         found.push({ "name": item.itemName, "count": 0 });
         continue;
       }
   
-      const countPoints = itemCountPos(box.x, box.y, iconSizePx);
+      const countPoints = itemCountPos(box.x, box.y, calibration.itemSizePx);
       if (this.visCanvas !== null) {
         let debugShot = cv.imread(this.visCanvas);
         await drawRect(debugShot, best.x0, best.y0, best.x1, best.y1);
@@ -245,7 +348,7 @@ class ItemCounter {
       let dsize = new cv.Size(countBox.width*4.0, countBox.height*4.0);
       cv.resize(countSmallMat, countMat, dsize, 0, 0, cv.INTER_CUBIC);
       countSmallMat.delete();
-      let itemCount = await tesseract.itemCount(this._mat2canvas(countMat), countPoints);
+      let itemCount = await this.tesseract.itemCount(this._mat2canvas(countMat), countPoints);
       console.log(item.itemName + ": " + itemCount);
       found.push({ "name": item.itemName, "count": itemCount });
       let perfOCRed = performance.now();
@@ -328,7 +431,7 @@ class Progress {
     this.step = 0; // 0 = not even started
     this.steps = 2;
     this.description = '';
-    this.error = null; 
+    this.errorMsg = null; 
   }
 
   _callback() {
@@ -338,12 +441,13 @@ class Progress {
       'step': this.step,
       'steps': this.steps,
       'description': this.description,
-      'error': this.error,
+      'error': this.errorMsg,
     });
   }
 
   error(message) {
     this.error = message;
+    console.error(message);
     this._callback();
   }
 
@@ -371,14 +475,13 @@ class Progress {
   }
 }
 
-const confidentEnough = (confidence, item) => {
-  if (item.itemName == 'Sampo Auto-Rifle 77') {
-    console.log('foo');
-  }
+const confidentEnough = (confidence, item, calibration) => {
   if (['Rifle', 'Long Rifle'].includes(item.itemClass)) {
     return confidence > 0.95;
   } else {
-    return confidence > 0.9;
+    // 0.945 @ 32
+    // 0.89  @ 43
+    return confidence > -0.005000 * calibration.itemSizePx + 1.105;
   }
 }
 
@@ -421,9 +524,10 @@ const addExtraDecor = async (scaledItemMat, decorMat, position, itemSizePx) => {
   let emptyMask = new cv.Mat();
   // @ itemSizePx=32
   // scale to 14x14px
+  // 19x19 px @ itemSizePx=43
   const length = Math.round(14.0 / 32.0 * itemSizePx);
   let dsize = new cv.Size(length, length);
-  cv.resize(decorMat, step3, dsize, 0, 0, cv.INTER_AREA);
+  cv.resize(decorMat, step3, dsize, 0, 0, cv.INTER_CUBIC);
   // px away from bottom and 1 from right
   let fillerColor = new cv.Scalar(0, 0, 0, 0);
 
@@ -457,7 +561,8 @@ const addExtraDecor = async (scaledItemMat, decorMat, position, itemSizePx) => {
   planes.get(0).convertTo(maxVal, -1, 0, 255);
   let oneVal = new cv.Mat();
   maxVal.convertTo(oneVal, cv.CV_32F, 0, 1);
-  planes.get(3).convertTo(alphaMask, cv.CV_32F, 1.0 / 256.0, 0);
+  let decorTransparency = 0.8;
+  planes.get(3).convertTo(alphaMask, cv.CV_32F, 1.0 / 256.0 * decorTransparency, 0);
   cv.subtract(oneVal, alphaMask, alphaMaskInv, new cv.Mat(), -1);
   let background1 = new cv.Mat();
   let background2 = new cv.Mat();
@@ -466,11 +571,12 @@ const addExtraDecor = async (scaledItemMat, decorMat, position, itemSizePx) => {
   cv.multiply(scaledItemMat, alphaMaskInv, background1, 1.0, scaledItemMat.type());
   
   // apply alpha mask to each color and add it with factor 1/3 to background
-  cv.multiply(planes.get(0), alphaMask, step5, 1.0/3.0, planes.get(0).type());
+  let brightness = 0.85;
+  cv.multiply(planes.get(0), alphaMask, step5, 1.0/3.0*brightness, planes.get(0).type());
   cv.add(background1, step5, background2, emptyMask, background1.type());
-  cv.multiply(planes.get(1), alphaMask, step5, 1.0/3.0, planes.get(0).type());
+  cv.multiply(planes.get(1), alphaMask, step5, 1.0/3.0*brightness, planes.get(0).type());
   cv.add(background2, step5, background3, emptyMask, background1.type());
-  cv.multiply(planes.get(2), alphaMask, step5, 1.0/3.0, planes.get(0).type());
+  cv.multiply(planes.get(2), alphaMask, step5, 1.0/3.0*brightness, planes.get(0).type());
   cv.add(background3, step5, background4, emptyMask, background1.type());
 
   step2.delete(); step3.delete(); step4.delete(); step5.delete(); emptyMask.delete();
@@ -482,12 +588,13 @@ const addExtraDecor = async (scaledItemMat, decorMat, position, itemSizePx) => {
 }
 
 // returns mat of processed item
-const prepareItem = async (inMat, item, itemSizePx) => {
+const prepareItem = async (inMat, item, crated, itemSizePx) => {
   let step = new cv.Mat();
   let dst = new cv.Mat();
   let rgbaPlanes = new cv.MatVector();
   cv.split(inMat, rgbaPlanes);
   let step2 = new cv.Mat();
+  let step3 = new cv.Mat();
   let nilVal = new cv.Mat();
   rgbaPlanes.get(0).convertTo(nilVal, -1, 0, 0);
   let maxVal = new cv.Mat();
@@ -499,30 +606,29 @@ const prepareItem = async (inMat, item, itemSizePx) => {
   //cv.add(step2, step3, 254);
   rgbaPlanes.get(3).convertTo(alphaMask, cv.CV_32F, 1.0/256.0, 0);
   // bake alpha into R
-  cv.multiply(rgbaPlanes.get(0), alphaMask, step2, 1.0, rgbaPlanes.get(0).type());
-  rgbaPlanes.set(0, step2);
+  cv.multiply(rgbaPlanes.get(0), alphaMask, gray, 1.0/3.0, rgbaPlanes.get(0).type());
   // bake alpha into G
-  cv.multiply(rgbaPlanes.get(1), alphaMask, step2, 1.0, rgbaPlanes.get(0).type());
-  rgbaPlanes.set(1, step2);
+  cv.multiply(rgbaPlanes.get(1), alphaMask, step2, 1.0/3.0, rgbaPlanes.get(0).type());
+  cv.add(gray, step2, step3, mask, rgbaPlanes.get(0).type());
   // bake alpha into B
-  cv.multiply(rgbaPlanes.get(2), alphaMask, step2, 1.0, rgbaPlanes.get(0).type());
-  rgbaPlanes.set(2, step2);
-  // set transparency to 255 (none)
-  rgbaPlanes.set(3, maxVal);
-  // merge planes
-  cv.merge(rgbaPlanes, step);
-  cv.cvtColor(step, gray, cv.COLOR_RGBA2GRAY, 0); 
+  cv.multiply(rgbaPlanes.get(2), alphaMask, step2, 1.0/3.0, rgbaPlanes.get(0).type());
+  cv.add(step3, step2, gray, mask, rgbaPlanes.get(0).type());
   let dsize = new cv.Size(itemSizePx, itemSizePx);
-  // You can try more different parameters
   cv.resize(gray, dst, dsize, 0, 0, cv.INTER_AREA);
-  let crated = await addCrate(dst, itemSizePx);
-  let extraIconed = await addExtraIcon(crated, item, itemSizePx);
-  step.delete(); dst.delete(); rgbaPlanes.delete(); step2.delete(); nilVal.delete(); 
+  let withCrate;
+  if (crated) {
+    withCrate = await addCrate(dst, itemSizePx);
+  } else {
+    withCrate = dst.clone();
+  }
+  let extraIconed = await addExtraIcon(withCrate, item, itemSizePx);
+  step.delete(); dst.delete(); rgbaPlanes.delete(); step2.delete(); step3.delete();
+  nilVal.delete(); 
   maxVal.delete(); 
   alphaMask.delete(); 
   mask.delete(); 
   gray.delete(); 
-  crated.delete();
+  withCrate.delete();
   return extraIconed;
 }
 
@@ -531,6 +637,7 @@ const imgmatch = async (haystackMat, needleMat) => {
   let mask = new cv.Mat();
   let foo = new cv.Mat();
   cv.matchTemplate(haystackMat, needleMat, dst, cv.TM_CCOEFF_NORMED, mask);
+  // good explanation of modes https://stackoverflow.com/questions/58158129/understanding-and-evaluating-template-matching-methods
   let best = null;
   let matches = [];
   for (let i = 0; i <= 20; i++){

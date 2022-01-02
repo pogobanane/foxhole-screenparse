@@ -26,7 +26,7 @@ const printCSV = async (findings) => {
   let pyramidPrio = "";
   let limit = "";
   for (const item of sortedItems) {
-    let found = findings.find((finding) => { return item.itemName === finding.name; });
+    let found = findings.items.find((finding) => { return item.itemName === finding.name; });
     if (typeof found === 'undefined') {
       continue;
     }
@@ -95,14 +95,24 @@ const run = async () => {
   let visualizationCanvas = document.getElementById('canvasImgmatch');
   let list = document.getElementById("itemlist");
   itemcounter = new ItemCounter(tmpCanvas, progressCb, currentTemplate, visualizationCanvas, list);
+  await itemcounter.init();
   itemcounter.setFaction(await getFaction());
+  let iconpack = document.getElementById("iconpack-select").selectedOptions[0].value;
+  itemcounter.setIconpack(iconpack);
 
   let fileselector = document.getElementById('fileInputSrc');
   let screenshotUrl = URL.createObjectURL(fileselector.files[0]);
   let screenshot = await loadImage(screenshotUrl);
   let findings = await itemcounter.count(screenshot); // takes long
   if (findings === null) {
+    window.alert('No stockpile found on screenshot.');
     return;
+  }
+  if (findings.stockpileType === null) {
+    window.alert('Stockpile type unknown. Assuming a Seaport or Storage Depot...');
+  }
+  if (!findings.stockpileType.crateBased) {
+    window.alert('Stockpile is not crate based. Some Table columns are wrong.');
   }
 
   await printCSV(findings);
@@ -110,4 +120,16 @@ const run = async () => {
 
 const abort = () => {
   itemcounter.abort = true;
+}
+
+const loaded = async () => {
+  connect_file_img('imageSrc', 'fileInputSrc');
+
+  for (let pack of known_iconpacks) {
+    let option = document.createElement('option');
+    option.setAttribute('value', pack.name);
+    let label = document.createTextNode(pack.label);
+    option.appendChild(label);
+    document.getElementById('iconpack-select').appendChild(option);
+  }
 }

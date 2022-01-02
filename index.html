@@ -56,8 +56,8 @@
             </div>
             <div class="alert alert-warning mt-3">
               <b>Current state</b><br/>
-              Supported are only Seaport and Storage Depots. Vehicles and shippables (containers, paletts) are not yet
-              supported. Screenshots of games in 1920x1080p resolution work best. 
+              Screenshots of games in 1920x1080p resolution work best. Vehicles and shippables (containers, paletts) 
+              are not yet supported. 
             </div>
             <div class="alert alert-info">
               Please report detection errors at <a href="https://discord.gg/sZs5UZf">3SP#gloabl-hq-code-talk discord</a>.
@@ -80,6 +80,11 @@
             <label for="colonialButton">Colonial</label><br/>
             <input type="radio" id="wardenButton" name="faction" value="warden" checked="checked">
             <label for="wardenButton">Warden</label><br/>
+            <br/>
+            Iconpack: <select id="iconpack-select" class="custom-select" id="inputGroupSelect01">
+              <option selected value="default">default</option>
+            </select>
+            <br/>
             <br/>
             <button id="run" onclick="run();" type="button" class="btn btn-primary">Run it</button>    
             <button id="run" onclick="abort();" type="button" class="btn btn-danger">Abort</button>    
@@ -150,7 +155,7 @@
       </div>
     </div>
     <script>
-      connect_file_img('imageSrc', 'fileInputSrc');
+      loaded()
     </script>
   </body>
 </html>
