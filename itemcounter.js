@@ -58,8 +58,8 @@ class ItemCounter {
     cv.cvtColor(image, screenshot, cv.COLOR_RGBA2GRAY, 0);
     image.delete();
     const coarse = 4;
-    // 7 coarse searches
-    let shirt1 = await this.calibrateFindMax(screenshot, 'Soldier Supplies', 25, 50, coarse);
+    // 12 coarse searches
+    let shirt1 = await this.calibrateFindMax(screenshot, 'Soldier Supplies', 25, 70, coarse);
     if (shirt1 === null) {
       screenshot.delete();
       return null;
@@ -456,7 +456,7 @@ class Progress {
     if (this.step !== 1) {
       this.step = 1;
       this._progress = 0;
-      this._total = 7 + 7 + 7;
+      this._total = 12 + 7 + 7;
     }
     this._progress++;
     this.description = description;
@@ -481,7 +481,8 @@ const confidentEnough = (confidence, item, calibration) => {
   } else {
     // 0.945 @ 32
     // 0.89  @ 43
-    return confidence > -0.005000 * calibration.itemSizePx + 1.105;
+    return confidence > 0.945
+    //return confidence > -0.005000 * calibration.itemSizePx + 1.105;
   }
 }
 
