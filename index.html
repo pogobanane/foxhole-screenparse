@@ -36,6 +36,10 @@
       .image-text {
         display: flex;
       }
+      .preformatted {
+        /* Chrome copies formatting wierdly with Ctrl+C */
+        font-size: 12px;
+      }
     </style>
   </head>
   <body>
@@ -56,8 +60,8 @@
             </div>
             <div class="alert alert-warning mt-3">
               <b>Current state</b><br/>
-              Screenshots of games in 1920x1080p resolution work best. Vehicles and shippables (containers, paletts) 
-              are not yet supported. 
+              Screenshots of games in full HD (1920x1080) and 4k-UHD resolution work well. Vehicles and shippables 
+              (containers, paletts) are not yet supported. 
             </div>
             <div class="alert alert-info">
               Please report detection errors at <a href="https://discord.gg/sZs5UZf">3SP#gloabl-hq-code-talk discord</a>.
@@ -115,23 +119,23 @@
               </th>
             <tr>
               <td>
-                <pre id='preformattedNames'>
+                <pre class='preformatted' id='preformattedNames'>
                 </pre>
               </td>
               <td>
-                <pre id='preformattedCrates'>
+                <pre class='preformatted' id='preformattedCrates'>
                 </pre>
               </td>
               <td>
-                <pre id='preformattedPyramid'>
+                <pre class='preformatted' id='preformattedPyramid'>
                 </pre>
               </td>
               <td>
-                <pre id='preformattedPyramidPriority'>
+                <pre class='preformatted' id='preformattedPyramidPriority'>
                 </pre>
               </td>
               <td>
-                <pre id='preformattedLimit'>
+                <pre class='preformatted' id='preformattedLimit'>
                 </pre>
               </td>
             </tr>

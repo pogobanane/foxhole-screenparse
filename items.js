@@ -4223,6 +4223,10 @@ const known_iconpacks = [
     "label": "UILabelIcons2.0",
   },
   {
+    "name": "UILabelIcons1.1",
+    "label": "UILabelIcons1.1",
+  },
+  {
     "name": "NewIcons3.0",
     "label": "NewIcons3.0 (bad accuracy)",
   }

@@ -58,8 +58,8 @@ class ItemCounter {
     cv.cvtColor(image, screenshot, cv.COLOR_RGBA2GRAY, 0);
     image.delete();
     const coarse = 4;
-    // 7 coarse searches
-    let shirt1 = await this.calibrateFindMax(screenshot, 'Soldier Supplies', 25, 50, coarse);
+    // 12 coarse searches
+    let shirt1 = await this.calibrateFindMax(screenshot, 'Soldier Supplies', 25, 70, coarse);
     if (shirt1 === null) {
       screenshot.delete();
       return null;
@@ -238,8 +238,7 @@ class ItemCounter {
           );
     let croppedMat = screenshot.roi(rect);
     let enlargedMat = new cv.Mat();
-    let dsize = new cv.Size(croppedMat.cols*4.0, croppedMat.rows*4.0);
-    cv.resize(croppedMat, enlargedMat, dsize, 0, 0, cv.INTER_CUBIC);
+    resize(croppedMat, enlargedMat, croppedMat.cols*4.0, croppedMat.rows*4.0);
     let postprocessedMat = await postprocessSeaport(enlargedMat);
     if (this.visCanvas !== null) {
       cv.imshow(this.visCanvas, postprocessedMat);
@@ -345,8 +344,7 @@ class ItemCounter {
             );
       let countSmallMat = stockpileMat.roi(rect);
       let countMat = new cv.Mat();
-      let dsize = new cv.Size(countBox.width*4.0, countBox.height*4.0);
-      cv.resize(countSmallMat, countMat, dsize, 0, 0, cv.INTER_CUBIC);
+      resize(countSmallMat, countMat, countBox.width*4.0, countBox.height*4.0);
       countSmallMat.delete();
       let itemCount = await this.tesseract.itemCount(this._mat2canvas(countMat), countPoints);
       console.log(item.itemName + ": " + itemCount);
@@ -456,7 +454,7 @@ class Progress {
     if (this.step !== 1) {
       this.step = 1;
       this._progress = 0;
-      this._total = 7 + 7 + 7;
+      this._total = 12 + 7 + 7;
     }
     this._progress++;
     this.description = description;
@@ -481,7 +479,8 @@ const confidentEnough = (confidence, item, calibration) => {
   } else {
     // 0.945 @ 32
     // 0.89  @ 43
-    return confidence > -0.005000 * calibration.itemSizePx + 1.105;
+    return confidence > 0.945
+    //return confidence > -0.005000 * calibration.itemSizePx + 1.105;
   }
 }
 
@@ -515,6 +514,21 @@ const addExtraIcon = async (scaledItemMat, item, itemSizePx) => {
   return ret;
 }
 
+const resize = (inMat, outMat, width, height) => {
+  if (isNaN(width) || isNaN(height)) {
+    console.error("resized to NaN");
+  }
+  let dsize = new cv.Size(width, height);
+  let mode;
+  if (inMat.cols + inMat.rows < width + height) {
+    mode = cv.INTER_CUBIC; // for growing
+  } else {
+    mode = cv.INTER_AREA; // for shrinking
+  }
+  cv.resize(inMat, outMat, dsize, 0, 0, mode);
+}
+  
+
 // return new mat with added crate
 const addExtraDecor = async (scaledItemMat, decorMat, position, itemSizePx) => {
   let step2 = new cv.Mat();
@@ -526,8 +540,7 @@ const addExtraDecor = async (scaledItemMat, decorMat, position, itemSizePx) => {
   // scale to 14x14px
   // 19x19 px @ itemSizePx=43
   const length = Math.round(14.0 / 32.0 * itemSizePx);
-  let dsize = new cv.Size(length, length);
-  cv.resize(decorMat, step3, dsize, 0, 0, cv.INTER_CUBIC);
+  resize(decorMat, step3, length, length);
   // px away from bottom and 1 from right
   let fillerColor = new cv.Scalar(0, 0, 0, 0);
 
@@ -613,8 +626,7 @@ const prepareItem = async (inMat, item, crated, itemSizePx) => {
   // bake alpha into B
   cv.multiply(rgbaPlanes.get(2), alphaMask, step2, 1.0/3.0, rgbaPlanes.get(0).type());
   cv.add(step3, step2, gray, mask, rgbaPlanes.get(0).type());
-  let dsize = new cv.Size(itemSizePx, itemSizePx);
-  cv.resize(gray, dst, dsize, 0, 0, cv.INTER_AREA);
+  resize(gray, dst, itemSizePx, itemSizePx);
   let withCrate;
   if (crated) {
     withCrate = await addCrate(dst, itemSizePx);
