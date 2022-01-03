@@ -21,6 +21,8 @@ Both of those libraries run directly in your browser using wasm and thelike.
 
 Clone this repository with all submodules: `git clone --recurse-submodules [repourl]`
 
+Pull to fetch updates: `git pull && git submodule update`
+
 Run a debugging server: `make debug`
 
 The webpage has no backend, so just shove the files into some webroot or so (i.e. `make install`).

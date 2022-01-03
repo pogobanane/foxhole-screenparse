@@ -33,14 +33,14 @@ const printCSV = async (findings) => {
     names += "" + found.name + "\n";
     crates += "" + found.count + "\n";
     if (typeof item.supplyPyramid === 'undefined') {
-      pyramid += "\n";
-      pyramidPrio += "\n";
+      pyramid += "none\n";
+      pyramidPrio += "none\n";
     } else {
       pyramid += "" + item.supplyPyramid.cratesIdeal + "\n";
       pyramidPrio += "" + item.supplyPyramid.priority + "\n";
     }
     if (typeof item.stockpileLimitPrivate === 'undefined') {
-      limit += "\n";
+      limit += "none\n";
     } else {
       limit += "" + item.stockpileLimitPrivate + "\n";
     }
