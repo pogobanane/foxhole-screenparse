@@ -301,15 +301,11 @@ class ItemCounter {
       console.log("Searching " + item.itemName + "...");
       let icon = await this.loadItemIcon(item, this.iconpack);
       let iconUnprocessedMat = cv.imread(icon);
-      let crated = calibration.stockpileType.crateBased;
-      let iconMat = await prepareItem(iconUnprocessedMat, item, crated, calibration.itemSizePx);
+      let best = await this._findIcon(iconUnprocessedMat, stockpileMat, item, calibration);
+      let iconMat = best.iconMat;
+      best = best.matches[0];
       iconUnprocessedMat.delete();
-      if (this.currentTemplate !== null) {
-        cv.imshow(this.currentTemplate, iconMat);
-      }
-      let matches = await imgmatch(stockpileMat, iconMat);
       let perfMatched = performance.now();
-      let best = matches[0];
       console.info("Confidence: " + best.confidence);
       const box = points2point(best);
       let rect = new cv.Rect(
@@ -360,6 +356,28 @@ class ItemCounter {
     console.info(found);
     return found;
   };
+
+  async _findIcon(iconUnprocessedMat, stockpileMat, item, calibration) {
+    let full = await this.__findIcon(iconUnprocessedMat, stockpileMat, item, calibration, calibration.itemSizePx);
+    let big = await this.__findIcon(iconUnprocessedMat, stockpileMat, item, calibration, calibration.itemSizePx + 1);
+    if (full.matches[0].confidence >= big.matches[0].confidence) {
+      big.iconMat.delete();
+      return full;
+    } else {
+      full.iconMat.delete();
+      return big;
+    }
+  }
+
+  async __findIcon(iconUnprocessedMat, stockpileMat, item, calibration, itemSizePx) {
+    let crated = calibration.stockpileType.crateBased;
+    let iconMat = await prepareItem(iconUnprocessedMat, item, crated, itemSizePx);
+    if (this.currentTemplate !== null) {
+      cv.imshow(this.currentTemplate, iconMat);
+    }
+    let matches = await imgmatch(stockpileMat, iconMat);
+    return { "matches": matches, "iconMat": iconMat};
+  }
 
   async _domListAppend(item, confidence, iconRendered, iconFound, countFound, countRead) {
     if (this.domList === null) {
