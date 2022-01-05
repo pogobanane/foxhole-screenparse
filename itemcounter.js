@@ -272,7 +272,16 @@ class ItemCounter {
             calibration.stockpileBox.height,
           );
     console.log(rect);
-    let stockpileMat = screenshot.roi(rect);
+    let croppedMat = screenshot.roi(rect);
+    let stockpileMat = new cv.Mat();
+    let fac = 2.0;
+    resize(croppedMat, stockpileMat, croppedMat.cols*fac, croppedMat.rows*fac);
+    croppedMat.delete();
+    calibration.itemSizePx *= fac;
+    calibration.stockpileBox.x *= fac;
+    calibration.stockpileBox.y *= fac;
+    calibration.stockpileBox.width *= fac;
+    calibration.stockpileBox.height *= fac;
     console.log('rectified');
     if (this.visCanvas !== null) {
       cv.imshow(this.visCanvas, stockpileMat);
@@ -475,11 +484,17 @@ class Progress {
 
 const confidentEnough = (confidence, item, calibration) => {
   if (['Rifle', 'Long Rifle'].includes(item.itemClass)) {
+    // with up and down scaling rifles have big errors in problematic resolutions. 
+    // This value is then too low though.
     return confidence > 0.95;
+  } else if (item.itemName.includes("Mortar") &&
+    item.itemName.includes("Shell")) {
+    // mortar shells match exceptionally well but have differences of only a few percent
+    return confidence > 0.95
   } else {
     // 0.945 @ 32
     // 0.89  @ 43
-    return confidence > 0.945
+    return confidence > 0.93
     //return confidence > -0.005000 * calibration.itemSizePx + 1.105;
   }
 }
@@ -602,6 +617,8 @@ const addExtraDecor = async (scaledItemMat, decorMat, position, itemSizePx) => {
 
 // returns mat of processed item
 const prepareItem = async (inMat, item, crated, itemSizePx) => {
+  let small = new cv.Mat();
+  let big = new cv.Mat();
   let step = new cv.Mat();
   let dst = new cv.Mat();
   let rgbaPlanes = new cv.MatVector();
@@ -634,6 +651,8 @@ const prepareItem = async (inMat, item, crated, itemSizePx) => {
     withCrate = dst.clone();
   }
   let extraIconed = await addExtraIcon(withCrate, item, itemSizePx);
+  resize(extraIconed, small, extraIconed.cols/2.0, extraIconed.rows/2.0);
+  resize(small, big, extraIconed.cols, extraIconed.rows);
   step.delete(); dst.delete(); rgbaPlanes.delete(); step2.delete(); step3.delete();
   nilVal.delete(); 
   maxVal.delete(); 
@@ -641,7 +660,8 @@ const prepareItem = async (inMat, item, crated, itemSizePx) => {
   mask.delete(); 
   gray.delete(); 
   withCrate.delete();
-  return extraIconed;
+  small.delete(); extraIconed.delete();
+  return big;
 }
 
 const imgmatch = async (haystackMat, needleMat) => {
