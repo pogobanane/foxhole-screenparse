@@ -359,19 +359,48 @@ class ItemCounter {
 
   async _findIcon(iconUnprocessedMat, stockpileMat, item, calibration) {
     const diffs = [
-      [0, 0],
       [-1, 0],
       [0, -1],
       [-1, -1],
       [1, 0],
       [0, 1],
-      [1, 1]
+      [1, 1],
     ];
     let results = [];
+
+    // find it roughly
+    let length = calibration.itemSizePx;
+    results.push(await this.__findIcon(iconUnprocessedMat, stockpileMat, item, calibration, length, length));
+
+    // crop stockpileMat to found area
+    let box = points2point(results[0].matches[0]);
+    let offset = length * 0.25;
+    box.x -= offset;
+    box.y -= offset;
+    box.width += 2.0 * offset;
+    box.height += 2.0 * offset;
+    box = box2bounds(box, stockpileMat);
+    let rect = new cv.Rect(
+            box.x,
+            box.y,
+            box.width,
+            box.height
+          );
+    let croppedPileMat = stockpileMat.roi(rect);
+    // remove offset at least from the match that will be used
+    let matchbox = points2point(results[0].matches[0]);
+    matchbox.x -= box.x;
+    matchbox.y -= box.y;
+    let points = point2points(matchbox);
+    results[0].matches[0].x0 = points.x0;
+    results[0].matches[0].y0 = points.y0;
+    results[0].matches[0].x1 = points.x1;
+    results[0].matches[0].y1 = points.y1;
+
     for (let diff of diffs) {
       let width = calibration.itemSizePx + diff[0];
       let height = calibration.itemSizePx + diff[1];
-      results.push(await this.__findIcon(iconUnprocessedMat, stockpileMat, item, calibration, width, height));
+      results.push(await this.__findIcon(iconUnprocessedMat, croppedPileMat, item, calibration, width, height));
     }
     // find best result
     let best = null;
@@ -387,6 +416,16 @@ class ItemCounter {
         result.iconMat.delete();
       }
     }
+    croppedPileMat.delete();
+    // add offset at least to the match that will be used
+    matchbox = points2point(best.matches[0]);
+    matchbox.x += box.x;
+    matchbox.y += box.y;
+    points = point2points(matchbox);
+    best.matches[0].x0 = points.x0;
+    best.matches[0].y0 = points.y0;
+    best.matches[0].x1 = points.x1;
+    best.matches[0].y1 = points.y1;
     return best;
   }
 
@@ -709,6 +748,15 @@ const imgmatch = async (haystackMat, needleMat) => {
   }
   dst.delete(); mask.delete(); foo.delete(); 
   return matches;
+}
+
+const point2points = (point) => {
+  return {
+    x0: point.x,
+    y0: point.y,
+    x1: point.x + point.width,
+    y1: point.y + point.height,
+  };
 }
 
 const points2point = (points) => {
