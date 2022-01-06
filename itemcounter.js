@@ -207,7 +207,7 @@ class ItemCounter {
     this.progress.step1('Calibration: ' + message);
     let icon = await this.loadItemIcon(item, this.iconpack);
     let iconUnprocessedMat = cv.imread(icon);
-    let iconMat = await prepareItem(iconUnprocessedMat, item, crated, iconSizePx);
+    let iconMat = await prepareItem(iconUnprocessedMat, item, crated, iconSizePx, iconSizePx);
     iconUnprocessedMat.delete();
     if (this.currentTemplate !== null) {
       cv.imshow(this.currentTemplate, iconMat);
@@ -358,8 +358,8 @@ class ItemCounter {
   };
 
   async _findIcon(iconUnprocessedMat, stockpileMat, item, calibration) {
-    let full = await this.__findIcon(iconUnprocessedMat, stockpileMat, item, calibration, calibration.itemSizePx);
-    let big = await this.__findIcon(iconUnprocessedMat, stockpileMat, item, calibration, calibration.itemSizePx + 1);
+    let full = await this.__findIcon(iconUnprocessedMat, stockpileMat, item, calibration, calibration.itemSizePx, calibration.itemSizePx);
+    let big = await this.__findIcon(iconUnprocessedMat, stockpileMat, item, calibration, calibration.itemSizePx - 1, calibration.itemSizePx);
     if (full.matches[0].confidence >= big.matches[0].confidence) {
       big.iconMat.delete();
       return full;
@@ -369,9 +369,9 @@ class ItemCounter {
     }
   }
 
-  async __findIcon(iconUnprocessedMat, stockpileMat, item, calibration, itemSizePx) {
+  async __findIcon(iconUnprocessedMat, stockpileMat, item, calibration, width, height) {
     let crated = calibration.stockpileType.crateBased;
-    let iconMat = await prepareItem(iconUnprocessedMat, item, crated, itemSizePx);
+    let iconMat = await prepareItem(iconUnprocessedMat, item, crated, width, height);
     if (this.currentTemplate !== null) {
       cv.imshow(this.currentTemplate, iconMat);
     }
@@ -511,23 +511,23 @@ const getImgPath = (imgPath) => {
 }
 
 // return new mat
-const addCrate = async (scaledItemMat, itemSizePx) => {
+const addCrate = async (scaledItemMat, width, height) => {
   let icon = await loadImage(getImgPath('icons/menus/filtercrates.png'));
   let step1 = cv.imread(icon);
-  let ret = await addExtraDecor(scaledItemMat, step1, 'botright', itemSizePx);
+  let ret = await addExtraDecor(scaledItemMat, step1, 'botright', width, height);
   step1.delete();
   return ret;
 }
 
 // return new mat
-const addExtraIcon = async (scaledItemMat, item, itemSizePx) => {
+const addExtraIcon = async (scaledItemMat, item, width, height) => {
   if (typeof item.extraIcon === 'undefined') {
     return scaledItemMat.clone();
   }
   let imgPath = extra_icons[item.extraIcon].imgPath;
   let icon = await loadImage(getImgPath(imgPath));
   let step1 = cv.imread(icon);
-  let ret = await addExtraDecor(scaledItemMat, step1, 'topleft', itemSizePx);
+  let ret = await addExtraDecor(scaledItemMat, step1, 'topleft', width, height);
   step1.delete();
   return ret;
 }
@@ -548,7 +548,7 @@ const resize = (inMat, outMat, width, height) => {
   
 
 // return new mat with added crate
-const addExtraDecor = async (scaledItemMat, decorMat, position, itemSizePx) => {
+const addExtraDecor = async (scaledItemMat, decorMat, position, itemWidth, itemHeight) => {
   let step2 = new cv.Mat();
   let step3 = new cv.Mat();
   let step4 = new cv.Mat();
@@ -557,8 +557,9 @@ const addExtraDecor = async (scaledItemMat, decorMat, position, itemSizePx) => {
   // @ itemSizePx=32
   // scale to 14x14px
   // 19x19 px @ itemSizePx=43
-  const length = Math.round(14.0 / 32.0 * itemSizePx);
-  resize(decorMat, step3, length, length);
+  const width = Math.round(14.0 / 32.0 * itemWidth);
+  const height = Math.round(14.0 / 32.0 * itemHeight);
+  resize(decorMat, step3, width, height);
   // px away from bottom and 1 from right
   let fillerColor = new cv.Scalar(0, 0, 0, 0);
 
@@ -569,13 +570,13 @@ const addExtraDecor = async (scaledItemMat, decorMat, position, itemSizePx) => {
   if (position == 'topleft') {
     padTop = 0;
     padLeft = 0;
-    padBot = itemSizePx - length;
-    padRight = itemSizePx - length;
+    padBot = itemHeight - height;
+    padRight = itemWidth - width;
   } else if (position == 'botright') {
-    padBot = Math.round(0.0 / 32.0 * itemSizePx);;
-    padRight = Math.round(0.0 / 32.0 * itemSizePx);;
-    padTop = itemSizePx - padBot - length;
-    padLeft = itemSizePx - padRight - length;
+    padBot = Math.round(0.0 / 32.0 * itemHeight);;
+    padRight = Math.round(0.0 / 32.0 * itemWidth);;
+    padTop = itemHeight - padBot - height;
+    padLeft = itemWidth - padRight - width;
   }
   cv.copyMakeBorder(step3, step4, 
     padTop, padBot, padLeft, padRight, 
@@ -619,7 +620,7 @@ const addExtraDecor = async (scaledItemMat, decorMat, position, itemSizePx) => {
 }
 
 // returns mat of processed item
-const prepareItem = async (inMat, item, crated, itemSizePx) => {
+const prepareItem = async (inMat, item, crated, width, height) => {
   let step = new cv.Mat();
   let dst = new cv.Mat();
   let rgbaPlanes = new cv.MatVector();
@@ -644,14 +645,14 @@ const prepareItem = async (inMat, item, crated, itemSizePx) => {
   // bake alpha into B
   cv.multiply(rgbaPlanes.get(2), alphaMask, step2, 1.0/3.0, rgbaPlanes.get(0).type());
   cv.add(step3, step2, gray, mask, rgbaPlanes.get(0).type());
-  resize(gray, dst, itemSizePx, itemSizePx);
+  resize(gray, dst, width, height);
   let withCrate;
   if (crated) {
-    withCrate = await addCrate(dst, itemSizePx);
+    withCrate = await addCrate(dst, width, height);
   } else {
     withCrate = dst.clone();
   }
-  let extraIconed = await addExtraIcon(withCrate, item, itemSizePx);
+  let extraIconed = await addExtraIcon(withCrate, item, width, height);
   step.delete(); dst.delete(); rgbaPlanes.delete(); step2.delete(); step3.delete();
   nilVal.delete(); 
   maxVal.delete(); 
