@@ -358,15 +358,36 @@ class ItemCounter {
   };
 
   async _findIcon(iconUnprocessedMat, stockpileMat, item, calibration) {
-    let full = await this.__findIcon(iconUnprocessedMat, stockpileMat, item, calibration, calibration.itemSizePx, calibration.itemSizePx);
-    let big = await this.__findIcon(iconUnprocessedMat, stockpileMat, item, calibration, calibration.itemSizePx - 1, calibration.itemSizePx);
-    if (full.matches[0].confidence >= big.matches[0].confidence) {
-      big.iconMat.delete();
-      return full;
-    } else {
-      full.iconMat.delete();
-      return big;
+    const diffs = [
+      [0, 0],
+      [-1, 0],
+      [0, -1],
+      [-1, -1],
+      [1, 0],
+      [0, 1],
+      [1, 1]
+    ];
+    let results = [];
+    for (let diff of diffs) {
+      let width = calibration.itemSizePx + diff[0];
+      let height = calibration.itemSizePx + diff[1];
+      results.push(await this.__findIcon(iconUnprocessedMat, stockpileMat, item, calibration, width, height));
     }
+    // find best result
+    let best = null;
+    for (let result of results) {
+      if (best === null) {
+        best = result;
+        continue;
+      }
+      if (result.matches[0].confidence > best.matches[0].confidence) {
+        best.iconMat.delete();
+        best = result;
+      } else {
+        result.iconMat.delete();
+      }
+    }
+    return best;
   }
 
   async __findIcon(iconUnprocessedMat, stockpileMat, item, calibration, width, height) {
