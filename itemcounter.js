@@ -1,3 +1,11 @@
+const getImgPath = (imgPath) => {
+  if (imgPath.startsWith('http')) {
+    return imgPath;
+  } else {
+    return 'https://raw.githubusercontent.com/foxholetools/assets/master/dist/' + imgPath;
+  }
+}
+
 class ItemCounter {
   constructor(tmpCanvas, progressCallback = (progress)=>{}, currentTemplate = null, visualizationCanvas = null, domList = null) {
     this.tmpCanvas = tmpCanvas; // scratchpad canvas element (should be display: none)
@@ -10,6 +18,8 @@ class ItemCounter {
     this.screenshotImg = null;
     this.http404s = [];
     this.tesseract = new OCR();
+
+    this.iconpacksLoc = "iconpacks"; // iconpacksLoc + '/mods/' + iconpack + '/' + item.imgUasset;
   }
 
   async init() {
@@ -179,7 +189,7 @@ class ItemCounter {
         console.error("Requesting item from unknown iconpack.");
         return null;
       }
-      let url = 'iconpacks/mods/' + iconpack + '/' + item.imgUasset;
+      let url = this.iconpacksLoc + '/mods/' + iconpack + '/' + item.imgUasset;
       if (this.http404s.includes(url)) {
         // Quick fallback to default item
       } else {
@@ -559,14 +569,6 @@ const confidentEnough = (confidence, item, calibration) => {
     // 0.89  @ 43
     return confidence > 0.945
     //return confidence > -0.005000 * calibration.itemSizePx + 1.105;
-  }
-}
-
-const getImgPath = (imgPath) => {
-  if (imgPath.startsWith('http')) {
-    return imgPath;
-  } else {
-    return 'https://raw.githubusercontent.com/foxholetools/assets/master/dist/' + imgPath;
   }
 }
 

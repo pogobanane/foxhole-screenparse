@@ -3,22 +3,15 @@
 function onOpen() {
  SpreadsheetApp
    .getUi()
-   .createMenu("Fh-screenparse")
-   .addItem("Send feedback", "showFeedbackDialog")
-   .addItem("Sidebar", "showSidebar")
+   .createMenu("foxhole-screenparse")
+   .addItem("Screenshot Analyzer", "showSidebar")
    .addToUi();
-}
-
-function showFeedbackDialog() {
- var widget = HtmlService.createHtmlOutputFromFile("testhtml.html");
- SpreadsheetApp.getUi().showModalDialog(widget, "Send feedback");
 }
 
 function showSidebar() {
   var html = HtmlService.createHtmlOutputFromFile('packed.html')
-      .setTitle('My custom sidebar');
-  SpreadsheetApp.getUi() // Or DocumentApp or SlidesApp or FormApp.
-      .showSidebar(html);
+      .setTitle('foxhole-screenparse');
+  SpreadsheetApp.getUi().showSidebar(html);
 }
 
 function fhInsert(s) {
@@ -29,6 +22,9 @@ function fhInsert(s) {
     var row = data.findIndex((a) => {
       return a.indexOf(item.name) !== -1;
     });
+    if (row === -1) {
+      continue;
+    }
     row += 1; // fix start counting at 1
     sheet.getRange(row, column).setValue(item.count);
   }

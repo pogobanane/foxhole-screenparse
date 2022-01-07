@@ -70,11 +70,6 @@ const getFaction = async () => {
 const run = async () => {
   console.log("run");
   removeAllChildNodes(document.getElementById('itemlist'));
-  removeAllChildNodes(document.getElementById('preformattedNames'));
-  removeAllChildNodes(document.getElementById('preformattedCrates'));
-  removeAllChildNodes(document.getElementById('preformattedPyramid'));
-  removeAllChildNodes(document.getElementById('preformattedPyramidPriority'));
-  removeAllChildNodes(document.getElementById('preformattedLimit'));
   await clearCanvas(document.getElementById('canvasImgmatch'));
 
   let tmpCanvas = document.getElementById('canvasTmp');
@@ -89,7 +84,6 @@ const run = async () => {
     document.getElementById('progressBar').innerHTML = roundedPercent + "%";
     if(roundedPercent === 100) {
       document.getElementById('progressBar').parentElement.hidden = true;
-      document.getElementById('resultTable').hidden = false;
     }
   };
   let currentTemplate = document.getElementById('canvasItem');
@@ -97,6 +91,7 @@ const run = async () => {
   let list = document.getElementById("itemlist");
   itemcounter = new ItemCounter(tmpCanvas, progressCb, currentTemplate, visualizationCanvas, list);
   await itemcounter.init();
+  itemcounter.iconpacksLoc = "https://raw.githubusercontent.com/pogobanane/foxhole-iconpacks/main/";
   itemcounter.setFaction(await getFaction());
   let iconpack = document.getElementById("iconpack-select").selectedOptions[0].value;
   itemcounter.setIconpack(iconpack);
