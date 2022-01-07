@@ -1,4 +1,5 @@
 var itemcounter = null;
+var globfindings = null;
 
 const connect_file_img = (imageid, fileinputid) => {
   let imgElement = document.getElementById(imageid);
@@ -115,12 +116,21 @@ const run = async () => {
     window.alert('Stockpile is not crate based. Some Table columns are wrong.');
   }
 
-  await printCSV(findings);
+  document.getElementById("insert").disabled = false;
+  globfindings = findings;
+  //await printCSV(findings);
 }
 
 const abort = () => {
-  google.script.run.doSmth();
   itemcounter.abort = true;
+}
+
+const insert = () => {
+  google.script.run.withSuccessHandler((ret) => {
+    console.log(ret);
+  })
+  .fhInsert(globfindings);
+  //.fhInsert({ "items": [ { "name": "Petrol", "count": 1337 } ] });
 }
 
 const loaded = async () => {

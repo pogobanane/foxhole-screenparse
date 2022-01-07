@@ -21,7 +21,15 @@ function showSidebar() {
       .showSidebar(html);
 }
 
-function doSmth() {
-    var sheet = SpreadsheetApp.getActiveSheet();
-  sheet.appendRow(['Cotton Sweatshirt XL', 'css004']);
+function fhInsert(s) {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  let column = sheet.getCurrentCell().getColumn();
+  var data = sheet.getDataRange().getValues();
+  for (let item of s.items) {
+    var row = data.findIndex((a) => {
+      return a.indexOf(item.name) !== -1;
+    });
+    row += 1; // fix start counting at 1
+    sheet.getRange(row, column).setValue(item.count);
+  }
 }
