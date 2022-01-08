@@ -235,10 +235,10 @@ class ItemCounter {
   // returns one of stockpile_types or null if unknown
   async _detectStockpileType(screenshot, shirtBox) {
     let box = shirtBox;
-    box.x = box.x - box.height;
-    box.y = box.y - 1.5 * box.width;
+    box.x = box.x - 0.3 * box.height;
+    box.y = box.y - 1.1 * box.width;
     box.width = box.width * 7.0;
-    box.height = box.height * 1.5;
+    box.height = box.height * 1.0;
     box = box2bounds(box, screenshot);
     let rect = new cv.Rect(
             box.x,
