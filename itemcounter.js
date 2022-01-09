@@ -136,6 +136,10 @@ class ItemCounter {
     shirtBox.x += box.x; // shirt coords in croppedMat to coords in screenshot
     shirtBox.y += box.y;
     let stockpileType = await this._detectStockpileType(screenshot, shirtBox);
+    if (stockpileType === null) {
+      this.progress.error('Stockpile type not recognized.');
+      return null;
+    }
 
     // sanity check 2
     if (bsups.confidence < 0.9) {
