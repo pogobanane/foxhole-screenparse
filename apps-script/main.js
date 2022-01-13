@@ -69,6 +69,7 @@ const getFaction = async () => {
 
 const run = async () => {
   console.log("run");
+  document.getElementById("insert").disabled = true;
   removeAllChildNodes(document.getElementById('itemlist'));
   await clearCanvas(document.getElementById('canvasImgmatch'));
 
@@ -89,17 +90,25 @@ const run = async () => {
   let currentTemplate = document.getElementById('canvasItem');
   let visualizationCanvas = document.getElementById('canvasImgmatch');
   let list = document.getElementById("itemlist");
-  itemcounter = new ItemCounter(tmpCanvas, progressCb, currentTemplate, visualizationCanvas, list);
-  await itemcounter.init();
-  itemcounter.iconpacksLoc = "https://raw.githubusercontent.com/pogobanane/foxhole-iconpacks/main/";
-  itemcounter.setFaction(await getFaction());
-  let iconpack = document.getElementById("iconpack-select").selectedOptions[0].value;
-  itemcounter.setIconpack(iconpack);
+  let findings;
+  document.getElementById("run-spinner").setAttribute("style", "display: inline-block;")
+  try {
+    itemcounter = new ItemCounter(tmpCanvas, progressCb, currentTemplate, visualizationCanvas, list);
+    await itemcounter.init();
+    itemcounter.iconpacksLoc = "https://raw.githubusercontent.com/pogobanane/foxhole-iconpacks/main/";
+    itemcounter.setFaction(await getFaction());
+    let iconpack = document.getElementById("iconpack-select").selectedOptions[0].value;
+    itemcounter.setIconpack(iconpack);
 
-  let fileselector = document.getElementById('fileInputSrc');
-  let screenshotUrl = URL.createObjectURL(fileselector.files[0]);
-  let screenshot = await loadImage(screenshotUrl);
-  let findings = await itemcounter.count(screenshot); // takes long
+    let fileselector = document.getElementById('fileInputSrc');
+    let screenshotUrl = URL.createObjectURL(fileselector.files[0]);
+    let screenshot = await loadImage(screenshotUrl);
+    findings = await itemcounter.count(screenshot); // takes long
+  } 
+  catch (e) {
+    console.error(e);
+  }
+  document.getElementById("run-spinner").setAttribute("style", "display: none;")
   if (findings === null) {
     window.alert('No stockpile found on screenshot.');
     return;
@@ -121,8 +130,16 @@ const abort = () => {
 }
 
 const insert = () => {
-  google.script.run.withSuccessHandler((ret) => {
+  document.getElementById("insert-spinner").setAttribute("style", "display: inline-block;")
+  google.script.run
+  .withSuccessHandler((ret) => {
+    document.getElementById("insert-spinner").setAttribute("style", "display: none;")
     console.log(ret);
+  })
+  .withFailureHandler((error) => {
+    document.getElementById("insert-spinner").setAttribute("style", "display: none;")
+    console.error(error);
+    window.alert(error);
   })
   .fhInsert(globfindings);
   //.fhInsert({ "items": [ { "name": "Petrol", "count": 1337 } ] });
