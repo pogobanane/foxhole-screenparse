@@ -94,8 +94,10 @@ const run = async () => {
   let currentTemplate = document.getElementById('canvasItem');
   let visualizationCanvas = document.getElementById('canvasImgmatch');
   let list = document.getElementById("itemlist");
-  itemcounter = new ItemCounter(tmpCanvas, progressCb, currentTemplate, visualizationCanvas, list);
-  await itemcounter.init();
+  if (itemcounter === null) {
+    itemcounter = new ItemCounter(tmpCanvas, progressCb, currentTemplate, visualizationCanvas, list);
+    await itemcounter.init();
+  }
   itemcounter.setFaction(await getFaction());
   let iconpack = document.getElementById("iconpack-select").selectedOptions[0].value;
   itemcounter.setIconpack(iconpack);

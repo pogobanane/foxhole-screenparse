@@ -16,6 +16,7 @@ class ItemCounter {
     this.abort = false;
     this.faction = null; // 'colonial' or 'warden'
     this.screenshotImg = null;
+    this.icons = new Icons();
     this.http404s = [];
     this.tesseract = new OCR();
 
@@ -36,6 +37,7 @@ class ItemCounter {
 
   // returns null on error
   async count(imageElem) {
+    let start = performance.now();
     if (this.faction == null) {
       console.error('faction undefined');
       this.progress.error('Choose a faction');
@@ -59,6 +61,8 @@ class ItemCounter {
     let ret = {};
     ret.items = findings;
     ret.stockpileType = cal.stockpileType;
+    let end = performance.now();
+    console.log("Counting took s", (end-start)/1000);
     return ret;
   }
 
@@ -221,7 +225,7 @@ class ItemCounter {
     this.progress.step1('Calibration: ' + message);
     let icon = await this.loadItemIcon(item, this.iconpack);
     let iconUnprocessedMat = cv.imread(icon);
-    let iconMat = await prepareItem(iconUnprocessedMat, item, crated, iconSizePx, iconSizePx);
+    let iconMat = await this.icons.prepareItem(iconUnprocessedMat, item, crated, iconSizePx, iconSizePx);
     iconUnprocessedMat.delete();
     if (this.currentTemplate !== null) {
       cv.imshow(this.currentTemplate, iconMat);
@@ -445,7 +449,7 @@ class ItemCounter {
 
   async __findIcon(iconUnprocessedMat, stockpileMat, item, calibration, width, height) {
     let crated = calibration.stockpileType.crateBased;
-    let iconMat = await prepareItem(iconUnprocessedMat, item, crated, width, height);
+    let iconMat = await this.icons.prepareItem(iconUnprocessedMat, item, crated, width, height);
     if (this.currentTemplate !== null) {
       cv.imshow(this.currentTemplate, iconMat);
     }
@@ -683,50 +687,6 @@ const addExtraDecor = async (scaledItemMat, decorMat, position, itemWidth, itemH
   background1.delete(); background2.delete(); background3.delete();
 
   return background4;
-}
-
-// returns mat of processed item
-const prepareItem = async (inMat, item, crated, width, height) => {
-  let step = new cv.Mat();
-  let dst = new cv.Mat();
-  let rgbaPlanes = new cv.MatVector();
-  cv.split(inMat, rgbaPlanes);
-  let step2 = new cv.Mat();
-  let step3 = new cv.Mat();
-  let nilVal = new cv.Mat();
-  rgbaPlanes.get(0).convertTo(nilVal, -1, 0, 0);
-  let maxVal = new cv.Mat();
-  nilVal.convertTo(maxVal, -1, 1, 255);
-  let alphaMask = new cv.Mat();
-  let mask = new cv.Mat();
-  let gray = new cv.Mat();
-  //cv.subtract(rgbaPlanes.get(0), rgbaPlanes.get(0), step2, mask);
-  //cv.add(step2, step3, 254);
-  rgbaPlanes.get(3).convertTo(alphaMask, cv.CV_32F, 1.0/256.0, 0);
-  // bake alpha into R
-  cv.multiply(rgbaPlanes.get(0), alphaMask, gray, 1.0/3.0, rgbaPlanes.get(0).type());
-  // bake alpha into G
-  cv.multiply(rgbaPlanes.get(1), alphaMask, step2, 1.0/3.0, rgbaPlanes.get(0).type());
-  cv.add(gray, step2, step3, mask, rgbaPlanes.get(0).type());
-  // bake alpha into B
-  cv.multiply(rgbaPlanes.get(2), alphaMask, step2, 1.0/3.0, rgbaPlanes.get(0).type());
-  cv.add(step3, step2, gray, mask, rgbaPlanes.get(0).type());
-  resize(gray, dst, width, height);
-  let withCrate;
-  if (crated) {
-    withCrate = await addCrate(dst, width, height);
-  } else {
-    withCrate = dst.clone();
-  }
-  let extraIconed = await addExtraIcon(withCrate, item, width, height);
-  step.delete(); dst.delete(); rgbaPlanes.delete(); step2.delete(); step3.delete();
-  nilVal.delete(); 
-  maxVal.delete(); 
-  alphaMask.delete(); 
-  mask.delete(); 
-  gray.delete(); 
-  withCrate.delete();
-  return extraIconed;
 }
 
 const imgmatch = async (haystackMat, needleMat) => {
