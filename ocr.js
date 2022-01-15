@@ -5,9 +5,7 @@ class OCR {
   }
 
   async init() {
-    this.worker = Tesseract.createWorker({
-      logger: m => console.debug(m)
-    });
+    this.worker = Tesseract.createWorker();
     await this.worker.load();
     await this.worker.loadLanguage('eng');
     await this.worker.initialize('eng', Tesseract.OEM.TESSERACT_ONLY);
