@@ -737,7 +737,7 @@ const imgmatch = async (haystackMat, needleMat) => {
   // good explanation of modes https://stackoverflow.com/questions/58158129/understanding-and-evaluating-template-matching-methods
   let best = null;
   let matches = [];
-  for (let i = 0; i <= 20; i++){
+  for (let i = 0; i <= 0; i++){
     let result = cv.minMaxLoc(dst, mask);
     let maxPoint = result.maxLoc;
     cv.floodFill(dst, foo, maxPoint, new cv.Scalar());
