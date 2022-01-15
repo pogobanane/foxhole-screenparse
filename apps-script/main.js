@@ -94,14 +94,21 @@ const run = async () => {
   document.getElementById("run-spinner").setAttribute("style", "display: inline-block;")
   try {
     let iconpacksLoc = "https://raw.githubusercontent.com/pogobanane/foxhole-iconpacks/main/";
-    itemcounter = new ItemCounter(tmpCanvas, progressCb, iconpacksLoc, currentTemplate, visualizationCanvas, list);
-    await itemcounter.init();
+    if (itemcounter === null) {
+      itemcounter = new ItemCounter(tmpCanvas, progressCb, iconpacksLoc, currentTemplate, visualizationCanvas, list);
+      await itemcounter.init();
+    }
     itemcounter.setFaction(await getFaction());
     let iconpack = document.getElementById("iconpack-select").selectedOptions[0].value;
     itemcounter.setIconpack(iconpack);
 
-    let fileselector = document.getElementById('fileInputSrc');
-    let screenshotUrl = URL.createObjectURL(fileselector.files[0]);
+    let file = document.getElementById('fileInputSrc').files[0];
+    let screenshotUrl;
+    if (typeof file === 'undefined') {
+      screenshotUrl = document.getElementById('imageSrc').src;
+    } else {
+      screenshotUrl = URL.createObjectURL(file);
+    }
     let screenshot = await loadImage(screenshotUrl);
     findings = await itemcounter.count(screenshot); // takes long
   } 
