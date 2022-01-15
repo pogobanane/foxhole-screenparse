@@ -17,7 +17,6 @@ class ItemCounter {
     this.faction = null; // 'colonial' or 'warden'
     this.screenshotImg = null;
     this.icons = new Icons();
-    this.http404s = [];
     this.tesseract = new OCR();
 
     this.iconpacksLoc = "iconpacks"; // iconpacksLoc + '/mods/' + iconpack + '/' + item.imgUasset;
@@ -188,45 +187,13 @@ class ItemCounter {
     return best;
   }
 
-  async loadItemIcon(item, iconpack = 'default') {
-    if (iconpack !== 'default') {
-      let idx = known_iconpacks.findIndex((pack) => {
-        return pack.name == iconpack;
-      });
-      if (idx === -1) {
-        console.error("Requesting item from unknown iconpack.");
-        return null;
-      }
-      let url = this.iconpacksLoc + '/mods/' + iconpack + '/' + item.imgUasset;
-      if (this.http404s.includes(url)) {
-        // Quick fallback to default item
-      } else {
-        let response = await fetch(url);
-        if (response.ok) {
-          return await loadImage(URL.createObjectURL(await response.blob()));
-        } else if (response.status === 404) {
-          // this mod does not have this item. Fallback to default icons
-          this.http404s.push(url);
-        } else {
-          console.error("Connection/server error?", response);
-          return null;
-        }
-      }
-    }
-
-    return await loadImage(getImgPath(item.imgPath));
-  }
-
   async calibrateFind(screenshotMat, itemName, crated, iconSizePx) {
     //let item = items.find((item) => { return item.itemName == 'Soldier Supplies'; });
     let item = items.find((item) => { return item.itemName == itemName; });
     let message = "Searching " + item.itemName + " at " + iconSizePx + "px...";
     console.log(message);
     this.progress.step1('Calibration: ' + message);
-    let icon = await this.loadItemIcon(item, this.iconpack);
-    let iconUnprocessedMat = cv.imread(icon);
-    let iconMat = await this.icons.prepareItem(iconUnprocessedMat, item, crated, iconSizePx, iconSizePx);
-    iconUnprocessedMat.delete();
+    let iconMat = await this.icons.getItemIcon(this.iconpack, item, crated, iconSizePx, iconSizePx);
     if (this.currentTemplate !== null) {
       cv.imshow(this.currentTemplate, iconMat);
     }
@@ -317,12 +284,9 @@ class ItemCounter {
   
       let perfStart = performance.now();
       console.log("Searching " + item.itemName + "...");
-      let icon = await this.loadItemIcon(item, this.iconpack);
-      let iconUnprocessedMat = cv.imread(icon);
-      let best = await this._findIcon(iconUnprocessedMat, stockpileMat, item, calibration);
+      let best = await this._findIcon(stockpileMat, item, calibration);
       let iconMat = best.iconMat;
       best = best.matches[0];
-      iconUnprocessedMat.delete();
       let perfMatched = performance.now();
       console.info("Confidence: " + best.confidence);
       const box = points2point(best);
@@ -375,7 +339,7 @@ class ItemCounter {
     return found;
   };
 
-  async _findIcon(iconUnprocessedMat, stockpileMat, item, calibration) {
+  async _findIcon(stockpileMat, item, calibration) {
     const diffs = [
       [-1, 0],
       [0, -1],
@@ -388,7 +352,7 @@ class ItemCounter {
 
     // find it roughly
     let length = calibration.itemSizePx;
-    results.push(await this.__findIcon(iconUnprocessedMat, stockpileMat, item, calibration, length, length));
+    results.push(await this.__findIcon(stockpileMat, item, calibration, length, length));
 
     // crop stockpileMat to found area
     let box = points2point(results[0].matches[0]);
@@ -418,7 +382,7 @@ class ItemCounter {
     for (let diff of diffs) {
       let width = calibration.itemSizePx + diff[0];
       let height = calibration.itemSizePx + diff[1];
-      results.push(await this.__findIcon(iconUnprocessedMat, croppedPileMat, item, calibration, width, height));
+      results.push(await this.__findIcon(croppedPileMat, item, calibration, width, height));
     }
     // find best result
     let best = null;
@@ -447,9 +411,9 @@ class ItemCounter {
     return best;
   }
 
-  async __findIcon(iconUnprocessedMat, stockpileMat, item, calibration, width, height) {
+  async __findIcon(stockpileMat, item, calibration, width, height) {
     let crated = calibration.stockpileType.crateBased;
-    let iconMat = await this.icons.prepareItem(iconUnprocessedMat, item, crated, width, height);
+    let iconMat = await this.icons.getItemIcon(this.iconpack, item, crated, width, height);
     if (this.currentTemplate !== null) {
       cv.imshow(this.currentTemplate, iconMat);
     }
