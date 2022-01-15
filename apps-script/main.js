@@ -93,9 +93,9 @@ const run = async () => {
   let findings;
   document.getElementById("run-spinner").setAttribute("style", "display: inline-block;")
   try {
-    itemcounter = new ItemCounter(tmpCanvas, progressCb, currentTemplate, visualizationCanvas, list);
+    let iconpacksLoc = "https://raw.githubusercontent.com/pogobanane/foxhole-iconpacks/main/";
+    itemcounter = new ItemCounter(tmpCanvas, progressCb, iconpacksLoc, currentTemplate, visualizationCanvas, list);
     await itemcounter.init();
-    itemcounter.iconpacksLoc = "https://raw.githubusercontent.com/pogobanane/foxhole-iconpacks/main/";
     itemcounter.setFaction(await getFaction());
     let iconpack = document.getElementById("iconpack-select").selectedOptions[0].value;
     itemcounter.setIconpack(iconpack);

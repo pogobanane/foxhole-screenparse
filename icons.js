@@ -1,7 +1,8 @@
 class Icons {
-  constructor() {
+  constructor(iconpacksLoc = "iconpacks") {
     this.cache = new Map();
     this.http404s = [];
+    this.iconpacksLoc = iconpacksLoc; // iconpacksLoc + '/mods/' + iconpack + '/' + item.imgUasset;
   }
 
   async loadItemIcon(item, iconpack = 'default') {

@@ -7,7 +7,7 @@ const getImgPath = (imgPath) => {
 }
 
 class ItemCounter {
-  constructor(tmpCanvas, progressCallback = (progress)=>{}, currentTemplate = null, visualizationCanvas = null, domList = null) {
+  constructor(tmpCanvas, progressCallback = (progress)=>{}, iconpacksLoc = "iconpacks", currentTemplate = null, visualizationCanvas = null, domList = null) {
     this.tmpCanvas = tmpCanvas; // scratchpad canvas element (should be display: none)
     this.progress = new Progress(progressCallback);
     this.currentTemplate = currentTemplate; // template used for current matching
@@ -16,10 +16,8 @@ class ItemCounter {
     this.abort = false;
     this.faction = null; // 'colonial' or 'warden'
     this.screenshotImg = null;
-    this.icons = new Icons();
+    this.icons = new Icons(iconpacksLoc);
     this.tesseract = new OCR();
-
-    this.iconpacksLoc = "iconpacks"; // iconpacksLoc + '/mods/' + iconpack + '/' + item.imgUasset;
   }
 
   async init() {
