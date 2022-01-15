@@ -350,7 +350,7 @@ class ItemCounter {
 
     // find it roughly
     let length = calibration.itemSizePx;
-    results.push(await this.__findIcon(stockpileMat, item, calibration, length, length));
+    results.push(await this.__findIcon(stockpileMat, item, calibration, length, length, true));
 
     // crop stockpileMat to found area
     let box = points2point(results[0].matches[0]);
@@ -380,7 +380,7 @@ class ItemCounter {
     for (let diff of diffs) {
       let width = calibration.itemSizePx + diff[0];
       let height = calibration.itemSizePx + diff[1];
-      results.push(await this.__findIcon(croppedPileMat, item, calibration, width, height));
+      results.push(await this.__findIcon(croppedPileMat, item, calibration, width, height, false));
     }
     // find best result
     let best = null;
@@ -409,10 +409,10 @@ class ItemCounter {
     return best;
   }
 
-  async __findIcon(stockpileMat, item, calibration, width, height) {
+  async __findIcon(stockpileMat, item, calibration, width, height, showTemplate) {
     let crated = calibration.stockpileType.crateBased;
     let iconMat = await this.icons.getItemIcon(this.iconpack, item, crated, width, height);
-    if (this.currentTemplate !== null) {
+    if (this.currentTemplate !== null && showTemplate) {
       cv.imshow(this.currentTemplate, iconMat);
     }
     let matches = await imgmatch(stockpileMat, iconMat);
