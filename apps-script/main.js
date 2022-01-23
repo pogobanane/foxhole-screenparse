@@ -1,12 +1,20 @@
 var itemcounter = null;
 var globfindings = null;
+var screenshot = null; // will be populated in connect_file_img
 
 const connect_file_img = (imageid, fileinputid) => {
   let imgElement = document.getElementById(imageid);
   let inputElement = document.getElementById(fileinputid);
-  inputElement.addEventListener('change', (e) => {
+  inputElement.addEventListener('change', async (e) => {
+    // mark screenshot as changing to prevent analysis
+    screenshot = "loading ...";
+    // show file
     imgElement.src = URL.createObjectURL(e.target.files[0]);
     document.getElementById('imageSrc').removeAttribute("hidden");
+    // store file in _our_ memory
+    let file = document.getElementById(fileinputid).files[0];
+    let screenshotUrl = URL.createObjectURL(file);
+    screenshot = await loadImage(screenshotUrl);
   }, false);
 }
 
@@ -102,14 +110,10 @@ const run = async () => {
     let iconpack = document.getElementById("iconpack-select").selectedOptions[0].value;
     itemcounter.setIconpack(iconpack);
 
-    let file = document.getElementById('fileInputSrc').files[0];
-    let screenshotUrl;
-    if (typeof file === 'undefined') {
+    if (screenshot === null) {
       screenshotUrl = document.getElementById('imageSrc').src;
-    } else {
-      screenshotUrl = URL.createObjectURL(file);
+      screenshot = await loadImage(screenshotUrl);
     }
-    let screenshot = await loadImage(screenshotUrl);
     findings = await itemcounter.count(screenshot); // takes long
   } 
   catch (e) {
