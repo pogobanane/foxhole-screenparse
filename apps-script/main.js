@@ -137,7 +137,18 @@ const run = async () => {
 }
 
 const abort = () => {
-  itemcounter.abort = true;
+  //itemcounter.abort = true;
+
+  let ret = google.script.run
+  .withSuccessHandler((ret) => {
+    console.log(ret);
+  })
+  .withFailureHandler((error) => {
+    console.error(error);
+    window.alert(error);
+  })
+  .fhColumnMap();
+  console.warn(ret);
 }
 
 const insert = () => {
