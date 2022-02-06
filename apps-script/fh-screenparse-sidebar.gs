@@ -19,7 +19,7 @@ function fhColumnMap() {
   //let column = sheet.getCurrentCell().getColumn();
   var data = sheet.getDataRange().getValues();
   let stockpiles = [];
-  let magicCol = 2;
+  let magicCol = 3;
 
   // town range
   let townrow = data.findIndex((a) => {
@@ -30,7 +30,7 @@ function fhColumnMap() {
   }
   let townnames = data[townrow];
   townrow += 1; // fix start counting at 0
-  let column = magicCol;
+  let column = magicCol + 1;
   while (column<townnames.length) {
     let range = sheet.getRange(townrow, column).getMergedRanges()[0];
     if (typeof range === 'undefined') {
@@ -69,13 +69,17 @@ function fhColumnMap() {
       throw "Stockpile Name not found";
     }
     row += 1; // fix start counting at 0
-    let piles = sheet.getRange(row, rStart, 1, rCount).getValues();
-
-    stockpiles.push({
-      "townname": townname,
-      "regionname": regionname,
-      "stockdesc": stockdesc,
-      "stockpiles": piles,
+    sheet.getRange(row, rStart, 1, rCount).getValues()[0].forEach((pilename) => {
+      if (pilename === 'Total' || pilename === '--') {
+        return;
+      }
+      stockpiles.push({
+        "townname": townname,
+        "regionname": regionname,
+        "stockdesc": stockdesc,
+        "stockpile": pilename,
+        "column": column,
+      });
     });
     column += rangeSize;
   }
