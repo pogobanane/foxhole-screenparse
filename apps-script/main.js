@@ -98,7 +98,9 @@ const printStockpileInput = () => {
         return r;
     }, Object.create(null));
 
+    let first = true;
     let div = document.getElementById("stockpile-select");
+    removeAllChildNodes(div);
     for (let region of Object.keys(regionpiles)) {
       let stockpiles = regionpiles[region];
       let b = document.createElement('b');
@@ -113,7 +115,10 @@ const printStockpileInput = () => {
         option.setAttribute('name', 'stockpile');
         option.setAttribute('id', 'stockpile' + stockpile.column);
         option.setAttribute('value', stockpile.column);
-        option.setAttribute('checked', 'checked');
+        if (first) {
+          option.setAttribute('checked', 'checked');
+          first = false;
+        }
         let label = document.createElement('label');
         let text = document.createTextNode("\u00A0" + stockpile.townname + ': ');
         let i = document.createElement('i');
