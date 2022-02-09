@@ -1,5 +1,5 @@
 var itemcounter = null;
-var globfindings = null;
+var stockpileinputs = [];
 var screenshot = null; // will be populated in connect_file_img
 
 const connect_file_img = (imageid, fileinputid) => {
@@ -75,9 +75,20 @@ const getFaction = async () => {
   }
 }
 
+const getStockpile = async () => {
+  return document.querySelector('input[name="stockpile"]:checked').value;
+}
+
+const disableStockpileInput = (b) => {
+  let div = document.getElementById("stockpile-select");
+  for (let input of stockpileinputs) {
+    input.disabled = b;
+  }
+}
+
 const run = async () => {
   console.log("run");
-  document.getElementById("insert").disabled = true;
+  disableStockpileInput(true);
   removeAllChildNodes(document.getElementById('itemlist'));
   await clearCanvas(document.getElementById('canvasImgmatch'));
 
@@ -119,9 +130,10 @@ const run = async () => {
   catch (e) {
     console.error(e);
   }
-  document.getElementById("run-spinner").setAttribute("style", "display: none;")
   if (findings === null) {
     window.alert('No stockpile found on screenshot.');
+    document.getElementById("run-spinner").setAttribute("style", "display: none;")
+    disableStockpileInput(false);
     return;
   }
   if (findings.stockpileType === null) {
@@ -131,40 +143,22 @@ const run = async () => {
     window.alert('Stockpile is not crate based. Some Table columns are wrong.');
   }
 
-  document.getElementById("insert").disabled = false;
-  globfindings = findings;
-  //await printCSV(findings);
+  // insert
+  google.script.run
+  .withSuccessHandler((ret) => {
+    console.log(ret);
+  })
+  .withFailureHandler((error) => {
+    console.error(error);
+    window.alert(error);
+  })
+  .fhInsert(findings, await getStockpile());
+  document.getElementById("run-spinner").setAttribute("style", "display: none;")
+  disableStockpileInput(false);
 }
 
 const abort = () => {
-  //itemcounter.abort = true;
-
-  let ret = google.script.run
-  .withSuccessHandler((ret) => {
-    console.log(ret);
-  })
-  .withFailureHandler((error) => {
-    console.error(error);
-    window.alert(error);
-  })
-  .fhColumnMap();
-  console.warn(ret);
-}
-
-const insert = () => {
-  document.getElementById("insert-spinner").setAttribute("style", "display: inline-block;")
-  google.script.run
-  .withSuccessHandler((ret) => {
-    document.getElementById("insert-spinner").setAttribute("style", "display: none;")
-    console.log(ret);
-  })
-  .withFailureHandler((error) => {
-    document.getElementById("insert-spinner").setAttribute("style", "display: none;")
-    console.error(error);
-    window.alert(error);
-  })
-  .fhInsert(globfindings, document.querySelector('input[name="stockpile"]:checked').value);
-  //.fhInsert({ "items": [ { "name": "Petrol", "count": 1337 } ] });
+  itemcounter.abort = true;
 }
 
 const loaded = async () => {
@@ -182,6 +176,7 @@ const loaded = async () => {
   let ret = google.script.run
   .withSuccessHandler((stockpiles) => {
     console.log(stockpiles);
+    document.getElementById("stockpile-spinner").setAttribute("style", "display: none;")
     let div = document.getElementById("stockpile-select");
     for (let stockpile of stockpiles) {
       let option = document.createElement('input');
@@ -189,11 +184,13 @@ const loaded = async () => {
       option.setAttribute('name', 'stockpile');
       option.setAttribute('id', 'stockpile' + stockpile.column);
       option.setAttribute('value', stockpile.column);
+      option.setAttribute('checked', 'checked');
       let label = document.createElement('label');
-      let text = document.createTextNode(' ' + stockpile.townname + ' ' + stockpile.stockpile);
+      let text = document.createTextNode("\u00A0" + stockpile.townname + ' ' + stockpile.stockpile);
       label.appendChild(text);
       label.setAttribute('for', 'stockpile' + stockpile.column);
       let br = document.createElement('br');
+      stockpileinputs.push(option);
       div.appendChild(option);
       div.appendChild(label);
       div.appendChild(br);
