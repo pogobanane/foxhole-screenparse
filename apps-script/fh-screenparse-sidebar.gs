@@ -15,7 +15,11 @@ function showSidebar() {
 }
 
 function fhColumnMap() {
-  var sheet = SpreadsheetApp.getActiveSheet();
+  let spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = spreadsheet.getSheets().find((s) => {
+    return s.getName() === 'Input / Screenparse';
+  });
+  //var sheet = SpreadsheetApp.getActiveSheet();
   //let column = sheet.getCurrentCell().getColumn();
   var data = sheet.getDataRange().getValues();
   let stockpiles = [];
@@ -69,26 +73,32 @@ function fhColumnMap() {
       throw "Stockpile Name not found";
     }
     row += 1; // fix start counting at 0
-    sheet.getRange(row, rStart, 1, rCount).getValues()[0].forEach((pilename) => {
-      if (pilename === 'Total' || pilename === '--') {
-        return;
+    let pilenames = sheet.getRange(row, rStart, 1, rCount).getValues()[0];
+    for (let i = 0; i<pilenames.length; i++) {
+      let pilename = pilenames[i];
+      if (pilename === 'Total' || pilename === '--' || stockdesc === 'inactive') {
+        continue;
       }
       stockpiles.push({
         "townname": townname,
         "regionname": regionname,
         "stockdesc": stockdesc,
         "stockpile": pilename,
-        "column": column,
+        "column": column + i,
       });
-    });
+    }
     column += rangeSize;
   }
   return stockpiles;
 }
 
-function fhInsert(s) {
-  var sheet = SpreadsheetApp.getActiveSheet();
-  let column = sheet.getCurrentCell().getColumn();
+function fhInsert(s, column) {
+  let spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = spreadsheet.getSheets().find((s) => {
+    return s.getName() === 'Input / Screenparse';
+  });
+  //var sheet = SpreadsheetApp.getActiveSheet();
+  //let column = sheet.getCurrentCell().getColumn();
   var data = sheet.getDataRange().getValues();
 
   // update item counts

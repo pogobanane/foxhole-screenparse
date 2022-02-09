@@ -163,7 +163,7 @@ const insert = () => {
     console.error(error);
     window.alert(error);
   })
-  .fhInsert(globfindings);
+  .fhInsert(globfindings, document.querySelector('input[name="stockpile"]:checked').value);
   //.fhInsert({ "items": [ { "name": "Petrol", "count": 1337 } ] });
 }
 
@@ -177,4 +177,32 @@ const loaded = async () => {
     option.appendChild(label);
     document.getElementById('iconpack-select').appendChild(option);
   }
+
+  // long running
+  let ret = google.script.run
+  .withSuccessHandler((stockpiles) => {
+    console.log(stockpiles);
+    let div = document.getElementById("stockpile-select");
+    for (let stockpile of stockpiles) {
+      let option = document.createElement('input');
+      option.setAttribute('type', 'radio');
+      option.setAttribute('name', 'stockpile');
+      option.setAttribute('id', 'stockpile' + stockpile.column);
+      option.setAttribute('value', stockpile.column);
+      let label = document.createElement('label');
+      let text = document.createTextNode(' ' + stockpile.townname + ' ' + stockpile.stockpile);
+      label.appendChild(text);
+      label.setAttribute('for', 'stockpile' + stockpile.column);
+      let br = document.createElement('br');
+      div.appendChild(option);
+      div.appendChild(label);
+      div.appendChild(br);
+    }
+  })
+  .withFailureHandler((error) => {
+    console.error(error);
+    window.alert(error);
+  })
+  .fhColumnMap();
+  console.warn(ret);
 }
