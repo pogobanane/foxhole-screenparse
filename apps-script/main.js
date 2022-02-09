@@ -86,6 +86,58 @@ const disableStockpileInput = (b) => {
   }
 }
 
+const printStockpileInput = () => {
+  // long running
+  let ret = google.script.run
+  .withSuccessHandler((piles) => {
+    console.log(piles);
+    document.getElementById("stockpile-spinner").setAttribute("style", "display: none;")
+    let regionpiles = piles.reduce(function (r, a) {
+        r[a.regionname] = r[a.regionname] || [];
+        r[a.regionname].push(a);
+        return r;
+    }, Object.create(null));
+
+    let div = document.getElementById("stockpile-select");
+    for (let region of Object.keys(regionpiles)) {
+      let stockpiles = regionpiles[region];
+      let b = document.createElement('b');
+      let text = document.createTextNode(region);
+      b.appendChild(text)
+      let br = document.createElement('br');
+      div.appendChild(b);
+      div.appendChild(br);
+      for (let stockpile of stockpiles) {
+        let option = document.createElement('input');
+        option.setAttribute('type', 'radio');
+        option.setAttribute('name', 'stockpile');
+        option.setAttribute('id', 'stockpile' + stockpile.column);
+        option.setAttribute('value', stockpile.column);
+        option.setAttribute('checked', 'checked');
+        let label = document.createElement('label');
+        let text = document.createTextNode("\u00A0" + stockpile.townname + ': ');
+        let i = document.createElement('i');
+        let text2 = document.createTextNode(stockpile.stockpile);
+        i.appendChild(text2);
+        let br = document.createElement('br');
+        label.appendChild(text);
+        label.appendChild(i);
+        label.setAttribute('for', 'stockpile' + stockpile.column);
+        stockpileinputs.push(option);
+        div.appendChild(option);
+        div.appendChild(label);
+        div.appendChild(br);
+      }
+    }
+  })
+  .withFailureHandler((error) => {
+    console.error(error);
+    window.alert(error);
+  })
+  .fhColumnMap();
+  console.warn(ret);
+}
+
 const run = async () => {
   console.log("run");
   disableStockpileInput(true);
@@ -172,34 +224,5 @@ const loaded = async () => {
     document.getElementById('iconpack-select').appendChild(option);
   }
 
-  // long running
-  let ret = google.script.run
-  .withSuccessHandler((stockpiles) => {
-    console.log(stockpiles);
-    document.getElementById("stockpile-spinner").setAttribute("style", "display: none;")
-    let div = document.getElementById("stockpile-select");
-    for (let stockpile of stockpiles) {
-      let option = document.createElement('input');
-      option.setAttribute('type', 'radio');
-      option.setAttribute('name', 'stockpile');
-      option.setAttribute('id', 'stockpile' + stockpile.column);
-      option.setAttribute('value', stockpile.column);
-      option.setAttribute('checked', 'checked');
-      let label = document.createElement('label');
-      let text = document.createTextNode("\u00A0" + stockpile.townname + ' ' + stockpile.stockpile);
-      label.appendChild(text);
-      label.setAttribute('for', 'stockpile' + stockpile.column);
-      let br = document.createElement('br');
-      stockpileinputs.push(option);
-      div.appendChild(option);
-      div.appendChild(label);
-      div.appendChild(br);
-    }
-  })
-  .withFailureHandler((error) => {
-    console.error(error);
-    window.alert(error);
-  })
-  .fhColumnMap();
-  console.warn(ret);
+  printStockpileInput();
 }
