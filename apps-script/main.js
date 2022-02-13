@@ -146,6 +146,7 @@ const printStockpileInput = () => {
 const run = async () => {
   console.log("run");
   disableStockpileInput(true);
+  document.getElementById('run').setAttribute("disabled", "disabled");
   removeAllChildNodes(document.getElementById('itemlist'));
   await clearCanvas(document.getElementById('canvasImgmatch'));
 
@@ -191,6 +192,7 @@ const run = async () => {
     window.alert('No stockpile found on screenshot.');
     document.getElementById("run-spinner").setAttribute("style", "display: none;")
     disableStockpileInput(false);
+    document.getElementById('run').removeAttribute("disabled");
     return;
   }
   if (findings.stockpileType === null) {
@@ -204,14 +206,18 @@ const run = async () => {
   google.script.run
   .withSuccessHandler((ret) => {
     console.log(ret);
+    document.getElementById("run-spinner").setAttribute("style", "display: none;")
+    disableStockpileInput(false);
+    document.getElementById('run').removeAttribute("disabled");
   })
   .withFailureHandler((error) => {
     console.error(error);
     window.alert(error);
+    document.getElementById("run-spinner").setAttribute("style", "display: none;")
+    disableStockpileInput(false);
+    document.getElementById('run').removeAttribute("disabled");
   })
   .fhInsert(findings, await getStockpile());
-  document.getElementById("run-spinner").setAttribute("style", "display: none;")
-  disableStockpileInput(false);
 }
 
 const abort = () => {
