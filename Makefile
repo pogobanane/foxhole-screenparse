@@ -5,12 +5,17 @@ install:
 	sudo cp -r ./ /var/www/html/foxhole-screenparse/
 
 appsscript:
-		awk '1;/<!-- insert js blob here -->/{exit}' apps-script/index.html > apps-script/packed.html
-		cat image.js >> apps-script/packed.html
-		cat items.js >> apps-script/packed.html
-		cat itemcounter.js >> apps-script/packed.html
-		cat icons.js >> apps-script/packed.html
-		cat ocr.js >> apps-script/packed.html
-		cat apps-script/main.js >> apps-script/packed.html
-		awk 'x==1 {print $1} /<!-- insert js blob here -->/ {x=1}' apps-script/index.html >> apps-script/packed.html
-		cd apps-script && clasp push
+		mkdir -p apps-script/build
+		cp apps-script/appsscript.json apps-script/build/
+		cp apps-script/fh-screenparse-sidebar.gs apps-script/build/
+		# generate packed.html
+		awk '1;/<!-- insert js blob here -->/{exit}' apps-script/index.html > apps-script/build/packed.html
+		cat image.js >> apps-script/build/packed.html
+		cat items.js >> apps-script/build/packed.html
+		cat itemcounter.js >> apps-script/build/packed.html
+		cat icons.js >> apps-script/build/packed.html
+		cat ocr.js >> apps-script/build/packed.html
+		cat apps-script/main.js >> apps-script/build/packed.html
+		awk 'x==1 {print $1} /<!-- insert js blob here -->/ {x=1}' apps-script/index.html >> apps-script/build/packed.html
+		# push to google
+		cd apps-script/build && clasp push
