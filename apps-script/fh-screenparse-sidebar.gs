@@ -14,9 +14,91 @@ function showSidebar() {
   SpreadsheetApp.getUi().showSidebar(html);
 }
 
-function fhInsert(s) {
-  var sheet = SpreadsheetApp.getActiveSheet();
-  let column = sheet.getCurrentCell().getColumn();
+function fhColumnMap() {
+  let spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = spreadsheet.getSheets().find((s) => {
+    return s.getName() === 'Input / Screenparse';
+  });
+  //var sheet = SpreadsheetApp.getActiveSheet();
+  //let column = sheet.getCurrentCell().getColumn();
+  var data = sheet.getDataRange().getValues();
+  let stockpiles = [];
+  let magicCol = 3;
+
+  // town range
+  let townrow = data.findIndex((a) => {
+    return a.indexOf("Town Name") !== -1;
+  });
+  if (townrow === -1) { 
+    throw "Town Name not found";
+  }
+  let townnames = data[townrow];
+  townrow += 1; // fix start counting at 0
+  let column = magicCol + 1;
+  while (column<townnames.length) {
+    let range = sheet.getRange(townrow, column).getMergedRanges()[0];
+    if (typeof range === 'undefined') {
+      throw "Not a range";
+    }
+    let rCount = range.getNumColumns();
+    rangeSize = rCount;
+    let rStart = range.getColumn();
+    let townname = sheet.getRange(townrow, rStart).getValue();
+
+    // region names
+    let row = data.findIndex((a) => {
+      return a.indexOf("Region Name") !== -1;
+    });
+    if (row === -1) { 
+      throw "Region Name not found";
+    }
+    row += 1; // fix start counting at 0
+    let regionname = sheet.getRange(row, rStart).getValue();  
+
+    // Stockpile Description
+    row = data.findIndex((a) => {
+      return a.indexOf("Stockpile Description") !== -1;
+    });
+    if (row === -1) { 
+      throw "Stockpile Description not found";
+    }
+    row += 1; // fix start counting at 0
+    let stockdesc = sheet.getRange(row, rStart).getValue();  
+
+    // stockpile names
+    row = data.findIndex((a) => {
+      return a.indexOf("Stockpile Name") !== -1;
+    });
+    if (row === -1) { 
+      throw "Stockpile Name not found";
+    }
+    row += 1; // fix start counting at 0
+    let pilenames = sheet.getRange(row, rStart, 1, rCount).getValues()[0];
+    for (let i = 0; i<pilenames.length; i++) {
+      let pilename = pilenames[i];
+      if (pilename === 'Total' || pilename === '--' || stockdesc === 'inactive') {
+        continue;
+      }
+      stockpiles.push({
+        "townname": townname,
+        "regionname": regionname,
+        "stockdesc": stockdesc,
+        "stockpile": pilename,
+        "column": column + i,
+      });
+    }
+    column += rangeSize;
+  }
+  return stockpiles;
+}
+
+function fhInsert(s, column) {
+  let spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = spreadsheet.getSheets().find((s) => {
+    return s.getName() === 'Input / Screenparse';
+  });
+  //var sheet = SpreadsheetApp.getActiveSheet();
+  //let column = sheet.getCurrentCell().getColumn();
   var data = sheet.getDataRange().getValues();
 
   // update item counts

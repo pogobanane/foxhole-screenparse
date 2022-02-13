@@ -1,5 +1,5 @@
 var itemcounter = null;
-var globfindings = null;
+var stockpileinputs = [];
 var screenshot = null; // will be populated in connect_file_img
 
 const connect_file_img = (imageid, fileinputid) => {
@@ -75,9 +75,78 @@ const getFaction = async () => {
   }
 }
 
+const getStockpile = async () => {
+  return document.querySelector('input[name="stockpile"]:checked').value;
+}
+
+const disableStockpileInput = (b) => {
+  let div = document.getElementById("stockpile-select");
+  for (let input of stockpileinputs) {
+    input.disabled = b;
+  }
+}
+
+const printStockpileInput = () => {
+  // long running
+  let ret = google.script.run
+  .withSuccessHandler((piles) => {
+    console.log(piles);
+    document.getElementById("stockpile-spinner").setAttribute("style", "display: none;")
+    let regionpiles = piles.reduce(function (r, a) {
+        r[a.regionname] = r[a.regionname] || [];
+        r[a.regionname].push(a);
+        return r;
+    }, Object.create(null));
+
+    let first = true;
+    let div = document.getElementById("stockpile-select");
+    removeAllChildNodes(div);
+    for (let region of Object.keys(regionpiles)) {
+      let stockpiles = regionpiles[region];
+      let b = document.createElement('b');
+      let text = document.createTextNode(region);
+      b.appendChild(text)
+      let br = document.createElement('br');
+      div.appendChild(b);
+      div.appendChild(br);
+      for (let stockpile of stockpiles) {
+        let option = document.createElement('input');
+        option.setAttribute('type', 'radio');
+        option.setAttribute('name', 'stockpile');
+        option.setAttribute('id', 'stockpile' + stockpile.column);
+        option.setAttribute('value', stockpile.column);
+        if (first) {
+          option.setAttribute('checked', 'checked');
+          first = false;
+        }
+        let label = document.createElement('label');
+        let text = document.createTextNode("\u00A0" + stockpile.townname + ': ');
+        let i = document.createElement('i');
+        let text2 = document.createTextNode(stockpile.stockpile);
+        i.appendChild(text2);
+        let br = document.createElement('br');
+        label.appendChild(text);
+        label.appendChild(i);
+        label.setAttribute('for', 'stockpile' + stockpile.column);
+        stockpileinputs.push(option);
+        div.appendChild(option);
+        div.appendChild(label);
+        div.appendChild(br);
+      }
+    }
+  })
+  .withFailureHandler((error) => {
+    console.error(error);
+    window.alert(error);
+  })
+  .fhColumnMap();
+  console.warn(ret);
+}
+
 const run = async () => {
   console.log("run");
-  document.getElementById("insert").disabled = true;
+  disableStockpileInput(true);
+  document.getElementById('run').setAttribute("disabled", "disabled");
   removeAllChildNodes(document.getElementById('itemlist'));
   await clearCanvas(document.getElementById('canvasImgmatch'));
 
@@ -119,9 +188,11 @@ const run = async () => {
   catch (e) {
     console.error(e);
   }
-  document.getElementById("run-spinner").setAttribute("style", "display: none;")
   if (findings === null) {
     window.alert('No stockpile found on screenshot.');
+    document.getElementById("run-spinner").setAttribute("style", "display: none;")
+    disableStockpileInput(false);
+    document.getElementById('run').removeAttribute("disabled");
     return;
   }
   if (findings.stockpileType === null) {
@@ -131,29 +202,26 @@ const run = async () => {
     window.alert('Stockpile is not crate based. Some Table columns are wrong.');
   }
 
-  document.getElementById("insert").disabled = false;
-  globfindings = findings;
-  //await printCSV(findings);
+  // insert
+  google.script.run
+  .withSuccessHandler((ret) => {
+    console.log(ret);
+    document.getElementById("run-spinner").setAttribute("style", "display: none;")
+    disableStockpileInput(false);
+    document.getElementById('run').removeAttribute("disabled");
+  })
+  .withFailureHandler((error) => {
+    console.error(error);
+    window.alert(error);
+    document.getElementById("run-spinner").setAttribute("style", "display: none;")
+    disableStockpileInput(false);
+    document.getElementById('run').removeAttribute("disabled");
+  })
+  .fhInsert(findings, await getStockpile());
 }
 
 const abort = () => {
   itemcounter.abort = true;
-}
-
-const insert = () => {
-  document.getElementById("insert-spinner").setAttribute("style", "display: inline-block;")
-  google.script.run
-  .withSuccessHandler((ret) => {
-    document.getElementById("insert-spinner").setAttribute("style", "display: none;")
-    console.log(ret);
-  })
-  .withFailureHandler((error) => {
-    document.getElementById("insert-spinner").setAttribute("style", "display: none;")
-    console.error(error);
-    window.alert(error);
-  })
-  .fhInsert(globfindings);
-  //.fhInsert({ "items": [ { "name": "Petrol", "count": 1337 } ] });
 }
 
 const loaded = async () => {
@@ -166,4 +234,6 @@ const loaded = async () => {
     option.appendChild(label);
     document.getElementById('iconpack-select').appendChild(option);
   }
+
+  printStockpileInput();
 }
