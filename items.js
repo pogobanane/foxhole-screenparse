@@ -2399,6 +2399,8 @@ const items = [
         "colonial"
       ],
       "imgName": "r_12_Salus_Ambulance.png",
+      "imgPath": "icons/vehicles/ambulance.png",
+      "imgUasset": "VehicleIcons/Ambulance.png",
       "itemName": "r-12 - \"Salus\" Ambulance",
       "itemClass": "Ambulance",
       "itemDesc": "The \"salus\" Ambulance is efficient at transporting Critcally Wounded Soldiers and carrying medical supplies.",
@@ -2416,6 +2418,8 @@ const items = [
         "warden"
       ],
       "imgName": "Dunne_Responder_3e.png",
+      "imgPath": "icons/vehicles/ambulancewar.png",
+      "imgUasset": "VehicleIcons/AmbulanceWar.png",
       "itemName": "Dunne Responder 3e",
       "itemClass": "Ambulance",
       "itemDesc": "The Responder Ambuleance is efficient at transporting Critically Wounded Soldiers and carrying medical supplies.",
@@ -2433,6 +2437,8 @@ const items = [
         "colonial"
       ],
       "imgName": "T3_Xiphos.png",
+      "imgPath": "icons/vehicles/armoredcarvehicle.png",
+      "imgUasset": "VehicleIcons/ArmoredCarVehicleIcon.png",
       "itemName": "T3 \"Xiphos\"",
       "itemClass": "Armored Car",
       "itemDesc": "Colonial Armored Cars are quick, well-rounded urban assault platforms. These anti-infantry vehicles are equipped with twin-barelled machineguns.",
@@ -2451,6 +2457,8 @@ const items = [
         "colonial"
       ],
       "imgName": "T12_Actaeon_Tankette.png",
+      "imgPath": "icons/vehicles/armoredcardefensivevehicle.png",
+      "imgUasset": "VehicleIcons/ArmoredCarDefensiveVehicleIcon.png",
       "itemName": "T12 \"Actaeon\" Tankette",
       "itemClass": "Armored Car",
       "itemDesc": "This complete overhaul of the T3 Armored Car is reinforced with tank armor. While these extra defenses lower the T12's overall speed and handling, the addition of treads provide increased performace in less than ideal terrain.",
@@ -2468,6 +2476,8 @@ const items = [
         "colonial"
       ],
       "imgName": "T5_Percutio.png",
+      "imgPath": "icons/vehicles/armoredcaroffensivecvehicle.png",
+      "imgUasset": "VehicleIcons/ArmoredCarOffensiveCVehicleIcon.png",
       "itemName": "T5 \"Percutio\"",
       "itemClass": "Armored Car",
       "itemDesc": "This \"Xiphos\" variant is fitted with a high-powered anti-tank turret in place of the twin machine gun platforms.",
@@ -2485,6 +2495,8 @@ const items = [
         "colonial"
       ],
       "imgName": "T8_Gemini.png",
+      "imgPath": "icons/vehicles/armoredcartwincitem.png",
+      "imgUasset": "VehicleIcons/ArmoredCarTwinCItemIcon.png",
       "itemName": "T8 \"Gemini\"",
       "itemClass": "Armored Car",
       "itemDesc": "Fitted with twin RPG launchers, the T8 employs hit-and-run assaults against enemy structures and emplacements.",
@@ -2505,6 +2517,8 @@ const items = [
         "warden"
       ],
       "imgName": "O_Brien_v_113_Gravekeeper.png",
+      // "imgPath": "missing",
+      // "imgUasset": "VehicleIcons/ArmoredCarATWVehicleIcon.png",
       "itemName": "O’Brien v.113 Gravekeeper",
       "itemClass": "Armored Car",
       "itemDesc": "A slight variation of the v.110, the Gravekeeper comes fitted with an embedded Bonesaw launcher, transforming the humble armoured car into an effective indirect anti-armour vehicle.",
@@ -2526,6 +2540,8 @@ const items = [
         "warden"
       ],
       "imgName": "O_Brien_v_121_Highlander.png",
+      "imgPath": "icons/vehicles/armoredcarmobilitywarvehicle.png",
+      "imgUasset": "VehicleIcons/ArmoredCarMobilityWarVehicleIcon.png",
       "itemName": "O'Brien v.121 Highlander",
       "itemClass": "Armored Car",
       "itemDesc": "Fitted with all-terrain treads, the Highlander brings significant all-terrain mobility and performs especially well in snowy and mountainous environments.",
@@ -2543,6 +2559,8 @@ const items = [
         "warden"
       ],
       "imgName": "O_Brien_v_101_Freeman.png",
+      "imgPath": "icons/vehicles/armoredcaroffensivewvehicle.png",
+      "imgUasset": "VehicleIcons/ArmoredCarOffensiveWVehicleIcon.png",
       "itemName": "O'Brien v.101 Freeman",
       "itemClass": "Armored Car",
       "itemDesc": "This early O'Brein variant, the v.101 Freeman is fitted with a 360 degree ballistics cannon turret at the expense of top speed.",
@@ -2560,6 +2578,8 @@ const items = [
         "warden"
       ],
       "imgName": "O_Brien_v_110.png",
+      "imgPath": "icons/vehicles/armoredcarwarvehicle.png",
+      "imgUasset": "VehicleIcons/ArmoredCarWarVehicleIcon.png",
       "itemName": "O'Brien v.110",
       "itemClass": "Armored Car",
       "itemDesc": "Warden Armoured Cars are quick, well-rounded urban assault platforms. These anti-infantry vehicles are equipped with twin-barrelled machineguns.",
@@ -2577,6 +2597,8 @@ const items = [
         "colonial"
       ],
       "imgName": "R_15_Chariot.png",
+      "imgPath": "icons/vehicles/bus.png",
+      "imgUasset": "VehicleIcons/BusIcon.png",
       "itemName": "R-15 - \"Chariot\"",
       "itemClass": "Transport Bus",
       "itemDesc": "The \"Chariot\" is a transport vehicle used to shuttle personnel to the front line.",
@@ -2594,6 +2616,8 @@ const items = [
         "warden"
       ],
       "imgName": "Dunne_Caravaner_2F.png",
+      "imgPath": "icons/vehicles/buswar.png",
+      "imgUasset": "VehicleIcons/BusWarIcon.png",
       "itemName": "Dunne Caravaner 2F",
       "itemClass": "Transport Bus",
       "itemDesc": "The Caravaner is a transport vehicle used to shuttle personnel to the front line.",
@@ -2611,6 +2635,8 @@ const items = [
         "colonial"
       ],
       "imgName": "AA_2_Battering_Ram.png",
+      "imgPath": "icons/vehicles/fieldantitankcolvehicle.png",
+      "imgUasset": "VehicleIcons/FieldAntiTankColVehicleIcon.png",
       "itemName": "AA-2 Battering Ram",
       "itemClass": "Field AT Gun",
       "itemDesc": "The Battering Ram is a mobile Anti-Tank field gun firing 68mm armor piercing rounds.",
@@ -2628,6 +2654,8 @@ const items = [
         "colonial"
       ],
       "imgName": "68_45_Smelter_Heavy_Field_Gun.png",
+      "imgPath": "icons/vehicles/fieldatoffensivec.png",
+      "imgUasset": "VehicleIcons/FieldATOffensiveCIcon.png",
       "itemName": "68-45 \"Smelter\" Heavy Field Gun",
       "itemClass": "Heavy Field Gun",
       "itemDesc": "Armored with heavy anti-tank rounds, the Smelter is perfect for engaging enemy armor. The frontal blast shielding providers operators with ample cover in heated skirmishes.",
@@ -2646,6 +2674,8 @@ const items = [
         "colonial"
       ],
       "imgName": "120_68_Koronides_Field_Gun.png",
+      "imgPath": "icons/vehicles/fieldartillerycolvehicle.png",
+      "imgUasset": "VehicleIcons/FieldArtilleryColVehicleIcon.png",
       "itemName": "120-68 \"Koronides\" Field Gun",
       "itemClass": "Field Artillery",
       "itemDesc": "A long range Colonial mobile artillery used to lay siege to fortified positions",
@@ -2663,6 +2693,8 @@ const items = [
         "colonial"
       ],
       "imgName": "G40_Sagittarii.png",
+      "imgPath": "icons/vehicles/fieldmachinegun.png",
+      "imgUasset": "VehicleIcons/FieldMachineGun.png",
       "itemName": "G40 \"Sagittarii\"",
       "itemClass": "Field Machine Gun",
       "itemDesc": "A duel barrelled, high calibre anti-infantry machine gun. The \"Sagittarii\" is fitted with forward-facing armor plating and is excellent for suppression.",
@@ -2680,6 +2712,8 @@ const items = [
         "warden"
       ],
       "imgName": "Noble_Widow_MK_XIV.png",
+      "imgPath": "icons/vehicles/destroyertankwvehicle.png",
+      "imgUasset": "VehicleIcons/DestroyerTankWVehicleIcon.png",
       "itemName": "Noble Widow MK. XIV",
       "itemClass": "Destroyer Tank",
       "itemDesc": "This deadly tank turns predator into prey. A tank Destroyer, the Noble Widow specializes in ambush tactics, waiting for its quarry and striking with destructive high-velocity shells",
@@ -2698,6 +2732,8 @@ const items = [
         "warden"
       ],
       "imgName": "Collins_Cannon_68mm.png",
+      "imgPath": "icons/vehicles/fieldantitankwarvehicle.png",
+      "imgUasset": "VehicleIcons/FieldAntiTankWarVehicleIcon.png",
       "itemName": "Collins Cannon 68mm",
       "itemClass": "Field AT Gun",
       "itemDesc": "The Collins Cannon is a mobile Anti-Tank field gun firing 68mm armor-piercing rounds.",
@@ -2715,6 +2751,8 @@ const items = [
         "warden"
       ],
       "imgName": "Balfour_Rampart_40mm.png",
+      "imgPath": "icons/vehicles/fieldcannonoffensivew.png",
+      "imgUasset": "VehicleIcons/FieldCannonOffensiveWIcon.png",
       "itemName": "Balfour Rampart 40mm",
       "itemClass": "Heavy Field Cannon",
       "itemDesc": "The Rampart is a high-velocity, anti-armor field cannon capable of dealing devasting damage to all but the heaviest armored vehicles while providing its crew with comprehensive ballistic shielding.",
@@ -2733,6 +2771,8 @@ const items = [
         "warden"
       ],
       "imgName": "Balfour_Wolfhound_40mm.png",
+      "imgPath": "icons/vehicles/fieldcannonwvehicle.png",
+      "imgUasset": "VehicleIcons/FieldCannonWVehicleIcon.png",
       "itemName": "Balfour Wolfhound 40mm",
       "itemClass": "Field Cannon",
       "itemDesc": "This destructive short-ranged cannon is designed for direct engagement with enemy fortifications. The Wolfhound is fitted with reinforced shielding and a 40mm barrel.",
@@ -2750,6 +2790,8 @@ const items = [
         "warden"
       ],
       "imgName": "Swallowtail_988_127_2.png",
+      "imgPath": "icons/vehicles/fieldmachinegunwar.png",
+      "imgUasset": "VehicleIcons/FieldMachineGunWar.png",
       "itemName": "Swallowtail 988/127-2",
       "itemClass": "Field Machine Gun",
       "itemDesc": "A duel barrelled, high calibre anti-infantry machine gun. The Swallowtail is fitted with forward-facing armor plating and is excellent for suppression.",
@@ -2768,6 +2810,8 @@ const items = [
         "warden"
       ],
       "imgName": "Balfour_Falconer_250mm.png",
+      "imgPath": "icons/vehicles/fieldmortarw.png",
+      "imgUasset": "VehicleIcons/FieldMortarWIcon.png",
       "itemName": "Balfour Falconer 250mm",
       "itemClass": "Field Mortar",
       "itemDesc": "A heavy mobile mortar platform fitted with a thick frontal sheild for assaulting fortified locations.",
@@ -2786,6 +2830,8 @@ const items = [
         "warden"
       ],
       "imgName": "BMS_Packmule_Flatbed.png",
+      "imgPath": "icons/vehicles/flatbedtruckvehicle.png",
+      "imgUasset": "VehicleIcons/FlatbedTruckVehicleIcon.png",
       "itemName": "BMS - Packmule Flatbed",
       "itemClass": "Flatbed Truck",
       "itemDesc": "A heavy duty shipping transport truck designed by Bassett Motor Society. It's built for hauling the heaviest of equipment over long distances with ease.",
@@ -2803,6 +2849,8 @@ const items = [
         "colonial"
       ],
       "imgName": "HH_d_Peltast.png",
+      "imgPath": "icons/vehicles/halftrackartilleryc.png",
+      "imgUasset": "VehicleIcons/HalfTrackArtilleryCIcon.png",
       "itemName": "HH-d \"Peltast\"",
       "itemClass": "Half-Track",
       "itemDesc": "This \"Javelin\" variant is fitted with a 360 degree mortar platform, designed to support infantry in frontline operations.",
@@ -2820,6 +2868,8 @@ const items = [
         "colonial"
       ],
       "imgName": "HH_a_Javelin.png",
+      "imgPath": "icons/vehicles/halftrackcolvehicle.png",
+      "imgUasset": "VehicleIcons/HalfTrackColVehicleIcon.png",
       "itemName": "HH-a \"Javelin\"",
       "itemClass": "Half-Track",
       "itemDesc": "Designed for escort missions and to support infantry operations, the HH-a class \"Javelin\" Half-Track is an armored, versatile all-terrain vehicle equipped with a mounted machinegun.",
@@ -2837,6 +2887,8 @@ const items = [
         "colonial"
       ],
       "imgName": "HH_b_Hoplite.png",
+      "imgPath": "icons/vehicles/halftrackcolheavyarmorvehicle.png",
+      "imgUasset": "VehicleIcons/HalfTrackColHeavyArmorVehicleIcon.png",
       "itemName": "HH-b \"Hoplite\"",
       "itemClass": "Half-Track",
       "itemDesc": "With reinforced armor at the expense of speed, the Hoplite is a formidable force in the heat of combat.",
@@ -2854,6 +2906,8 @@ const items = [
         "warden"
       ],
       "imgName": "Niska_Mk_II_Blinder.png",
+      "imgPath": "icons/vehicles/halftrackoffensivewarvehicle.png",
+      "imgUasset": "VehicleIcons/HalfTrackOffensiveWarVehicleIcon.png",
       "itemName": "Niska Mk. II Blinder",
       "itemClass": "Half-Track",
       "itemDesc": "Fitted with a heavy-duty anti-tank gun, the Blinder is capable of punching through all but the most tempered of alloys.",
@@ -2871,6 +2925,8 @@ const items = [
         "warden"
       ],
       "imgName": "Niska_Mk_I_Gun_Motor_Carriage.png",
+      "imgPath": "icons/vehicles/halftrackwarvehicle.png",
+      "imgUasset": "VehicleIcons/HalfTrackWarVehicleIcon.png",
       "itemName": "Niska Mk. I Gun Motor Carriage",
       "itemClass": "Half-Track",
       "itemDesc": "Designed for escort missions and to support infantry operations, the Niska Gun Motor Carriage Half-Track is an armored, versatile all-terrain vehicle equipped with a mounted machinegun.",
@@ -2889,6 +2945,8 @@ const items = [
         "warden"
       ],
       "imgName": "BMS_Scrap_Hauler.png",
+      "imgPath": "icons/vehicles/harvester.png",
+      "imgUasset": "VehicleIcons/Harvester.png",
       "itemName": "BMS - Scrap Hauler",
       "itemClass": "Harvester",
       "itemDesc": "The Scrap Hauler, designed by the Bassett Motor Society is a heavy-duty piece of machinery designed to reduce scrap matal and other materials into usable, raw resources. Scrap Haulers are often used to extract battlefield resources following skirmishes.",
@@ -2906,6 +2964,8 @@ const items = [
         "colonial"
       ],
       "imgName": "AB_8_Acheron.png",
+      "imgPath": "icons/vehicles/landingcraftvehicle.png",
+      "imgUasset": "VehicleIcons/LandingCraftVehicleIcon.png",
       "itemName": "AB-8 \"Acheron\"",
       "itemClass": "Landing APC",
       "itemDesc": "The Acheron is an armored amphibious vehicle designed for carrying troops across large bodies of water to aid in coordinated beach landings and flanking assaults.",
@@ -2923,6 +2983,8 @@ const items = [
         "colonial"
       ],
       "imgName": "AB_11_Doru.png",
+      "imgPath": "icons/vehicles/landingcraftoffensivevehicle.png",
+      "imgUasset": "VehicleIcons/LandingCraftOffensiveVehicleIcon.png",
       "itemName": "AB-11 \"Doru\"",
       "itemClass": "Landing APC",
       "itemDesc": "With its mounted machinegun, the Doru is the perfect addition to any shoreline assault.",
@@ -2940,6 +3002,8 @@ const items = [
         "warden"
       ],
       "imgName": "Mulloy_LPC.png",
+      "imgPath": "icons/vehicles/landingcraftwarvehicle.png",
+      "imgUasset": "VehicleIcons/LandingCraftWarVehicleIcon.png",
       "itemName": "Mulloy LPC",
       "itemClass": "Landing APC",
       "itemDesc": "The Mulloy Landing Personnel Carrier is an armored amphibious vehicle designed for carrying troops across large bodies of water to aid in coordinated beach landings and flanking assaults.",
@@ -2957,6 +3021,8 @@ const items = [
         "colonial"
       ],
       "imgName": "HC_2_Scorpion.png",
+      "imgPath": "icons/vehicles/lighttank2infantrycvehicle.png",
+      "imgUasset": "VehicleIcons/LightTank2InfantryCVehicleIcon.png",
       "itemName": "HC-2 \"Scorpion\"",
       "itemClass": "Light Infantry Tank",
       "itemDesc": "The \"Scorpion\" HC-class tank is a moderately armored infantry support vehicle with twin, high-powered heavy machine guns and short-range radios for improved intelligence support. In addition, exterior seating is available for infantry.",
@@ -2975,6 +3041,8 @@ const items = [
         "colonial"
       ],
       "imgName": "H5_Hatchet.png",
+      "imgPath": "icons/vehicles/lighttankcolvehicle.png",
+      "imgUasset": "VehicleIcons/LightTankColVehicleIcon.png",
       "itemName": "H5 \"Hatchet\"",
       "itemClass": "Light Tank",
       "itemDesc": "A highly maneuverable lightweight tank. Designed for urban environments, the \"Hatchet\" is fitted with a 40mm cannon.",
@@ -2992,6 +3060,8 @@ const items = [
         "colonial"
       ],
       "imgName": "H_8_Kranesca.png",
+      "imgPath": "icons/vehicles/lighttankcolmobilityvehicle.png",
+      "imgUasset": "VehicleIcons/LightTankColMobilityVehicleIcon.png",
       "itemName": "H-8 \"Kranesca\"",
       "itemClass": "Light Tank",
       "itemDesc": "The \"Kranesca\" Light Tank is fitted with an overpowered engine and a reinforced chassis, capable of boosting its top speed at the expense of overall acceleration and maneuverability.",
@@ -3009,6 +3079,8 @@ const items = [
         "colonial"
       ],
       "imgName": "H_10_Pelekys.png",
+      "imgPath": "icons/vehicles/lighttankoffensivecvehicle.png",
+      "imgUasset": "VehicleIcons/LightTankOffensiveCVehicleIcon.png",
       "itemName": "H-10 \"Pelekys\"",
       "itemClass": "Light Tank",
       "itemDesc": "The \"Pelekys\" H-class light tank is heavily modified with an open top chassis and equipped with a devastating long-range anti-tank cannon.",
@@ -3026,6 +3098,8 @@ const items = [
         "colonial"
       ],
       "imgName": "86K_a_Bardiche.png",
+      "imgPath": "icons/vehicles/mediumtank2c.png",
+      "imgUasset": "VehicleIcons/MediumTank2CIcon.png",
       "itemName": "86K-a \"Bardiche\"",
       "itemClass": "Assault Tank",
       "itemDesc": "Unlike the 85-series, the Bardiche sports a heavier, more durable build and is fitted with a coaxial heavy machinegun along with a powerful, short-barrelled 68mm turret. Modern Kraunian engineering allows for a fast reload, making it an ideal tool to combat enemy armor.",
@@ -3043,6 +3117,8 @@ const items = [
         "colonial"
       ],
       "imgName": "85K_b_Falchion.png",
+      "imgPath": "icons/vehicles/colonialmediumtank.png",
+      "imgUasset": "VehicleIcons/ColonialMediumTankIcon.png",
       "itemName": "85K-b \"Falchion\"",
       "itemClass": "Assault Tank",
       "itemDesc": "Designed for mass-production in Kraunia, this assault tank features a modular turret system for maximum versatility.The \"Falchion\" Class features a powerful if understated, 40mm cannon.",
@@ -3061,6 +3137,8 @@ const items = [
         "colonial"
       ],
       "imgName": "85k_a_Spatha.png",
+      "imgPath": "icons/vehicles/colonialmediumtankoffensive.png",
+      "imgUasset": "VehicleIcons/ColonialMediumTankOffensive.png",
       "itemName": "85k-a \"Spatha\"",
       "itemClass": "Assault Tank",
       "itemDesc": "The \"Spatha\" assault tank features a unique and destructive 40mm turret that fires high-velocity shells. This specialized turret is not as well suited to mass-production as its more refined counterpart, the \"Falchion.\"",
@@ -3079,6 +3157,8 @@ const items = [
         "colonial"
       ],
       "imgName": "HC_7_Ballista.png",
+      "imgPath": "icons/vehicles/mortartankvehicle.png",
+      "imgUasset": "VehicleIcons/MortarTankVehicleIcon.png",
       "itemName": "HC-7 \"Ballista\"",
       "itemClass": "Seige Tank",
       "itemDesc": "The HC-Class \"Ballista\" is a heavy tank designed to obliterate opposition defenses with its 250mm Hades Mortar Cannon.",
@@ -3096,6 +3176,8 @@ const items = [
         "colonial"
       ],
       "imgName": "03MM_Caster.png",
+      "imgPath": "icons/vehicles/motorcyclevehicle.png",
+      "imgUasset": "VehicleIcons/MotorcycleVehicleIcon.png",
       "itemName": "03MM \"Caster\"",
       "itemClass": "Motorcyle",
       "itemDesc": "A motorcycle and sidecar used to patrol large areas. Speed can be boosted at the cost of additional fuel.",
@@ -3113,6 +3195,8 @@ const items = [
         "colonial"
       ],
       "imgName": "00MS_Stinger.png",
+      "imgPath": "icons/vehicles/motorcycleoffensivevehicle.png",
+      "imgUasset": "VehicleIcons/MotorcycleOffensiveVehicleIcon.png",
       "itemName": "00MS \"Stinger\"",
       "itemClass": "Motorcyle",
       "itemDesc": "The cab of this Motorcycle is fitted with an LMG for fast-response hit and run assaults.",
@@ -3130,6 +3214,8 @@ const items = [
         "colonial"
       ],
       "imgName": "RR_3_Stolon_Tanker.png",
+      "imgPath": "icons/vehicles/oiltanker.png",
+      "imgUasset": "VehicleIcons/OilTankerIcon.png",
       "itemName": "RR-3 \"Stolon\" Tanker.",
       "itemClass": "Fuel Tanker",
       "itemDesc": "The \"Stolen\" Tanker is a heavier R-series rig designed to transport and distribute large quantities of Fuel.",
@@ -3147,6 +3233,8 @@ const items = [
         "colonial"
       ],
       "imgName": "UV_05a_Argonaut.png",
+      "imgPath": "icons/vehicles/scoutvehiclemobilityvehicle.png",
+      "imgUasset": "VehicleIcons/ScoutVehicleMobilityVehicleIcon.png",
       "itemName": "UV-05a \"Argonaut\"",
       "itemClass": "Light Utility Vehicle",
       "itemDesc": "This stripped down Light Utility Vehicle provides extra seating for a small crew to engage in hit and run tactices.",
@@ -3164,6 +3252,8 @@ const items = [
         "colonial"
       ],
       "imgName": "UV_24_Icarus.png",
+      "imgPath": "icons/vehicles/scoutvehicleoffensivevehicle.png",
+      "imgUasset": "VehicleIcons/ScoutVehicleOffensiveVehicleIcon.png",
       "itemName": "UV-24 \"Icarus\"",
       "itemClass": "Light Utility Vehicle",
       "itemDesc": "This RPG-mounted Light Utility Vehicle provides a heavy-duty weapon platform with suerior speed. Perfectly suited for assaulting enemy structures and vehicles, or supporting an armored assault.",
@@ -3184,6 +3274,8 @@ const items = [
         "colonial"
       ],
       "imgName": "UV_5c_Odyssey.png",
+      "imgPath": "icons/vehicles/scoutvehicleutilitycvehicle.png",
+      "imgUasset": "VehicleIcons/ScoutVehicleUtilityCVehicleIcon.png",
       "itemName": "UV-5c \"Odyssey\"",
       "itemClass": "Light Utility Vehicle",
       "itemDesc": "This simple, modified Utility Vehicle is fitted with a reinforced hatch to provide one crew member with increased visibility for intense recon operations.",
@@ -3201,6 +3293,8 @@ const items = [
         "colonial"
       ],
       "imgName": "T20_Ixion_Tankette.png",
+      "imgPath": "icons/vehicles/tanketteoffensivecvehicle.png",
+      "imgUasset": "VehicleIcons/TanketteOffensiveCVehicleIcon.png",
       "itemName": "T20 \"Ixion\" Tankette",
       "itemClass": "Tankette",
       "itemDesc": "A bombastic variant of the T12 Tankette, the \"Ixion\" provides its crew with more support and mounted Infantry Support Gun. Added weight from the armor results in reduced overall speed.",
@@ -3218,6 +3312,8 @@ const items = [
         "colonial"
       ],
       "imgName": "R_1_Hauler.png",
+      "imgPath": "icons/vehicles/truckvehicle.png",
+      "imgUasset": "VehicleIcons/TruckVehicleIcon.png",
       "itemName": "R-1 Hauler",
       "itemClass": "Truck",
       "itemDesc": "A heavy-duty Colonial truck used to mobilize troops and supplies.",
@@ -3235,6 +3331,8 @@ const items = [
         "colonial"
       ],
       "imgName": "R_5_Atlas_Hauler.png",
+      "imgPath": "icons/vehicles/truckutilityvehicle.png",
+      "imgUasset": "VehicleIcons/TruckUtilityVehicleIcon.png",
       "itemName": "R-5 \"Atlas\" Hauler",
       "itemClass": "Truck",
       "itemDesc": "This standard Truck is fitted with a resource hopper in place of the standard cargo hold. This allows for a much greater capacity for resources at the expense of space for cargo.",
@@ -3252,6 +3350,8 @@ const items = [
         "colonial"
       ],
       "imgName": "R_5b_Sisyphus_Hauler.png",
+      "imgPath": "icons/vehicles/truckmobilitycvehicle.png",
+      "imgUasset": "VehicleIcons/TruckMobilityCVehicleIcon.png",
       "itemName": "R-5b \"Sisyphus\" Hauler",
       "itemClass": "Truck",
       "itemDesc": "This variation of the standard R-5 Hauler is fitted with an improved suspension and axle system resulting in better overall handling. However, these improvements may not hold up under severe weather conditions.",
@@ -3269,6 +3369,8 @@ const items = [
         "colonial"
       ],
       "imgName": "R_9_Speartip_Escort.png",
+      "imgPath": "icons/vehicles/truckoffensivevehicle.png",
+      "imgUasset": "VehicleIcons/TruckOffensiveVehicleIcon.png",
       "itemName": "R-9 \"Speartip\" Escort",
       "itemClass": "Truck",
       "itemDesc": "This standard Truck is fitted with Light Machinegun in place of the passenger seat. It's well suited as an escort for convoys or lightly armored operations.",
@@ -3286,6 +3388,8 @@ const items = [
         "warden"
       ],
       "imgName": "Devitt_Caine_Mk_IV_MMR.png",
+      "imgPath": "icons/vehicles/lighttankartillerywar.png",
+      "imgUasset": "VehicleIcons/LightTankArtilleryWar.png",
       "itemName": "Devitt-Caine Mk. IV MMR",
       "itemClass": "Light Tank",
       "itemDesc": "A modified Devitt fitted with a specialized Caine mortar turret at the expense of top speed.",
@@ -3303,6 +3407,8 @@ const items = [
         "warden"
       ],
       "imgName": "Devitt_Ironhide_Mk_IV.png",
+      "imgPath": "icons/vehicles/lighttankwardefensivevehicle.png",
+      "imgUasset": "VehicleIcons/LightTankWarDefensiveVehicleIcon.png",
       "itemName": "Devitt Ironhide Mk. IV",
       "itemClass": "Light Tank",
       "itemDesc": "The Ironhide Light Tank is similar to the Mk. III but reinforced with plates of heavy steel at the expense of speed and maneuverability.",
@@ -3320,6 +3426,8 @@ const items = [
         "warden"
       ],
       "imgName": "Devitt_Mk_III.png",
+      "imgPath": "icons/vehicles/lighttankwarvehicle.png",
+      "imgUasset": "VehicleIcons/LightTankWarVehicleIcon.png",
       "itemName": "Devitt Mk. III",
       "itemClass": "Light Tank",
       "itemDesc": "A highly maneuverable lightweight tank. Designed for urban environments, the Devitt is fitted with a 40mm cannon.",
@@ -3337,6 +3445,8 @@ const items = [
         "warden"
       ],
       "imgName": "Gallagher_Outlaw_Mk_II.png",
+      "imgPath": "icons/vehicles/mediumtank2rangew.png",
+      "imgUasset": "VehicleIcons/MediumTank2RangeWIcon.png",
       "itemName": "Gallagher Outlaw Mk. II",
       "itemClass": "Cruiser Tank",
       "itemDesc": "Originally designed in response to increasing swarms of Mesean armor, the Outlaw is an exceptionally capable medium tank armed with a long-range 40mm turret and includes a built-in storm rifle support position.",
@@ -3355,6 +3465,8 @@ const items = [
         "warden"
       ],
       "imgName": "Silverhand_Chieftain_Mk_VI.png",
+      "imgPath": "icons/vehicles/mediumtanksiegewvehicle.png",
+      "imgUasset": "VehicleIcons/MediumTankSiegeWVehicleIcon.png",
       "itemName": "Silverhand Chieftain - Mk. VI",
       "itemClass": "Assault Tank",
       "itemDesc": "The Cheiftan assault tank is fitted with asymmetrical armaments, including a 250mm mortar cannon and a twin-barreled 12.7mm turret.",
@@ -3373,6 +3485,8 @@ const items = [
         "warden"
       ],
       "imgName": "Silverhand_Mk_IV.png",
+      "imgPath": "icons/vehicles/wardenmediumtank.png",
+      "imgUasset": "VehicleIcons/WardenMediumTankIcon.png",
       "itemName": "Silverhand - Mk. IV",
       "itemClass": "Assault Tank",
       "itemDesc": "The Silverhand assault tank is fitted with destructive dual-barrel armaments, and heavy frontal and rear armor. Its 68mm frontal cannon is pared with a lighter 40mm turret.",
@@ -3390,6 +3504,8 @@ const items = [
         "warden"
       ],
       "imgName": "Kivela_Power_Wheel_80_1.png",
+      "imgPath": "icons/vehicles/motorcyclew.png",
+      "imgUasset": "VehicleIcons/MotorcycleWIcon.png",
       "itemName": "Kivela Power Wheel 80-1",
       "itemClass": "Motorcycle",
       "itemDesc": "A Warden Motorcycle used in patrols and fitted with a sidecar. The Kivela Power Wheel can also gain a momentary speed boost by burning additional fuel.",
@@ -3407,6 +3523,8 @@ const items = [
         "warden"
       ],
       "imgName": "Dunne_Fuelrunner_2d.png",
+      "imgPath": "icons/vehicles/oiltankerwar.png",
+      "imgUasset": "VehicleIcons/OilTankerWarIcon.png",
       "itemName": "Dunne Fuelrunner 2d",
       "itemClass": "Fuel Tanker",
       "itemDesc": "The Fuelrunner is a heavy Dunne rig designed to transport and distribute large quantities of Fuel.",
@@ -3424,6 +3542,8 @@ const items = [
         "warden"
       ],
       "imgName": "King_Gallant_Mk_II.png",
+      "imgPath": "icons/vehicles/scoutankoffensivew.png",
+      "imgUasset": "VehicleIcons/ScouTankOffensiveWIcon.png",
       "itemName": "King Gallant Mk. II",
       "itemClass": "Scout Tank",
       "itemDesc": "A heavily armored variant of the King Spire, the Gallant Mk. II boasts a weighty 30mm cannon at the cost of top speed.",
@@ -3441,6 +3561,8 @@ const items = [
         "warden"
       ],
       "imgName": "King_Spire_Mk_I.png",
+      "imgPath": "icons/vehicles/scoutvehiclewar.png",
+      "imgUasset": "VehicleIcons/ScoutVehicleWar.png",
       "itemName": "King Spire Mk. I",
       "itemClass": "Scout Tank",
       "itemDesc": "This small tank has been recently recommissioned to the Warden arsenal. It b oasts high maneuverability and an antenna that allows for long-range communications during high-stakes recon operations.",
@@ -3458,6 +3580,8 @@ const items = [
         "warden"
       ],
       "imgName": "Drummond_Spitfire_100d.png",
+      "imgPath": "icons/vehicles/scoutvehicleoffensivewarvehicle.png",
+      "imgUasset": "VehicleIcons/ScoutVehicleOffensiveWarVehicleIcon.png",
       "itemName": "Drummond Spitfire 100d",
       "itemClass": "Light Utility Vehicle",
       "itemDesc": "This LMG-mounted Light Utility Vehicle provides a heavy-duty weapons platform with superior speed. Perfectly suited for supporting flanking infantry or an armored assault.",
@@ -3475,6 +3599,8 @@ const items = [
         "warden"
       ],
       "imgName": "Drummond_Loscann_55c.png",
+      "imgPath": "icons/vehicles/scoutvehicleamphibiouswarvehicle.png",
+      "imgUasset": "VehicleIcons/ScoutVehicleAmphibiousWarVehicleIcon.png",
       "itemName": "Drummond Loscann 55c",
       "itemClass": "Light Utility Vehicle",
       "itemDesc": "This amphibious Light Utility Vehicle has been heavily modified to cross rivers and lakes with ease. Venturing out into the open sea is ill-advised, however.",
@@ -3492,6 +3618,8 @@ const items = [
         "warden"
       ],
       "imgName": "Drummond_100a.png",
+      "imgPath": "icons/vehicles/scoutvehiclewarvehicle.png",
+      "imgUasset": "VehicleIcons/ScoutVehicleWarVehicleIcon.png",
       "itemName": "Drummond 100a",
       "itemClass": "Light Utility Vehicle",
       "itemDesc": "A maltipurpose off-road Warden vehicle that can scout nearby targets.",
@@ -3509,6 +3637,8 @@ const items = [
         "warden"
       ],
       "imgName": "Dunne_Leatherback_2a.png",
+      "imgPath": "icons/vehicles/truckdefensivew.png",
+      "imgUasset": "VehicleIcons/TruckDefensiveWIcon.png",
       "itemName": "Dunne Leatherback 2a",
       "itemClass": "Truck",
       "itemDesc": "A heavy, reinforced Dunne transport. Fitted with a heavier frame, the Leatherback is capable of enduring more punishment at the cost of initial acceleration.",
@@ -3526,6 +3656,8 @@ const items = [
         "warden"
       ],
       "imgName": "Dunne_Loadlugger_3c.png",
+      "imgPath": "icons/vehicles/truckutilitywarvehicle.png",
+      "imgUasset": "VehicleIcons/TruckUtilityWarVehicleIcon.png",
       "itemName": "Dunne Loadlugger 3c",
       "itemClass": "Truck",
       "itemDesc": "This standard Truck is fitted with a resource hopper in place of the standard cargo hold. This allows for a much greater capacity for resources at the expense of space for cargo.",
@@ -3543,6 +3675,8 @@ const items = [
         "warden"
       ],
       "imgName": "Dunne_Landrunner_12c.png",
+      "imgPath": "icons/vehicles/truckmobilitywarvehicle.png",
+      "imgUasset": "VehicleIcons/TruckMobilityWarVehicleIcon.png",
       "itemName": "Dunne Landrunner 12c",
       "itemClass": "Truck",
       "itemDesc": "This standard Truck is fitted with rugged off-road treads, allowing for more efficient movement on rough terrain and conditions at the expense of maximum speed.",
@@ -3560,6 +3694,8 @@ const items = [
         "warden"
       ],
       "imgName": "Dunne_Transport.png",
+      "imgPath": "icons/vehicles/truckwarvehicle.png",
+      "imgUasset": "VehicleIcons/TruckWarVehicleIcon.png",
       "itemName": "Dunne Transport",
       "itemClass": "Truck",
       "itemDesc": "A heavy-duty Warden truck used to mobilize troops and supplies.",
@@ -3578,6 +3714,8 @@ const items = [
         "warden"
       ],
       "imgName": "BMS_Aquatipper.png",
+      "imgPath": "icons/vehicles/bargevehicle.png",
+      "imgUasset": "VehicleIcons/BargeVehicleIcon.png",
       "itemName": "BMS - Aquatipper",
       "itemClass": "Barge",
       "itemDesc": "A large shipping vessel, the Aquatipper is used to transport vehicles, equipment, and personnel over large bodies of water.",
@@ -3596,6 +3734,8 @@ const items = [
         "warden"
       ],
       "imgName": "BMS_Ironship.png",
+      "imgPath": "icons/vehicles/freightervehicle.png",
+      "imgUasset": "VehicleIcons/FreighterVehicleIcon.png",
       "itemName": "BMS - Ironship",
       "itemClass": "Freighter",
       "itemDesc": "The Basset Motor Society's Ironship-class shipping vessel is used to freight shippable goods and heavy vehicles.",
@@ -3613,6 +3753,8 @@ const items = [
         "colonial"
       ],
       "imgName": "Type_C_Charon.png",
+      "imgPath": "icons/vehicles/gunboatvehicle.png",
+      "imgUasset": "VehicleIcons/GunBoatVehicleIcon.png",
       "itemName": "Type C - \"Charon\"",
       "itemClass": "Gunboat",
       "itemDesc": "A navel vessel designed to bombard coastal targets. The Charon is fitted with a 120mm light artillery cannon and 12.7mm Machinegun.",
@@ -3630,6 +3772,8 @@ const items = [
         "warden"
       ],
       "imgName": "74c_2_Ronan_Meteora_Gunship.png",
+      "imgPath": "icons/vehicles/gunboatwardoubleartilleryvehicle.png",
+      "imgUasset": "VehicleIcons/GunboatWarDoubleArtilleryVehicleIcon.png",
       "itemName": "74c-2 Ronan Meteora Gunship",
       "itemClass": "Gunboat",
       "itemDesc": "The Meteora Gunship replaces the machinegun with another identical 120mm artillery cannon on the bow.",
@@ -3647,6 +3791,8 @@ const items = [
         "warden"
       ],
       "imgName": "74b_1_Ronan_Gunship.png",
+      "imgPath": "icons/vehicles/gunboatwarvehicle.png",
+      "imgUasset": "VehicleIcons/GunboatWarVehicleIcon.png",
       "itemName": "74b-1 Ronan Gunship",
       "itemClass": "Gunboat",
       "itemDesc": "A naval vessel designed to bombard coastal targets. The Ronan is fitted with a 120mm light artillery cannon and a 12.7mm Machinegun.",
@@ -3666,6 +3812,8 @@ const items = [
         "warden"
       ],
       "imgName": "BMS_White_Whale.png",
+      "imgPath": "icons/vehicles/troopshipvehicle.png",
+      "imgUasset": "VehicleIcons/TroopShipVehicleIcon.png",
       "itemName": "BMS - White Whale",
       "itemClass": "Landing Ship",
       "itemDesc": "A heavily armored vessel, the Basset Motor Society's White Whale-class troop transports can deploy on a faraway beaches to function as a permanent forward operating base.",
@@ -3684,6 +3832,8 @@ const items = [
         "warden"
       ],
       "imgName": "BMS_Universal_Assemly_Rig.png",
+      "imgPath": "icons/vehicles/constructionvehicle.png",
+      "imgUasset": "VehicleIcons/ConstructionVehicleIcon.png",
       "itemName": "BMS - Universal Assemly Rig",
       "itemClass": "Construction Vehicle",
       "itemDesc": "A specialized vehicle designed by the Basset Motor Society used in the construction of large structures.",
@@ -3702,6 +3852,8 @@ const items = [
         "warden"
       ],
       "imgName": "BMS_Class_2_Mobile_Auto_Crane.png",
+      "imgPath": "icons/vehicles/cranevehicle.png",
+      "imgUasset": "VehicleIcons/CraneVehicleIcon.png",
       "itemName": "BMS - Class 2 Mobile Auto-Crane",
       "itemClass": "Crane",
       "itemDesc": "The Basset Motor Society's Class 2 Mobile Auto-Crane is used to lift and reposition vehicles and very heavy equipment.",
