@@ -2199,6 +2199,8 @@ const items = [
         "warden"
       ],
       "imgName": "Barbed_Wire_Pallet.png",
+      "imgPath": "icons/items/barbedwireplatformitem.png",
+      // "imgUasset": "missing",
       "itemName": "Barbed Wire Pallet",
       "itemDesc": "A pallet of Barbed Wire that's used for the construction of frontline defenses.",
       "itemCategory": "shipables",
@@ -2216,6 +2218,8 @@ const items = [
         "warden"
       ],
       "imgName": "Concrete_Mixer.png",
+      "imgPath": "icons/structures/concretemixer.png",
+      // "imgUasset": "missing",
       "itemName": "Concrete Mixer",
       "itemDesc": "A portable device that mixes various materials to form Concrete, which are used to build heavily fortified structures.",
       "itemCategory": "shipables",
@@ -2233,6 +2237,8 @@ const items = [
         "warden"
       ],
       "imgName": "68mm_Anti_Tank_Cannon.png",
+      "imgPath": "icons/structures/emplacedat.png",
+      "imgUasset": "StructureIcons/EmplacedATIcon.png",
       "itemName": "68mm Anti-Tank Cannon",
       "itemDesc": "A defensive emplacement against heavily armored vehicles.",
       "itemCategory": "shipables",
@@ -2249,6 +2255,8 @@ const items = [
         "colonial"
       ],
       "imgName": "50_500_Thunderbolt_Cannon.png",
+      "imgPath": "icons/structures/heavyartilleryc.png",
+      "imgUasset": "StructureIcons/HeavyArtilleryCIcon.png",
       "itemName": "50-500 \"Thunderbolt\" Cannon",
       "itemDesc": "This heavy artillery cannon is designed to cripple enemy fortifcations from an entrenched position. Its long heavy barrel gives the \"Thunderbolt\" outstanding range.",
       "itemCategory": "shipables",
@@ -2265,6 +2273,8 @@ const items = [
         "warden"
       ],
       "imgName": "Huber_Exalt_150mm.png",
+      "imgPath": "icons/structures/heavyartilleryw.png",
+      "imgUasset": "StructureIcons/HeavyArtilleryW.png",
       "itemName": "Huber Exalt 150mm",
       "itemDesc": "A heavy cannon designed to shatter the garrisons and fortifications of advancing forces. The Exalt is best utilized when placed into a defensive position to take advantage of its impressive range.",
       "itemCategory": "shipables",
@@ -2281,6 +2291,8 @@ const items = [
         "warden"
       ],
       "imgName": "Huber_Lariat_120mm.png",
+      "imgPath": "icons/structures/emplacedhowitzer.png",
+      "imgUasset": "StructureIcons/EmplacedHowitzerIcon.png",
       "itemName": "Huber Lariat 120mm",
       "itemDesc": "A light artillery cannon designed to be a fixture in defensive fortifications. The Lariat sports a formidable long-range 120mm cannon designed to put immense pressure on the enemy infantry.",
       "itemCategory": "shipables",
@@ -2298,6 +2310,8 @@ const items = [
         "warden"
       ],
       "imgName": "12_7_Anti_Infantry_Flak_Gun.png",
+      "imgPath": "icons/structures/emplacedmg.png",
+      "imgUasset": "StructureIcons/EmplacedATIcon.png",
       "itemName": "12.7 Anti Infantry Flak Gun",
       "itemDesc": "An anti-aircraft flak cannon repurposed as a defensive emplacement against infantry.",
       "itemCategory": "shipables",
@@ -2315,6 +2329,8 @@ const items = [
         "warden"
       ],
       "imgName": "Metal_Beam_Pallet.png",
+      "imgPath": "icons/items/metalbeamplatformitem.png",
+      // "imgUasset": "missing",
       "itemName": "Metal Beam Pallet",
       "itemDesc": "A pallet of Metal Beams that's used for the construction of frontline defenses.",
       "itemCategory": "shipables",
@@ -2332,6 +2348,8 @@ const items = [
         "warden"
       ],
       "imgName": "Resource_Container.png",
+      "imgPath": "icons/structures/resourcecontainer.png",
+      // "imgUasset": "missing",
       "itemName": "Resource Container",
       "itemDesc": "A container that can carry large quantities of resources and can be transported by certain vehicles.",
       "itemCategory": "shipables",
@@ -2349,6 +2367,8 @@ const items = [
         "warden"
       ],
       "imgName": "Sandbag_Pallet.png",
+      "imgPath": "icons/items/sandbagplatformitem.png",
+      // "imgUasset": "missing",
       "itemName": "Sandbag Pallet",
       "itemDesc": "A pallet of sandbags that's used for the construction of frontline defenses.",
       "itemCategory": "shipables",
@@ -2366,6 +2386,8 @@ const items = [
         "warden"
       ],
       "imgName": "Shipping_Container.png",
+      "imgPath": "icons/structures/shippingcontainerstructure.png",
+      // "imgUasset": "missing",
       "itemName": "Shipping Container",
       "itemDesc": "A container for shipping very large quantities of Crates using Crane loaded vehicles. This type of container can only be unloaded at Storage Depots and Seaports.",
       "itemCategory": "shipables",
@@ -2383,6 +2405,8 @@ const items = [
         "warden"
       ],
       "imgName": "Small_Shipping_Container.png",
+      "imgPath": "icons/structures/shippingcontainershort.png",
+      // "imgUasset": "missing",
       "itemName": "Small Shipping Container",
       "itemDesc": "A container for shipping large quantities of Crates using Crane loaded vehicles. This type of container can be unloaded from any location.",
       "itemCategory": "shipables",
