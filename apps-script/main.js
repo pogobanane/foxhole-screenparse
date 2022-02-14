@@ -18,49 +18,6 @@ const connect_file_img = (imageid, fileinputid) => {
   }, false);
 }
 
-const printCSV = async (findings) => {
-  // TODO this order is not strong enough and prone to reodering by the interpreter
-  let sortedItems = items.sort((a, b) => {
-    if (typeof a.supplyPyramid === 'undefined') {
-      return 1;
-    }
-    if (typeof b.supplyPyramid === 'undefined') {
-      return -1;
-    }
-    return a.supplyPyramid.priority - b.supplyPyramid.priority;
-  });
-  let names = "";
-  let crates = "";
-  let pyramid = "";
-  let pyramidPrio = "";
-  let limit = "";
-  for (const item of sortedItems) {
-    let found = findings.items.find((finding) => { return item.itemName === finding.name; });
-    if (typeof found === 'undefined') {
-      continue;
-    }
-    names += "" + found.name + "\n";
-    crates += "" + found.count + "\n";
-    if (typeof item.supplyPyramid === 'undefined') {
-      pyramid += "none\n";
-      pyramidPrio += "none\n";
-    } else {
-      pyramid += "" + item.supplyPyramid.cratesIdeal + "\n";
-      pyramidPrio += "" + item.supplyPyramid.priority + "\n";
-    }
-    if (typeof item.stockpileLimitPrivate === 'undefined') {
-      limit += "none\n";
-    } else {
-      limit += "" + item.stockpileLimitPrivate + "\n";
-    }
-  }
-  document.getElementById('preformattedNames').textContent = names;
-  document.getElementById('preformattedCrates').textContent = crates;
-  document.getElementById('preformattedPyramid').textContent = pyramid;
-  document.getElementById('preformattedPyramidPriority').textContent = pyramidPrio;
-  document.getElementById('preformattedLimit').textContent = limit;
-}
-
 const removeAllChildNodes = (parent) => {
   while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
