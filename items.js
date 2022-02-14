@@ -2482,45 +2482,45 @@ const items = [
     {
       "displayId": 5,
       "faction": [
-      "colonial"
-    ],
-    "imgName": "T8_Gemini.png",
-    "itemName": "T8 \"Gemini\"",
-    "itemClass": "Armored Car",
-    "itemDesc": "Fitted with twin RPG launchers, the T8 employs hit-and-run assaults against enemy structures and emplacements.",
-    "damageType": "Deals explosive damage",
-    "damageDesc": "Can penetrate armored vehicles",
-    "vehiclePen": "Higher chance to penetrate armored vehicles at direct angles (to the sides/rear of the target) and at close range.",
-    "itemCategory": "vehicles",
-    "numberProduced": 1,
-    "isTeched": true,
-    "isMpfCraftable": true,
-    "cost": {
-      "rmat": 135
-    }
-  },
-  {
-    "displayId": 6,
-    "faction": [
-      "warden"
-    ],
-    "imgName": "O_Brien_v_113_Gravekeeper.png",
-    "itemName": "O’Brien v.113 Gravekeeper",
-    "itemClass": "Armored Car",
-    "itemDesc": "A slight variation of the v.110, the Gravekeeper comes fitted with an embedded Bonesaw launcher, transforming the humble armoured car into an effective indirect anti-armour vehicle.",
-    "damageType": "Deals Armor Piercing damage",
-    "damageDesc": "Can penetrate armored vehicles",
-    "vehiclePen": "High Chance to penetrate armored vehicles",
-    "vehiclePenChance": "Additional 100% chance to penetrate armored vehicles",
-    "itemCategory": "vehicles",
-    "numberProduced": 3,
-    "isTeched": true,
-    "isMpfCraftable": true,
-    "cost": {
-      "rmat": 135
-    }
-  },
-  {
+        "colonial"
+      ],
+      "imgName": "T8_Gemini.png",
+      "itemName": "T8 \"Gemini\"",
+      "itemClass": "Armored Car",
+      "itemDesc": "Fitted with twin RPG launchers, the T8 employs hit-and-run assaults against enemy structures and emplacements.",
+      "damageType": "Deals explosive damage",
+      "damageDesc": "Can penetrate armored vehicles",
+      "vehiclePen": "Higher chance to penetrate armored vehicles at direct angles (to the sides/rear of the target) and at close range.",
+      "itemCategory": "vehicles",
+      "numberProduced": 1,
+      "isTeched": true,
+      "isMpfCraftable": true,
+      "cost": {
+        "rmat": 135
+      }
+    },
+    {
+      "displayId": 6,
+      "faction": [
+        "warden"
+      ],
+      "imgName": "O_Brien_v_113_Gravekeeper.png",
+      "itemName": "O’Brien v.113 Gravekeeper",
+      "itemClass": "Armored Car",
+      "itemDesc": "A slight variation of the v.110, the Gravekeeper comes fitted with an embedded Bonesaw launcher, transforming the humble armoured car into an effective indirect anti-armour vehicle.",
+      "damageType": "Deals Armor Piercing damage",
+      "damageDesc": "Can penetrate armored vehicles",
+      "vehiclePen": "High Chance to penetrate armored vehicles",
+      "vehiclePenChance": "Additional 100% chance to penetrate armored vehicles",
+      "itemCategory": "vehicles",
+      "numberProduced": 3,
+      "isTeched": true,
+      "isMpfCraftable": true,
+      "cost": {
+        "rmat": 135
+      }
+    },
+    {
     "displayId": 7,
     "faction": [
         "warden"
