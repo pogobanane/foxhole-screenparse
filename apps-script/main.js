@@ -28,7 +28,7 @@ const getFilter = async () => {
   return {
     'colonial': document.getElementById('colonialButton').checked,
     'warden': document.getElementById('wardenButton').checked,
-    'shippables': document.getElementById('shippablesButton').checked,
+    'shippables': true,
   };
 }
 
