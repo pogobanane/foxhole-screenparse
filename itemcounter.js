@@ -15,7 +15,7 @@ class ItemCounter {
     this.visCanvas = visualizationCanvas; // visualization of detected items
     this.domList = domList; // list of debug info for items
     this.abort = false;
-    this.faction = null; // 'colonial' or 'warden'
+    this.filter = null; // see main.js:getFilter
     this.screenshotImg = null;
     this.icons = new Icons(iconpacksLoc);
     this.tesseract = new OCR();
@@ -25,8 +25,8 @@ class ItemCounter {
     await this.tesseract.init();
   }
 
-  setFaction(faction) {
-    this.faction = faction;
+  setFilter(filter) {
+    this.filter = filter;
   }
 
   setIconpack(iconpack) {
@@ -36,11 +36,6 @@ class ItemCounter {
   // returns null on error
   async count(imageElem) {
     let start = performance.now();
-    if (this.faction == null) {
-      console.error('faction undefined');
-      this.progress.error('Choose a faction');
-      return null;
-    }
 
     this.abort = false;
     this.screenshotImg = imageElem;
@@ -274,10 +269,23 @@ class ItemCounter {
       i++;
       this.progress.step2('Searching ' + item.itemName);
 
+      // filter items
       if (typeof item.imgPath === 'undefined') {
         continue;
       }
-      if (!item.faction.includes(this.faction)) {
+      let isC = item.faction.includes('colonial');
+      let isW = item.faction.includes('warden');
+      let wantsC = this.filter.colonial;
+      let wantsW = this.filter.warden;
+      if (!(
+        (wantsC && isC) ||
+        (wantsW && isW)
+      )) {
+        continue;
+      }
+      if (!this.filter.shippables && 
+        (item.itemCategory === 'shipables' || item.itemCategory === 'vehicles')
+      ) {
         continue;
       }
  

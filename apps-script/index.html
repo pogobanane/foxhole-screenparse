@@ -57,10 +57,13 @@
             <div id="stockpile-select">
             </div>
             <br/>
-            <input type="radio" id="colonialButton" name="faction" value="colonial">
-            <label for="colonialButton">Colonial</label><br/>
-            <input type="radio" id="wardenButton" name="faction" value="warden" checked="checked">
-            <label for="wardenButton">Warden</label><br/>
+            Search only for: <br/>
+            <input type="checkbox" id="colonialButton" name="filter" value="colonial">
+            <label for="colonialButton">Colonial items</label><br/>
+            <input type="checkbox" id="wardenButton" name="filter" value="warden" checked="checked">
+            <label for="wardenButton">Warden items</label><br/>
+            <input type="checkbox" id="shippablesButton" name="filter" value="shippables">
+            <label for="shippablesButton">Vehicles &amp; Shippables (beta)</label><br/>
             <br/>
             Iconpack: <select id="iconpack-select" class="custom-select" id="inputGroupSelect01">
               <option selected value="default">default</option>

@@ -58,12 +58,12 @@ const removeAllChildNodes = (parent) => {
     }
 }
 
-const getFaction = async () => {
-  if (document.getElementById('colonialButton').checked) {
-    return 'colonial';
-  } else if (document.getElementById('wardenButton').checked) {
-    return 'warden';
-  }
+const getFilter = async () => {
+  return {
+    'colonial': document.getElementById('colonialButton').checked,
+    'warden': document.getElementById('wardenButton').checked,
+    'shippables': document.getElementById('shippablesButton').checked,
+  };
 }
 
 const run = async () => {
@@ -98,7 +98,7 @@ const run = async () => {
     itemcounter = new ItemCounter(tmpCanvas, progressCb, "iconpacks", currentTemplate, visualizationCanvas, list);
     await itemcounter.init();
   }
-  itemcounter.setFaction(await getFaction());
+  itemcounter.setFilter(await getFilter());
   let iconpack = document.getElementById("iconpack-select").selectedOptions[0].value;
   itemcounter.setIconpack(iconpack);
 
