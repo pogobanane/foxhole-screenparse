@@ -555,6 +555,8 @@ class Progress {
 const confidentEnough = (confidence, item, calibration) => {
   if (['Rifle', 'Long Rifle'].includes(item.itemClass)) {
     return confidence > 0.95;
+  } else if (['vehicles', 'shipables'].includes(item.itemCategory)) {
+    return confidence > 0.97;
   } else {
     // 0.945 @ 32
     // 0.89  @ 43
