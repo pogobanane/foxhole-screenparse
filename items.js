@@ -1,5 +1,5 @@
 // downloaded from https://foxholelogi.com/ and added imgPath as icon from github.com/foxholetools/assets/
-const items = [
+const gameitems = [
     {
       "displayId": 0,
       "faction": [
@@ -4553,3 +4553,25 @@ const stockpile_types = [
     "crateBased": false
   },
 ]
+
+const getItems = () => {
+  let ret = [];
+  let a;
+  let b;
+  for (let item of gameitems) {
+    if (item.itemCategory === 'vehicles' || item.itemCategory === 'shipables') {
+      let name = item.itemName + ' (crated)';
+      a = JSON.parse(JSON.stringify(item));
+      b = JSON.parse(JSON.stringify(item));
+      a.crated = "always";
+      b.crated = "never";
+      a.itemName = item.itemName + ' (crated)';
+      b.itemName = item.itemName + ' (uncrated)';
+      ret.push(a);
+      ret.push(b);
+    } else {
+      ret.push(item)
+    }
+  }
+  return ret;
+}

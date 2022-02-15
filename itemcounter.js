@@ -9,7 +9,8 @@ const getImgPath = (imgPath) => {
 class ItemCounter {
   constructor(tmpCanvas, progressCallback = (progress)=>{}, iconpacksLoc = "iconpacks", currentTemplate = null, visualizationCanvas = null, domList = null) {
     this.tmpCanvas = tmpCanvas; // scratchpad canvas element (should be display: none)
-    this.progress = new Progress(progressCallback);
+    this.items = getItems();
+    this.progress = new Progress(progressCallback, this.items);
     this.currentTemplate = currentTemplate; // template used for current matching
     this.visCanvas = visualizationCanvas; // visualization of detected items
     this.domList = domList; // list of debug info for items
@@ -187,7 +188,7 @@ class ItemCounter {
 
   async calibrateFind(screenshotMat, itemName, crated, iconSizePx) {
     //let item = items.find((item) => { return item.itemName == 'Soldier Supplies'; });
-    let item = items.find((item) => { return item.itemName == itemName; });
+    let item = this.items.find((item) => { return item.itemName == itemName; });
     let message = "Searching " + item.itemName + " at " + iconSizePx + "px...";
     console.log(message);
     this.progress.step1('Calibration: ' + message);
@@ -263,7 +264,7 @@ class ItemCounter {
     screenshot.delete();
   	
     let i = 0;
-    for (let item of items) {
+    for (let item of this.items) {
       //item = items[0];
       if (this.abort) {
         this.progress.error('Aborted');
@@ -279,7 +280,8 @@ class ItemCounter {
       if (!item.faction.includes(this.faction)) {
         continue;
       }
-  
+ 
+      // _findIcon and continue when not confident enough
       let perfStart = performance.now();
       console.log("Searching " + item.itemName + "...");
       let best = await this._findIcon(stockpileMat, item, calibration);
@@ -302,6 +304,7 @@ class ItemCounter {
         continue;
       }
   
+      // crop item number, OCR it and add it to the results
       const countPoints = itemCountPos(box.x, box.y, calibration.itemSizePx);
       if (this.visCanvas !== null) {
         let debugShot = cv.imread(this.visCanvas);
@@ -310,7 +313,6 @@ class ItemCounter {
         cv.imshow(this.visCanvas, debugShot);
         debugShot.delete();
       }
-  
       const countBox = points2point(countPoints);
       rect = new cv.Rect(
               countBox.x, 
@@ -327,6 +329,7 @@ class ItemCounter {
       found.push({ "name": item.itemName, "count": itemCount });
       let perfOCRed = performance.now();
       console.info("Matching: " + (perfMatched - perfStart) + "ms, OCR: " + (perfOCRed - perfMatched) + "ms");
+
       this._domListAppend(item, best.confidence, iconMat, matchedMat, countMat, itemCount);
       iconMat.delete(); countMat.delete(); matchedMat.delete();
       //break;
@@ -410,7 +413,16 @@ class ItemCounter {
   }
 
   async __findIcon(stockpileMat, item, calibration, width, height, showTemplate) {
-    let crated = calibration.stockpileType.crateBased;
+    // for vehicles/shippables: you want to treat i.e. crated and uncrated trucks as seperate items
+    let crated;
+    if (item.crated === 'always') {
+      crated = true;
+    } else if (item.crated === 'never') {
+      crated = false;
+    } else {
+      crated = calibration.stockpileType.crateBased;
+    }
+
     let iconMat = await this.icons.getItemIcon(this.iconpack, item, crated, width, height);
     if (this.currentTemplate !== null && showTemplate) {
       cv.imshow(this.currentTemplate, iconMat);
@@ -479,7 +491,7 @@ class ItemCounter {
 }
 
 class Progress {
-  constructor(progressCallback) {
+  constructor(progressCallback, items) {
     this.callback = progressCallback; // (progress) => {}: inform other component about progress
     this._progress = 0;
     this._total = 0;
@@ -488,6 +500,7 @@ class Progress {
     this.steps = 2;
     this.description = '';
     this.errorMsg = null; 
+    this.items = items;
   }
 
   _callback() {
@@ -523,7 +536,7 @@ class Progress {
     if (this.step !== 2) {
       this.step = 2;
       this._progress = 0;
-      this._total = items.length;
+      this._total = this.items.length;
     }
     this._progress++;
     this.description = description;

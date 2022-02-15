@@ -11,7 +11,7 @@ const connect_file_img = (imageid, fileinputid) => {
 
 const printCSV = async (findings) => {
   // TODO this order is not strong enough and prone to reodering by the interpreter
-  let sortedItems = items.sort((a, b) => {
+  let sortedItems = getItems().sort((a, b) => {
     if (typeof a.supplyPyramid === 'undefined') {
       return 1;
     }
