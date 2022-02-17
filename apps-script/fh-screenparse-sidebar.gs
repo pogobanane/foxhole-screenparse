@@ -14,6 +14,16 @@ function showSidebar() {
   SpreadsheetApp.getUi().showSidebar(html);
 }
 
+function find2D(haystack, needle) {
+  for (let row = 0; row <= haystack.length; row++) {
+    for (let col = 0; col <= haystack[0].length; col++) {
+      if (haystack[row][col] == needle) {
+        return [row, col];
+      }
+    }
+  }
+}
+
 function fhColumnMap() {
   let spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = spreadsheet.getSheets().find((s) => {
@@ -23,7 +33,7 @@ function fhColumnMap() {
   //let column = sheet.getCurrentCell().getColumn();
   var data = sheet.getDataRange().getValues();
   let stockpiles = [];
-  let magicCol = 3;
+  let magicCol = find2D(data, 'Labels for foxhole-screenparse to find rows')[1] + 1;
 
   // town range
   let townrow = data.findIndex((a) => {

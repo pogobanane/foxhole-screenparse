@@ -1,15 +1,27 @@
 # foxhole-screenparse
-https://pogobanane.de/foxhole-screenparse/
 
-Foxhole-screenparse parses contents of stockpiles into machine-readable lists which can be used in spreadsheets for logistics planning. 
+Foxhole-screenparse reads contents of stockpile screenshots to ease logistics planning. 
+To calculate valuable information from the stockpile data, foxhole-screeparse is integrated into the [Stocks v3](https://docs.google.com/spreadsheets/d/1T9Pj0pXs8YB6OcQXIzCX9XTqG1nJyWauN5D7tfH2lPs/edit?usp=sharing) Google Spreadsheet ([copy sheet](https://docs.google.com/spreadsheets/d/1T9Pj0pXs8YB6OcQXIzCX9XTqG1nJyWauN5D7tfH2lPs/copy)). 
+Note that the screenparser sidebar only works when logged in. 
+
+<img src="spreadsheet1.png" alt="Spreadsheet Overview + Insert" style="width: 50%;" />
+<details>
+<summary>More screenshots
+</summary>
+
+  ![Spreadsheet Overview](spreadsheet1.png)
+  ![Spreadsheet Production](spreadsheet2.png)
+
+</details>
+
+Foxhole-screenparse is also available as a [standalone website](https://pogobanane.de/foxhole-screenparse/) with a simple table output.
+
+
+# Technical Overview
+
+Foxhole-screenparse parses contents of stockpiles into machine-readable lists.
 It uses a naive image processing approach using openCVs template matching and tesseract for OCR/text recognition. 
 Both of those libraries run directly in your browser using wasm and thelike. 
-
-Foxhole-screenparse is available as a [standalone website](https://pogobanane.de/foxhole-screenparse/) and as a Google Spreadsheets sidebar. The spreadsheet allows convenient and efficient transcription of screenshots into spreadsheet and brings lots of functionality. 
-
-You can try the spreadsheet here [3SP Stocks v2 - template](https://docs.google.com/spreadsheets/d/1SdMzb2fMB2IoVRNJfAVv7W6TZw7-CChasx_VSnnBESc/) or [copy](https://docs.google.com/spreadsheets/d/1SdMzb2fMB2IoVRNJfAVv7W6TZw7-CChasx_VSnnBESc/copy) it to your google drive. Note that the screenparse sidebar only works when logged in.
-
-# Comparison
 
 |                                | screenparse           | [Stockpiler](https://github.com/tehruttiger/Stockpiler)   |
 |--------------------------------|-----------------------|----------------------|

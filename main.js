@@ -11,7 +11,7 @@ const connect_file_img = (imageid, fileinputid) => {
 
 const printCSV = async (findings) => {
   // TODO this order is not strong enough and prone to reodering by the interpreter
-  let sortedItems = items.sort((a, b) => {
+  let sortedItems = getItems().sort((a, b) => {
     if (typeof a.supplyPyramid === 'undefined') {
       return 1;
     }
@@ -58,12 +58,12 @@ const removeAllChildNodes = (parent) => {
     }
 }
 
-const getFaction = async () => {
-  if (document.getElementById('colonialButton').checked) {
-    return 'colonial';
-  } else if (document.getElementById('wardenButton').checked) {
-    return 'warden';
-  }
+const getFilter = async () => {
+  return {
+    'colonial': document.getElementById('colonialButton').checked,
+    'warden': document.getElementById('wardenButton').checked,
+    'shippables': true
+  };
 }
 
 const run = async () => {
@@ -98,7 +98,7 @@ const run = async () => {
     itemcounter = new ItemCounter(tmpCanvas, progressCb, "iconpacks", currentTemplate, visualizationCanvas, list);
     await itemcounter.init();
   }
-  itemcounter.setFaction(await getFaction());
+  itemcounter.setFilter(await getFilter());
   let iconpack = document.getElementById("iconpack-select").selectedOptions[0].value;
   itemcounter.setIconpack(iconpack);
 

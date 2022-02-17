@@ -62,10 +62,9 @@
             <div class="alert alert-warning mt-3">
               <b>Current state</b><br/>
               The detection works well, however rarely items are falsely reported missing. 
-              Vehicles and shippables (containers, paletts) are not yet supported. 
             </div>
             <div class="alert alert-info">
-              Please report detection errors at <a href="https://discord.gg/sZs5UZf">3SP#gloabl-hq-code-talk discord</a>.
+              Please report detection errors at <a href="https://discord.gg/sZs5UZf">3SP#global-hq-code-talk discord</a>.
             </div>
           </div>
         </div>
@@ -81,10 +80,11 @@
               <div class="caption"><input type="file" id="fileInputSrc" name="file" /></div>
             </div>
             <br/>
-            <input type="radio" id="colonialButton" name="faction" value="colonial">
-            <label for="colonialButton">Colonial</label><br/>
-            <input type="radio" id="wardenButton" name="faction" value="warden" checked="checked">
-            <label for="wardenButton">Warden</label><br/>
+            Search only for: <br/>
+            <input type="checkbox" id="colonialButton" name="filter" value="colonial">
+            <label for="colonialButton">Colonial items</label><br/>
+            <input type="checkbox" id="wardenButton" name="filter" value="warden" checked="checked">
+            <label for="wardenButton">Warden items</label><br/>
             <br/>
             Iconpack: <select id="iconpack-select" class="custom-select" id="inputGroupSelect01">
               <option selected value="default">default</option>
