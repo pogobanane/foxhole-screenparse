@@ -2,7 +2,7 @@ const getImgPath = (imgPath) => {
   if (imgPath.startsWith('http')) {
     return imgPath;
   } else {
-    return 'https://raw.githubusercontent.com/foxholetools/assets/master/dist/' + imgPath;
+    return 'https://raw.githubusercontent.com/pogobanane/assets/master/dist/' + imgPath;
   }
 }
 
