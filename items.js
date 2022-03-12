@@ -2377,7 +2377,7 @@ const gameitems = [
       ],
       "imgName": "12_7_Anti_Infantry_Flak_Gun.png",
       "imgPath": "icons/structures/emplacedmg.png",
-      "imgUasset": "StructureIcons/EmplacedATIcon.png",
+      "imgUasset": "StructureIcons/EmplacedMGIcon.png",
       "itemName": "12.7 Anti Infantry Flak Gun",
       "itemDesc": "An anti-aircraft flak cannon repurposed as a defensive emplacement against infantry.",
       "itemCategory": "shipables",
@@ -4168,6 +4168,7 @@ const gameitems = [
       "itemClass": "Colonial Armour Uniform",
       "numberProduced": 5,
       "stockpileLimitPrivate": 100,
+      "extraIcon": "armour",
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -4189,6 +4190,7 @@ const gameitems = [
       "itemDesc": "This uniform, while impractical in combat, denotes the head of a regiment. Appropriately dressed officers may freely discipline their subordinates. Ancient Mesean officialis were key to the Legion's organization. This modern attire honours their lasting legacy.",
       "itemCategory": "uniforms",
       "itemClass": "Colonial Officer Uniform",
+      "extraIcon": "officer",
       "numberProduced": 3,
       "stockpileLimitPrivate": 100,
       "isTeched": true,
@@ -4385,6 +4387,7 @@ const gameitems = [
       "itemDesc": "Repurposed from ancient wars, these armour plates are highly effective at stopping enemy small arms fire. That protection comes at the cost of weight, and the wearer will feel quite restricted.",
       "itemCategory": "uniforms",
       "itemClass": "Warden Armour Uniform",
+      "extraIcon": "armour",
       "numberProduced": 5,
       "stockpileLimitPrivate": 100,
       "isTeched": true,
@@ -4408,6 +4411,7 @@ const gameitems = [
       "itemDesc": "A formal uniform that denotes a regiment's leading officer. While impractical, the officer on duty may use their authority to discipline subordinates without reparation. Officers hold an important role in the Warden military, dating back to ancient times when Caoiva was ruled by a dozen kings.",
       "itemCategory": "uniforms",
       "itemClass": "Warden Officer Uniform",
+      "extraIcon": "officer",
       "numberProduced": 3,
       "stockpileLimitPrivate": 100,
       "isTeched": true,
@@ -4662,6 +4666,14 @@ const extra_icons = {
   "ammo": {
     "label": "Heavy Ammo Uniform",
     "imgPath": "icons/items/subtypeammo.png"
+  },
+  "armour": {
+    "label": "Armour Uniform",
+    "imgPath": "icons/items/subtypearmour.png"
+  },
+  "officer": {
+    "label": "Officer Uniform",
+    "imgPath": "icons/items/subtypeofficer.png"
   }
 }
 
