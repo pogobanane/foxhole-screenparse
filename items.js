@@ -1,4 +1,5 @@
 // downloaded from https://foxholelogi.com/ and added imgPath as icon from github.com/foxholetools/assets/
+// Items from update 48 are added, but values of existing items are still the old ones.
 const gameitems = [
     {
       "displayId": 0,
@@ -1667,6 +1668,50 @@ const gameitems = [
       }
     },
     {
+      "displayId": 34,
+      "faction": [
+         "colonial"
+      ],
+      "imgName": "KLG901_2_Lunaire_F.png",
+      "imgPath": "icons/items/grenadelaunchercitem.png",
+      "imgUasset": "ItemIcons/GrenadeLauncherCItemIcon.png",
+      "itemName": "KLG901-2 Lunaire F",
+      "itemDesc": "A weapon designed to launch specialty grenades over long-distances. This modern Kraunian firearm uses advanced propulsion designed for increased efficiency due to the overall weight of the weapon and projectiles.",
+      "itemCategory": "heavy_arms",
+      "itemClass": "Grenade Launcher",
+      "ammoUsed": "Green Ash Grenade, PT-815 Smoke Grenade, Tremola Grenade GPb-1",
+      "numberProduced": 10,
+      "stockpileLimitPrivate": 100,
+      "isTeched": true,
+      "isMpfCraftable": true,
+      "cost": {
+         "bmat": 50,
+         "rmat": 5
+      }
+    },
+    {
+      "displayId": 35,
+      "faction": [
+         "colonial",
+         "warden"
+      ],
+      "imgName": "Tremola_Grenade_GPb_1.png",
+      "imgPath": "icons/items/helaunchedgrenadeitem.png",
+      "imgUasset": "ItemIcons/HELaunchedGrenadeItemIcon.png",
+      "itemName": "Tremola Grenade GPb-1",
+      "itemDesc": "An expolosive Estrllan grenade specially designed for use with handheld grenade launchers. This modern grenade boasts a large payload and is deadly to lingering infantry and structural supports.",
+      "itemCategory": "heavy_arms",
+      "itemClass": "Grenade",
+      "numberProduced": 15,
+      "stockpileLimitPrivate": 100,
+      "isTeched": false,
+      "isMpfCraftable": true,
+      "cost": {
+         "bmat": 150,
+         "emat": 10
+      }
+    },
+    {
       "displayId": 0,
       "faction": [
         "colonial",
@@ -2025,6 +2070,27 @@ const gameitems = [
       }
     },
     {
+      "displayId": 15,
+      "faction": [
+         "warden"
+      ],
+      "imgName": "The_Ospreay.png",
+      "imgPath": "icons/items/grenadeadapter.png",
+      "imgUasset": "ItemIcons/GrenadeAdapterIcon.png",
+      "itemName": "The Ospreay",
+      "itemDesc": "A rifle attachment that fires grenades with pneumatic force. Along with specialized grenades, it can launch standard grenades.",
+      "itemCategory": "utilities",
+      "itemClass": "Grenade Launcher",
+      "numberProduced": 20,
+      "stockpileLimitPrivate": 100,
+      "isTeched": true,
+      "isMpfCraftable": false,
+      "cost": {
+         "bmat": 85,
+         "rmat": 10
+      }
+   },
+    {
       "displayId": 0,
       "faction": [
         "colonial",
@@ -2311,7 +2377,7 @@ const gameitems = [
       ],
       "imgName": "12_7_Anti_Infantry_Flak_Gun.png",
       "imgPath": "icons/structures/emplacedmg.png",
-      "imgUasset": "StructureIcons/EmplacedATIcon.png",
+      "imgUasset": "StructureIcons/EmplacedMGIcon.png",
       "itemName": "12.7 Anti Infantry Flak Gun",
       "itemDesc": "An anti-aircraft flak cannon repurposed as a defensive emplacement against infantry.",
       "itemCategory": "shipables",
@@ -2541,8 +2607,8 @@ const gameitems = [
         "warden"
       ],
       "imgName": "O_Brien_v_113_Gravekeeper.png",
-      // "imgPath": "missing",
-      // "imgUasset": "VehicleIcons/ArmoredCarATWVehicleIcon.png",
+      "imgPath": "icons/vehicles/armoredcaratwvehicle.png",
+      "imgUasset": "VehicleIcons/ArmoredCarATWVehicleIcon.png",
       "itemName": "O’Brien v.113 Gravekeeper",
       "itemClass": "Armored Car",
       "itemDesc": "A slight variation of the v.110, the Gravekeeper comes fitted with an embedded Bonesaw launcher, transforming the humble armoured car into an effective indirect anti-armour vehicle.",
@@ -4089,6 +4155,54 @@ const gameitems = [
       }
     },
     {
+      "displayId": 6,
+      "faction": [
+         "colonial"
+      ],
+      "imgName": "Grenadiers_Baldric.png",
+      "imgPath": "icons/uniforms/armouruniformc.png",
+      "imgUasset": "ItemIcons/Uniforms/ArmourUniformC.png",
+      "itemName": "Velian Flak Vest",
+      "itemDesc": "A heavily reinforced vest designed to protect grenadiers from shrapnel back blasts. As such, the Flak Vest reduces cuts and scrapes on top of dampening bullet impacts.",
+      "itemCategory": "uniforms",
+      "itemClass": "Colonial Armour Uniform",
+      "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
+      "extraIcon": "armour",
+      "isTeched": true,
+      "isMpfCraftable": true,
+      "cost": {
+         "bmat": 100
+      },
+      "outfitBuffs": [
+         "3 backpack slots"
+      ]
+    },
+    {
+      "displayId": 7,
+      "faction": [
+         "colonial"
+      ],
+      "imgName": "Grenadiers_Baldric.png",
+      "imgPath": "icons/uniforms/officeruniformc.png",
+      "imgUasset": "ItemIcons/Uniforms/OfficerUniformCIcon.png",
+      "itemName": "Officialis' Attire",
+      "itemDesc": "This uniform, while impractical in combat, denotes the head of a regiment. Appropriately dressed officers may freely discipline their subordinates. Ancient Mesean officialis were key to the Legion's organization. This modern attire honours their lasting legacy.",
+      "itemCategory": "uniforms",
+      "itemClass": "Colonial Officer Uniform",
+      "extraIcon": "officer",
+      "numberProduced": 3,
+      "stockpileLimitPrivate": 100,
+      "isTeched": true,
+      "isMpfCraftable": true,
+      "cost": {
+         "bmat": 100
+      },
+      "outfitBuffs": [
+         "6 backpack slots"
+      ]
+    },
+    {
       "displayId": -2,
       "faction": [
         "warden"
@@ -4262,6 +4376,54 @@ const gameitems = [
       }
     },
     {
+      "displayId": 13,
+      "faction": [
+         "warden"
+      ],
+      "imgName": "Grenadiers_Baldric.png",
+      "imgPath": "icons/uniforms/armouruniformw.png",
+      "imgUasset": "ItemIcons/Uniforms/ArmourUniformW.png",
+      "itemName": "Gunner's Breastplate",
+      "itemDesc": "Repurposed from ancient wars, these armour plates are highly effective at stopping enemy small arms fire. That protection comes at the cost of weight, and the wearer will feel quite restricted.",
+      "itemCategory": "uniforms",
+      "itemClass": "Warden Armour Uniform",
+      "extraIcon": "armour",
+      "numberProduced": 5,
+      "stockpileLimitPrivate": 100,
+      "isTeched": true,
+      "isMpfCraftable": true,
+      "cost": {
+         "bmat": 100
+      },
+      "outfitBuffs": [
+         "3 backpack slots"
+      ]
+    },
+    {
+      "displayId": 14,
+      "faction": [
+         "warden"
+      ],
+      "imgName": "Grenadiers_Baldric.png",
+      "imgPath": "icons/uniforms/officeruniformw.png",
+      "imgUasset": "ItemIcons/Uniforms/OfficerUniformWIcon.png",
+      "itemName": "Officer's Regalia",
+      "itemDesc": "A formal uniform that denotes a regiment's leading officer. While impractical, the officer on duty may use their authority to discipline subordinates without reparation. Officers hold an important role in the Warden military, dating back to ancient times when Caoiva was ruled by a dozen kings.",
+      "itemCategory": "uniforms",
+      "itemClass": "Warden Officer Uniform",
+      "extraIcon": "officer",
+      "numberProduced": 3,
+      "stockpileLimitPrivate": 100,
+      "isTeched": true,
+      "isMpfCraftable": true,
+      "cost": {
+         "bmat": 100
+      },
+      "outfitBuffs": [
+         "6 backpack slots"
+      ]
+    },
+    {
       "displayId": 0,
       "faction": [
         "warden",
@@ -4395,6 +4557,10 @@ const gameitems = [
 
 const known_iconpacks = [
   {
+    "name": "UILabelIcons3.0",
+    "label": "UILabelIcons3.0",
+  },
+  {
     "name": "UILabelIcons2.0",
     "label": "UILabelIcons2.0",
   },
@@ -4500,6 +4666,14 @@ const extra_icons = {
   "ammo": {
     "label": "Heavy Ammo Uniform",
     "imgPath": "icons/items/subtypeammo.png"
+  },
+  "armour": {
+    "label": "Armour Uniform",
+    "imgPath": "icons/items/subtypearmour.png"
+  },
+  "officer": {
+    "label": "Officer Uniform",
+    "imgPath": "icons/items/subtypeofficer.png"
   }
 }
 
