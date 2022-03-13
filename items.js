@@ -1702,6 +1702,7 @@ const gameitems = [
       "itemDesc": "An expolosive Estrllan grenade specially designed for use with handheld grenade launchers. This modern grenade boasts a large payload and is deadly to lingering infantry and structural supports.",
       "itemCategory": "heavy_arms",
       "itemClass": "Grenade",
+      "extraIcon": "explosive",
       "numberProduced": 15,
       "stockpileLimitPrivate": 100,
       "isTeched": false,
