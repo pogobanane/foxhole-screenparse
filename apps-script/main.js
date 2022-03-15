@@ -94,10 +94,14 @@ const printStockpileInput = () => {
   })
   .withFailureHandler((error) => {
     console.error(error);
-    window.alert(error);
+    _alert(error);
   })
   .fhColumnMap();
   console.warn(ret);
+}
+
+const _alert = (msg) => {
+  google.script.run.fhAlert(msg);
 }
 
 const run = async () => {
@@ -121,6 +125,9 @@ const run = async () => {
       document.getElementById('progressBar').parentElement.hidden = true;
     }
   };
+  let errorCb = (msg) => {
+    _alert(msg);
+  };
   let currentTemplate = document.getElementById('canvasItem');
   let visualizationCanvas = document.getElementById('canvasImgmatch');
   let list = document.getElementById("itemlist");
@@ -129,7 +136,7 @@ const run = async () => {
   try {
     let iconpacksLoc = "https://raw.githubusercontent.com/pogobanane/foxhole-iconpacks/main/";
     if (itemcounter === null) {
-      itemcounter = new ItemCounter(tmpCanvas, progressCb, iconpacksLoc, currentTemplate, visualizationCanvas, list);
+      itemcounter = new ItemCounter(tmpCanvas, progressCb, errorCb, iconpacksLoc, currentTemplate, visualizationCanvas, list);
       await itemcounter.init();
     }
     itemcounter.setFilter(await getFilter());
@@ -146,17 +153,17 @@ const run = async () => {
     console.error(e);
   }
   if (findings === null) {
-    window.alert('No stockpile found on screenshot.');
+    _alert('No stockpile found on screenshot.');
     document.getElementById("run-spinner").setAttribute("style", "display: none;")
     disableStockpileInput(false);
     document.getElementById('run').removeAttribute("disabled");
     return;
   }
   if (findings.stockpileType === null) {
-    window.alert('Stockpile type unknown. Assuming a Seaport or Storage Depot...');
+    _alert('Stockpile type unknown. Assuming a Seaport or Storage Depot...');
   }
   if (!findings.stockpileType.crateBased) {
-    window.alert('Stockpile is not crate based. Some Table columns are wrong.');
+    _alert('Stockpile is not crate based. Some Table columns are wrong.');
   }
 
   // insert
@@ -169,7 +176,7 @@ const run = async () => {
   })
   .withFailureHandler((error) => {
     console.error(error);
-    window.alert(error);
+    _alert(error);
     document.getElementById("run-spinner").setAttribute("style", "display: none;")
     disableStockpileInput(false);
     document.getElementById('run').removeAttribute("disabled");

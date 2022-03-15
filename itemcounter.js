@@ -7,10 +7,10 @@ const getImgPath = (imgPath) => {
 }
 
 class ItemCounter {
-  constructor(tmpCanvas, progressCallback = (progress)=>{}, iconpacksLoc = "iconpacks", currentTemplate = null, visualizationCanvas = null, domList = null) {
+  constructor(tmpCanvas, progressCallback = (progress)=>{}, errorCallback = (msg)=>{}, iconpacksLoc = "iconpacks", currentTemplate = null, visualizationCanvas = null, domList = null) {
     this.tmpCanvas = tmpCanvas; // scratchpad canvas element (should be display: none)
     this.items = getItems();
-    this.progress = new Progress(progressCallback, this.items);
+    this.progress = new Progress(progressCallback, errorCallback, this.items);
     this.currentTemplate = currentTemplate; // template used for current matching
     this.visCanvas = visualizationCanvas; // visualization of detected items
     this.domList = domList; // list of debug info for items
@@ -499,8 +499,9 @@ class ItemCounter {
 }
 
 class Progress {
-  constructor(progressCallback, items) {
+  constructor(progressCallback, errorCallback, items) {
     this.callback = progressCallback; // (progress) => {}: inform other component about progress
+    this.errorCb = errorCallback; // (errMsg) => {}
     this._progress = 0;
     this._total = 0;
     this.percent = 0.0;
@@ -523,8 +524,8 @@ class Progress {
   }
 
   error(message) {
-    this.error = message;
-    console.error(message);
+    this.errorMsg = message;
+    this.errorCb(message);
     this._callback();
   }
 

@@ -24,6 +24,10 @@ function find2D(haystack, needle) {
   }
 }
 
+function fhAlert(msg) {
+  SpreadsheetApp.getUi().alert(msg);
+}
+
 function fhColumnMap() {
   let spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = spreadsheet.getSheets().find((s) => {
