@@ -1,7 +1,7 @@
 # foxhole-screenparse
 
 Foxhole-screenparse reads contents of stockpile screenshots to ease logistics planning. 
-To calculate valuable information from the stockpile data, foxhole-screeparse is integrated into the [Stocks v5 demo](https://docs.google.com/spreadsheets/d/18UuaIwmFeRKs6o95yXXuqw2_YSrYtOvybOmmkSqKuqs/edit?usp=sharing) Google Spreadsheet ([copy sheet](https://docs.google.com/spreadsheets/d/18UuaIwmFeRKs6o95yXXuqw2_YSrYtOvybOmmkSqKuqs/copy)). 
+To calculate valuable information from the stockpile data, foxhole-screeparse is integrated into the [Stocks v6 demo](https://docs.google.com/spreadsheets/d/1qVe41WyBE-yunY1HUi_jYfHlnz32cfaFj986BWBv4fY/edit?usp=sharing) Google Spreadsheet ([copy sheet](https://docs.google.com/spreadsheets/d/1qVe41WyBE-yunY1HUi_jYfHlnz32cfaFj986BWBv4fY/copy)). 
 Note that the screenparser sidebar only works when logged in. 
 
 <img src="spreadsheet1.png" alt="Spreadsheet Overview + Insert" style="width: 50%;" />
@@ -23,7 +23,7 @@ Here you find a checklist for what to do when setting up the spreadsheet for you
 
 ### 1. Copy the template
 
-Item tech as of start of war: [Stocks v5 template](https://docs.google.com/spreadsheets/d/1sgpsGSFD5lG0_sXu1FcenFvKIr-RYE7dH4XuY7-wvcA/copy)
+Item tech as of start of war: [Stocks v6 template](https://docs.google.com/spreadsheets/d/1bHlXyZUi91vty7nS8s3H2ImEQrLPwOqvUmcdqQ5bawc/copy)
 
 ### 2. Access policies
 
