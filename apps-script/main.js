@@ -5,11 +5,17 @@ var screenshot = null; // will be populated in connect_file_img
 const connect_file_img = (imageid, fileinputid) => {
   let imgElement = document.getElementById(imageid);
   let inputElement = document.getElementById(fileinputid);
+  inputElement.addEventListener('click', async (e) => {
+    // work around this bug/feature where selecting the same file/path again
+    // does not trigger change, even if the underlying picture changed.
+    imgElement.src = null;
+    e.target.files[0] = null;
+  })
   inputElement.addEventListener('change', async (e) => {
     // mark screenshot as changing to prevent analysis
     screenshot = "loading ...";
     // show file
-    imgElement.src = URL.createObjectURL(e.target.files[0]);
+    imgElement.src = URL.createObjectURL(e.target.files[0]); // still creates the same old image though
     document.getElementById('imageSrc').removeAttribute("hidden");
     // store file in _our_ memory
     let file = document.getElementById(fileinputid).files[0];
