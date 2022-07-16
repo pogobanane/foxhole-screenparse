@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/pogobanane/foxhole-screenparse/issues"
   },
-  "homepage": "https://github.com/pogobanane/foxhole-screenparse#readme"
+  "homepage": "https://github.com/pogobanane/foxhole-screenparse#readme",
+  "dependencies": {
+    "@techstark/opencv-js": "^4.6.0-release.1"
+  }
 }
