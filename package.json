@@ -4,7 +4,7 @@
   "description": "Foxhole-screenparse reads contents of stockpile screenshots to ease logistics planning.",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -18,5 +18,8 @@
   "homepage": "https://github.com/pogobanane/foxhole-screenparse#readme",
   "dependencies": {
     "@techstark/opencv-js": "^4.6.0-release.1"
+  },
+  "devDependencies": {
+    "mocha": "^10.0.0"
   }
 }
