@@ -1,4 +1,5 @@
-const assert = require('assert');
+import assert from 'assert';
+import { ItemCounter } from '../itemcounter.js';
 
 describe('Simple Math Test', () => {
  it('should return 2', () => {
@@ -7,4 +8,10 @@ describe('Simple Math Test', () => {
  it('should return 9', () => {
         assert.equal(3 * 3, 9);
     });
+});
+
+describe('Simple itemcounter API test', () => {
+  it('should initialize', () => {
+    let counter = new ItemCounter();
+  });
 });
