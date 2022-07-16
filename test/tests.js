@@ -12,7 +12,8 @@ describe('Simple Math Test', () => {
     });
 });
 
-describe('Simple itemcounter API test', () => {
+describe('Simple itemcounter API test', function() {
+  this.timeout(10 * 1000);
   it('should initialize', async () => {
     let counter = new ItemCounter();
     await counter.init();

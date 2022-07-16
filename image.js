@@ -1,3 +1,7 @@
+import Jimp from 'jimp';
+import cv from '@techstark/opencv-js';
+import { inNodejs } from './icons.js';
+
 // taken from https://stackoverflow.com/questions/37854355/wait-for-image-loading-to-complete-in-javascript
 export const loadImage = async function(imageUrl) {
     let img;
@@ -10,6 +14,16 @@ export const loadImage = async function(imageUrl) {
 
     await imageLoadPromise;
     return img;
+}
+
+export const loadImageMat = async function(imageUrl) {
+  if (inNodejs()) {
+    let image = await Jimp.read(imageUrl);
+    return cv.matFromImageData(image.bitmap);
+  } else {
+    let image = await loadImage(imageUrl);
+    return cv.imread(image);
+  }
 }
 
 // Borrowed from docs.opencv.org sources

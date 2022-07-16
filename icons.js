@@ -1,5 +1,12 @@
 import { loadImage } from './image.js';
-import { getImgPath } from './itemcounter.js';
+import { getImgPath, resize, addCrate, addExtraIcon } from './itemcounter.js';
+import { known_iconpacks } from './items.js';
+import Jimp from 'jimp';
+import cv from '@techstark/opencv-js';
+
+export function inNodejs() {
+  return typeof window === 'undefined';
+}
 
 export class Icons {
   constructor(iconpacksLoc = "iconpacks") {
@@ -8,22 +15,45 @@ export class Icons {
     this.iconpacksLoc = iconpacksLoc; // iconpacksLoc + '/mods/' + iconpack + '/' + item.imgUasset;
   }
 
-  async loadItemIcon(item, iconpack = 'default') {
+  getIconUrl(item, iconpack) {
+    let idx = known_iconpacks.findIndex((pack) => {
+      return pack.name == iconpack;
+    });
+    if (idx === -1) {
+      console.error("Requesting item from unknown iconpack.");
+      return null;
+    }
+    let url = this.iconpacksLoc + '/mods/' + iconpack + '/' + item.imgUasset;
+    return url;
+  }
+
+  async localItemIconMat(item, iconpack = 'default') {
     if (iconpack !== 'default') {
-      let idx = known_iconpacks.findIndex((pack) => {
-        return pack.name == iconpack;
-      });
-      if (idx === -1) {
-        console.error("Requesting item from unknown iconpack.");
-        return null;
-      }
-      let url = this.iconpacksLoc + '/mods/' + iconpack + '/' + item.imgUasset;
+      let url = this.getIconUrl(item, iconpack);
+      // TODO on file not found, exit if but and try default
+      let image = await Jimp.read(url);
+      print(url);
+      print(image);
+      let mat = cv.matFromImageData(image.bitmap); // TODO check all occurences of this function for memory leaks
+      return mat;
+    }
+
+    // return default item
+    let image = await Jimp.read(getImgPath(item.imgPath));
+    let mat = cv.matFromImageData(image.bitmap);
+    return mat;
+  }
+
+  async loadItemIconMat(item, iconpack = 'default') {
+    if (iconpack !== 'default') {
+      let url = this.getIconUrl(item, iconpack);
       if (this.http404s.includes(url)) {
         // Quick fallback to default item
       } else {
         let response = await fetch(url);
         if (response.ok) {
-          return await loadImage(URL.createObjectURL(await response.blob()));
+          let image = await loadImage(URL.createObjectURL(await response.blob()));
+          return cv.imread(image);
         } else if (response.status === 404) {
           // this mod does not have this item. Fallback to default icons
           this.http404s.push(url);
@@ -34,7 +64,9 @@ export class Icons {
       }
     }
 
-    return await loadImage(getImgPath(item.imgPath));
+    // return default item
+    let image = loadImage(getImgPath(item.imgPath));
+    return cv.imread(image);
   }
 
   async getItemIcon(iconpack, item, crated, width, height) {
@@ -50,8 +82,14 @@ export class Icons {
       return cached.clone();
     }
 
-    let icon = await this.loadItemIcon(item, iconpack);
-    let iconUnprocessedMat = cv.imread(icon);
+    let iconUnprocessedMat;
+    if (inNodejs()) {
+      // special case in nodejs with local files
+      iconUnprocessedMat = await this.localItemIconMat(item, iconpack);
+    } else {
+      // normal case in webbrowsers with http fetch
+      iconUnprocessedMat = await this.loadItemIconMat(item, iconpack);
+    }
     let iconMat = await this._prepareItem(iconUnprocessedMat, item, crated, width, height);
     iconUnprocessedMat.delete();
 

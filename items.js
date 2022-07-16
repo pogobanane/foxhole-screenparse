@@ -4556,7 +4556,7 @@ const gameitems = [
     },
   ];
 
-const known_iconpacks = [
+export const known_iconpacks = [
   {
     "name": "UILabelIcons3.0",
     "label": "UILabelIcons3.0",
@@ -4575,7 +4575,7 @@ const known_iconpacks = [
   }
 ]
 
-const extra_icons = {
+export const extra_icons = {
   "smoke": {
     "label": "Smoke",
     "labelLong": "Creates Smoke",

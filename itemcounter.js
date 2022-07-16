@@ -2,6 +2,8 @@ import { getItems } from './items.js';
 import { Icons } from './icons.js';
 import { OCR } from './ocr.js';
 import cv from '@techstark/opencv-js';
+import { extra_icons } from './items.js';
+import { loadImageMat } from './image.js';
 
 export const getImgPath = (imgPath) => {
   if (imgPath.startsWith('http')) {
@@ -581,28 +583,26 @@ const confidentEnough = (confidence, item, calibration) => {
 }
 
 // return new mat
-const addCrate = async (scaledItemMat, width, height) => {
-  let icon = await loadImage(getImgPath('icons/menus/filtercrates.png'));
-  let step1 = cv.imread(icon);
-  let ret = await addExtraDecor(scaledItemMat, step1, 'botright', width, height);
-  step1.delete();
+export const addCrate = async (scaledItemMat, width, height) => {
+  let icon = await loadImageMat(getImgPath('icons/menus/filtercrates.png'));
+  let ret = await addExtraDecor(scaledItemMat, icon, 'botright', width, height);
+  icon.delete();
   return ret;
 }
 
 // return new mat
-const addExtraIcon = async (scaledItemMat, item, width, height) => {
+export const addExtraIcon = async (scaledItemMat, item, width, height) => {
   if (typeof item.extraIcon === 'undefined') {
     return scaledItemMat.clone();
   }
   let imgPath = extra_icons[item.extraIcon].imgPath;
-  let icon = await loadImage(getImgPath(imgPath));
-  let step1 = cv.imread(icon);
-  let ret = await addExtraDecor(scaledItemMat, step1, 'topleft', width, height);
-  step1.delete();
+  let icon = await loadImageMat(getImgPath(imgPath));
+  let ret = await addExtraDecor(scaledItemMat, icon, 'topleft', width, height);
+  icon.delete();
   return ret;
 }
 
-const resize = (inMat, outMat, width, height) => {
+export const resize = (inMat, outMat, width, height) => {
   if (isNaN(width) || isNaN(height)) {
     console.error("resized to NaN");
   }
