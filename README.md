@@ -92,6 +92,13 @@ The webpage has no backend, so just shove the files into some webroot or so whic
 
 Use `make appsscript` to package the files (`./apps-script/build`). Those files will be pushed to google via googles `clasp`. You can just as well copy and paste the build files to the `Apps Script` area of your spreadsheet to incorporate the sidebar, for example if you don't have clasp installed.
 
+# License
+
+Mozilla Public License 2.0 ([MPL](./LICENSE)): 
+
+- This allows, for example, programs using MPL-licensed code to be statically linked to and distributed as part of a larger proprietary piece of software [[1]](https://www.mozilla.org/en-US/MPL/2.0/FAQ/)
+- All modified files containing MPL'd code must be disclosed under the MPL. [[2]](https://tldrlegal.com/license/mozilla-public-license-2.0-(mpl-2))
+
 # Conribute
 
 This project can use some work on the front-end. The frontend could be set up with proper compilation steps (react).
