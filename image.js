@@ -1,5 +1,5 @@
 // taken from https://stackoverflow.com/questions/37854355/wait-for-image-loading-to-complete-in-javascript
-const loadImage = async function(imageUrl) {
+export const loadImage = async function(imageUrl) {
     let img;
     const imageLoadPromise = new Promise(resolve => {
         img = new Image();

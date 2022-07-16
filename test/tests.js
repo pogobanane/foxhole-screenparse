@@ -1,7 +1,7 @@
 import assert from 'assert';
 import { ItemCounter } from '../itemcounter.js';
 import Jimp from 'jimp';
-//const { Jimp } = jimp;
+import cv from '@techstark/opencv-js';
 
 describe('Simple Math Test', () => {
  it('should return 2', () => {
@@ -19,7 +19,8 @@ describe('Simple itemcounter API test', () => {
     counter.setFilter({ 'colonial': false, 'warden': false, 'shippables': false });
     counter.setIconpack('default');
     let screenshot = await Jimp.read('./example-screenshot.jpg');
-    let findings = await counter.count(screenshot);
+    let mat = cv.matFromImageData(screenshot.bitmap);
+    let findings = await counter.countMat(mat);
     console.log(findings);
     await counter.terminate();
   });

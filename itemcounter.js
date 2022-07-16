@@ -3,7 +3,7 @@ import { Icons } from './icons.js';
 import { OCR } from './ocr.js';
 import cv from '@techstark/opencv-js';
 
-const getImgPath = (imgPath) => {
+export const getImgPath = (imgPath) => {
   if (imgPath.startsWith('http')) {
     return imgPath;
   } else {

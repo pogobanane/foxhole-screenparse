@@ -1,3 +1,6 @@
+import { loadImage } from './image.js';
+import { getImgPath } from './itemcounter.js';
+
 export class Icons {
   constructor(iconpacksLoc = "iconpacks") {
     this.cache = new Map();
