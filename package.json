@@ -1,0 +1,19 @@
+{
+  "name": "foxhole-screenparse",
+  "version": "1.0.0",
+  "description": "Foxhole-screenparse reads contents of stockpile screenshots to ease logistics planning.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pogobanane/foxhole-screenparse.git"
+  },
+  "author": "pogobanane",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/pogobanane/foxhole-screenparse/issues"
+  },
+  "homepage": "https://github.com/pogobanane/foxhole-screenparse#readme"
+}
