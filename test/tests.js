@@ -1,5 +1,7 @@
 import assert from 'assert';
 import { ItemCounter } from '../itemcounter.js';
+import Jimp from 'jimp';
+//const { Jimp } = jimp;
 
 describe('Simple Math Test', () => {
  it('should return 2', () => {
@@ -11,7 +13,14 @@ describe('Simple Math Test', () => {
 });
 
 describe('Simple itemcounter API test', () => {
-  it('should initialize', () => {
+  it('should initialize', async () => {
     let counter = new ItemCounter();
+    await counter.init();
+    counter.setFilter({ 'colonial': false, 'warden': false, 'shippables': false });
+    counter.setIconpack('default');
+    let screenshot = await Jimp.read('./example-screenshot.jpg');
+    let findings = await counter.count(screenshot);
+    console.log(findings);
+    await counter.terminate();
   });
 });

@@ -1,4 +1,6 @@
-class OCR {
+import Tesseract from 'tesseract.js';
+
+export class OCR {
   constructor() {
     this.worker = null; // classical tesseract only
     this.AIworker = null; // default with AI
@@ -16,6 +18,11 @@ class OCR {
     await this.AIworker.load();
     await this.AIworker.loadLanguage('eng');
     await this.AIworker.initialize('eng');
+  }
+
+  async terminate() {
+    await this.worker.terminate();
+    await this.AIworker.terminate();
   }
 
   async itemCount(domElem, points) {

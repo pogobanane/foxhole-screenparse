@@ -4729,13 +4729,12 @@ const stockpile_types = [
   },
 ]
 
-const getItems = () => {
+export const getItems = () => {
   let ret = [];
   let a;
   let b;
   for (let item of gameitems) {
     if (item.itemCategory === 'vehicles' || item.itemCategory === 'shipables') {
-      let name = item.itemName + ' (crated)';
       a = JSON.parse(JSON.stringify(item));
       b = JSON.parse(JSON.stringify(item));
       a.crated = "always";

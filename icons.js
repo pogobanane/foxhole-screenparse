@@ -1,4 +1,4 @@
-class Icons {
+export class Icons {
   constructor(iconpacksLoc = "iconpacks") {
     this.cache = new Map();
     this.http404s = [];

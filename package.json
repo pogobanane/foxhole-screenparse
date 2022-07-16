@@ -18,7 +18,9 @@
   },
   "homepage": "https://github.com/pogobanane/foxhole-screenparse#readme",
   "dependencies": {
-    "@techstark/opencv-js": "^4.6.0-release.1"
+    "@techstark/opencv-js": "^4.6.0-release.1",
+    "jimp": "^0.16.1",
+    "tesseract.js": "^2.1.5"
   },
   "devDependencies": {
     "eslint": "^8.19.0",
