@@ -21,7 +21,7 @@ export class ItemCounter {
     this.domList = domList; // list of debug info for items
     this.abort = false;
     this.filter = null; // see main.js:getFilter
-    this.screenshotImg = null;
+    this.screenshotMat = null;
     this.icons = new Icons(iconpacksLoc);
     this.tesseract = new OCR();
   }
@@ -42,12 +42,17 @@ export class ItemCounter {
     this.iconpack = iconpack;
   }
 
-  // returns null on error
   async count(imageElem) {
+    let mat = cv.imread(imageElem);
+    return await this.countMat(mat);
+  }
+
+  // returns null on error
+  async countMat(imageMat) {
     let start = performance.now();
 
     this.abort = false;
-    this.screenshotImg = imageElem;
+    this.screenshotMat = imageMat;
 
     let cal = await this._calibrate();
     if (cal == null) {
@@ -69,7 +74,7 @@ export class ItemCounter {
   }
 
   async _calibrate() {
-    let image = cv.imread(this.screenshotImg);
+    let image = this.screenshotMat;
     var screenshot = new cv.Mat();
     cv.cvtColor(image, screenshot, cv.COLOR_RGBA2GRAY, 0);
     image.delete();
@@ -249,7 +254,7 @@ export class ItemCounter {
   // expects the calibration.stockpileBox to already been drawn into the canvasImgmatch
   async _countItems(calibration) {
     let found = [];
-    let image = cv.imread(this.screenshotImg);
+    let image = this.screenshotMat;
     var screenshot = new cv.Mat();
     cv.cvtColor(image, screenshot, cv.COLOR_RGBA2GRAY, 0);
     image.delete();
