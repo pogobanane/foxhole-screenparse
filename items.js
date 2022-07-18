@@ -4558,6 +4558,10 @@ const gameitems = [
 
 const known_iconpacks = [
   {
+    "name": "UILabel1.0",
+    "label": "UILabel1.0",
+  },
+  {
     "name": "UILabelIcons3.0",
     "label": "UILabelIcons3.0",
   },
