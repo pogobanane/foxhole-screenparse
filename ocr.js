@@ -1,4 +1,5 @@
 import Tesseract from 'tesseract.js';
+import cv from '@techstark/opencv-js';
 
 export class OCR {
   constructor() {
@@ -81,7 +82,7 @@ const parseNKInt = (string) => {
 }
 
 // returns: matOut
-const postprocessSeaport = async (matIn) => {
+export const postprocessSeaport = async (matIn) => {
   let step = new cv.Mat();
   let step2 = new cv.Mat();
   //cv.cvtColor(matIn, step, cv.COLOR_RGBA2GRAY, 0);

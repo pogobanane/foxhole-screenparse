@@ -4678,7 +4678,7 @@ export const extra_icons = {
   }
 }
 
-const stockpile_types = [
+export const stockpile_types = [
   {
     "label": "Seaport",
     "crateBased": true

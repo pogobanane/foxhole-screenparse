@@ -1,9 +1,10 @@
 import { getItems } from './items.js';
 import { Icons } from './icons.js';
-import { OCR } from './ocr.js';
+import { OCR, postprocessSeaport } from './ocr.js';
 import cv from '@techstark/opencv-js';
-import { extra_icons } from './items.js';
+import { extra_icons, stockpile_types } from './items.js';
 import { loadImageMat } from './image.js';
+import Jimp from 'jimp';
 
 export const getImgPath = (imgPath) => {
   if (imgPath.startsWith('http')) {
@@ -239,6 +240,25 @@ export class ItemCounter {
       cv.imshow(this.visCanvas, postprocessedMat);
     }
     let text = await this.tesseract.detectSeaport(this._mat2canvas(postprocessedMat));
+    asasd
+    let dst = postprocessedMat;
+    let foo = new Jimp({
+    width: dst.cols,
+    height: dst.rows,
+    data: Buffer.from(dst.data)
+    })
+    .write('output.png');
+    let jimp = new Jimp({ 
+      width: postprocessedMat.cols, 
+      height: postprocessedMat.rows, 
+      data: Buffer.from(postprocessedMat.data)
+    }, (err, img) => { 
+      console.log(err); 
+      //img.write("bar"); 
+    });
+    await jimp.write("./foobar");
+    let buf = await jimp.getBufferAsync(Jimp.MINE_PNG)
+    let text = await this.tesseract.detectSeaport(buf);
     postprocessedMat.delete();
     enlargedMat.delete();
     croppedMat.delete();
