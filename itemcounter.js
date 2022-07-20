@@ -240,25 +240,41 @@ export class ItemCounter {
       cv.imshow(this.visCanvas, postprocessedMat);
     }
     let text = await this.tesseract.detectSeaport(this._mat2canvas(postprocessedMat));
-    asasd
-    let dst = postprocessedMat;
-    let foo = new Jimp({
-    width: dst.cols,
-    height: dst.rows,
-    data: Buffer.from(dst.data)
-    })
-    .write('output.png');
-    let jimp = new Jimp({ 
-      width: postprocessedMat.cols, 
-      height: postprocessedMat.rows, 
-      data: Buffer.from(postprocessedMat.data)
-    }, (err, img) => { 
-      console.log(err); 
-      //img.write("bar"); 
-    });
-    await jimp.write("./foobar");
-    let buf = await jimp.getBufferAsync(Jimp.MINE_PNG)
-    text = await this.tesseract.detectSeaport(buf);
+    as
+    ////asasd
+    //let dst = postprocessedMat;
+    ////let text = await this.tesseract.detectSeaport(await Jimp.read('./example-screenshot.jpg'));
+    //let image = null;
+    ////await Jimp.read('./example-screenshot.jpg')
+    //await Jimp.read(this._mat2canvas(postprocessedMat).toBuffer('image/jpeg'))
+    //.then(img => {
+    //  image = img;
+    //})
+    //.catch(err => {
+    //  console.log("wut");
+    //  console.log(err);
+    //});
+    //let text = await this.tesseract.detectSeaport(await image.getBufferAsync(Jimp.MIME_PNG));
+    ////let text = await this.tesseract.detectSeaport('./example-screenshot.jpg');
+    //fasd
+    //let foo = new Jimp({
+    //width: dst.cols,
+    //height: dst.rows,
+    //data: Buffer.from(dst.data)
+    //})
+    //.write('output.png');
+    //asd
+    //let jimp = new Jimp({ 
+    //  width: postprocessedMat.cols, 
+    //  height: postprocessedMat.rows, 
+    //  data: Buffer.from(postprocessedMat.data)
+    //}, (err, img) => { 
+    //  console.log(err); 
+    //  //img.write("bar"); 
+    //});
+    //await jimp.write("./foobar.png");
+    //let buf = await jimp.getBufferAsync(Jimp.MINE_PNG)
+    //text = await this.tesseract.detectSeaport(buf);
     postprocessedMat.delete();
     enlargedMat.delete();
     croppedMat.delete();

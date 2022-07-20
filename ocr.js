@@ -1,5 +1,7 @@
 import Tesseract from 'tesseract.js';
 import cv from '@techstark/opencv-js';
+import { inNodejs } from './icons.js';
+import Jimp from 'jimp';
 
 export class OCR {
   constructor() {
@@ -51,6 +53,7 @@ export class OCR {
     return parseNKInt(result.data.text);
   }
 
+  // domElem: html canvas in browsers or simulated canvas in nodejs
   async detectSeaport(domElem) {
     const params = {
       //'tessedit_ocr_engine_mode': 0,
@@ -63,7 +66,25 @@ export class OCR {
       //'tessjs_create_osd': '1'
     };
     await this.AIworker.setParameters(params);
-    const result = await this.AIworker.recognize(domElem);
+    console.log("error?");
+    let image = null;
+    if (inNodejs) {
+      // on nodejs, tesseract does not accept simulated html canvases, but for example raw buffers
+      let jimage = null;
+      await Jimp.read(domElem.toBuffer('image/png'))
+      .then(img => {
+        jimage = img;
+      })
+      .catch(err => {
+        console.log("TODO");
+        console.log(err);
+      });
+      image = await jimage.getBufferAsync(Jimp.MIME_PNG);
+    } else {
+      image = domElem
+    }
+    const result = await this.AIworker.recognize(image);
+    console.log("error.");
     console.debug(result);
     console.debug(result.data.text);
 

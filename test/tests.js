@@ -3,9 +3,9 @@ import { ItemCounter } from '../itemcounter.js';
 import Jimp from 'jimp';
 import cv from '@techstark/opencv-js';
 import { Canvas, createCanvas, Image, ImageData, loadImage } from 'canvas';
-import { writeFileSync, existsSync, mkdirSync } from 'fs'; 
+import { writeFileSync } from 'fs'; 
 import { JSDOM } from 'jsdom';
-import { inNodejs, setInNodejs } from '../icons.js';
+import { setInNodejs } from '../icons.js';
 
 describe('Simple Math Test', () => {
  it('should return 2', () => {
