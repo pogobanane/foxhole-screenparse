@@ -258,7 +258,7 @@ export class ItemCounter {
     });
     await jimp.write("./foobar");
     let buf = await jimp.getBufferAsync(Jimp.MINE_PNG)
-    let text = await this.tesseract.detectSeaport(buf);
+    text = await this.tesseract.detectSeaport(buf);
     postprocessedMat.delete();
     enlargedMat.delete();
     croppedMat.delete();

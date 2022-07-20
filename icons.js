@@ -4,8 +4,10 @@ import { known_iconpacks } from './items.js';
 import Jimp from 'jimp';
 import cv from '@techstark/opencv-js';
 
-export function inNodejs() {
-  return typeof window === 'undefined';
+export let inNodejs = false;
+
+export function setInNodejs(bool) {
+  inNodejs = bool;
 }
 
 export class Icons {
@@ -83,7 +85,7 @@ export class Icons {
     }
 
     let iconUnprocessedMat;
-    if (inNodejs()) {
+    if (inNodejs) {
       // special case in nodejs with local files
       iconUnprocessedMat = await this.localItemIconMat(item, iconpack);
     } else {

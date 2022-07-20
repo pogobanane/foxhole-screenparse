@@ -17,7 +17,7 @@ export const loadImage = async function(imageUrl) {
 }
 
 export const loadImageMat = async function(imageUrl) {
-  if (inNodejs()) {
+  if (inNodejs) {
     let image = await Jimp.read(imageUrl);
     return cv.matFromImageData(image.bitmap);
   } else {

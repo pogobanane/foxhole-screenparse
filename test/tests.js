@@ -2,7 +2,10 @@ import assert from 'assert';
 import { ItemCounter } from '../itemcounter.js';
 import Jimp from 'jimp';
 import cv from '@techstark/opencv-js';
-import { createCanvas } from 'canvas';
+import { Canvas, createCanvas, Image, ImageData, loadImage } from 'canvas';
+import { writeFileSync, existsSync, mkdirSync } from 'fs'; 
+import { JSDOM } from 'jsdom';
+import { inNodejs, setInNodejs } from '../icons.js';
 
 describe('Simple Math Test', () => {
  it('should return 2', () => {
@@ -15,8 +18,29 @@ describe('Simple Math Test', () => {
 
 describe('Simple itemcounter API test', function() {
   this.timeout(10 * 1000);
+
+  it('canvas works with opencv', async () => {
+    console.log("ready?");
+    await openCvReady();
+    console.log("yes");
+    installDOM();
+    const image = await loadImage('./example-screenshot.jpg');
+    const src = cv.imread(image);
+    const dst = new cv.Mat();
+    const M = cv.Mat.ones(5, 5, cv.CV_8U);
+    const anchor = new cv.Point(-1, -1);
+    cv.dilate(src, dst, M, anchor, 1, cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
+    // we create an object compatible HTMLCanvasElement
+    const canvas = createCanvas(300, 300);
+    cv.imshow(canvas, dst);
+    writeFileSync('/tmp/output.jpg', canvas.toBuffer('image/jpeg'));
+    src.delete();
+    dst.delete();
+  });
+
   it('should initialize', async () => {
-    let counter = new ItemCounter(createCanvas(1000, 1000));
+    let counter = new ItemCounter(createCanvas(2000, 2000));
+    //let counter = new ItemCounter();
     await counter.init();
     counter.setFilter({ 'colonial': false, 'warden': false, 'shippables': false });
     counter.setIconpack('default');
@@ -27,3 +51,25 @@ describe('Simple itemcounter API test', function() {
     await counter.terminate();
   });
 });
+
+// Magic setup function from https://docs.opencv.org/3.4/dc/de6/tutorial_js_nodejs.html:
+// Using jsdom and node-canvas we define some global variables to emulate HTML DOM.
+// Although a complete emulation can be archived, here we only define those globals used
+// by cv.imread() and cv.imshow().
+function installDOM() {
+  setInNodejs(true);
+  const dom = new JSDOM();
+  global.document = dom.window.document;
+  // The rest enables DOM image and canvas and is provided by node-canvas
+  global.Image = Image;
+  global.HTMLCanvasElement = Canvas;
+  global.ImageData = ImageData;
+  global.HTMLImageElement = Image;
+}
+
+async function openCvReady() {
+  let promise = new Promise(resolve => {
+    cv['onRuntimeInitialized']=resolve;
+  });
+  await promise;
+}
