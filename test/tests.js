@@ -17,7 +17,7 @@ describe('Simple Math Test', () => {
 });
 
 describe('Simple itemcounter API test', function() {
-  this.timeout(10 * 1000);
+  this.timeout(5 * 60 * 1000);
 
   it('canvas works with opencv', async () => {
     console.log("ready?");
@@ -42,7 +42,7 @@ describe('Simple itemcounter API test', function() {
     let counter = new ItemCounter(createCanvas(2000, 2000));
     //let counter = new ItemCounter();
     await counter.init();
-    counter.setFilter({ 'colonial': false, 'warden': false, 'shippables': false });
+    counter.setFilter({ 'colonial': false, 'warden': true, 'shippables': false });
     counter.setIconpack('default');
     let screenshot = await Jimp.read('./example-screenshot.jpg');
     let mat = cv.matFromImageData(screenshot.bitmap);

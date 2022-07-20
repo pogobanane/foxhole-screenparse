@@ -46,7 +46,8 @@ export class OCR {
             width: Math.abs(points.x1 - points.x0), 
             height: Math.abs(points.y1 - points.y0)
     }};
-    const result = await this.worker.recognize(domElem); //, options);
+    let image = await fromDomElem(domElem);
+    const result = await this.worker.recognize(image); //, options);
     console.debug(result);
     console.debug(result.data.text);
 
@@ -66,30 +67,35 @@ export class OCR {
       //'tessjs_create_osd': '1'
     };
     await this.AIworker.setParameters(params);
-    console.log("error?");
-    let image = null;
-    if (inNodejs) {
-      // on nodejs, tesseract does not accept simulated html canvases, but for example raw buffers
-      let jimage = null;
-      await Jimp.read(domElem.toBuffer('image/png'))
-      .then(img => {
-        jimage = img;
-      })
-      .catch(err => {
-        console.log("TODO");
-        console.log(err);
-      });
-      image = await jimage.getBufferAsync(Jimp.MIME_PNG);
-    } else {
-      image = domElem
-    }
+    let image = await fromDomElem(domElem);
     const result = await this.AIworker.recognize(image);
-    console.log("error.");
     console.debug(result);
     console.debug(result.data.text);
 
     return result.data.text;
   }
+}
+
+async function fromDomElem(domElem) {
+  let image = null;
+
+  if (inNodejs) {
+    // on nodejs, tesseract does not accept simulated html canvases, but for example raw buffers
+    let jimage = null;
+    await Jimp.read(domElem.toBuffer('image/png'))
+    .then(img => {
+      jimage = img;
+    })
+    .catch(err => {
+      console.log("TODO");
+      console.log(err);
+    });
+    image = await jimage.getBufferAsync(Jimp.MIME_PNG);
+  } else {
+    image = domElem
+  }
+
+  return image;
 }
 
 const parseNKInt = (string) => {
