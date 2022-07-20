@@ -87,7 +87,6 @@ async function fromDomElem(domElem) {
       jimage = img;
     })
     .catch(err => {
-      console.log("TODO");
       console.log(err);
     });
     image = await jimage.getBufferAsync(Jimp.MIME_PNG);
