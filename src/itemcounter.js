@@ -81,7 +81,7 @@ export class ItemCounter {
     cv.cvtColor(image, screenshot, cv.COLOR_RGBA2GRAY, 0);
     const coarse = 4;
     // 12 coarse searches
-    let shirt1 = await this.calibrateFindMax(screenshot, 'Soldier Supplies', 25, 70, coarse);
+    let shirt1 = await this._calibrateFindMax(screenshot, 'Soldier Supplies', 25, 70, coarse);
     if (shirt1 === null) {
       screenshot.delete();
       return null;
@@ -100,7 +100,7 @@ export class ItemCounter {
           );
     let croppedMat = screenshot.roi(rect);
     // 7 fine searches
-    let shirt2 = await this.calibrateFindMax(croppedMat, 'Soldier Supplies', 
+    let shirt2 = await this._calibrateFindMax(croppedMat, 'Soldier Supplies', 
       shirt1.iconSizePx - coarse + 1, 
       shirt1.iconSizePx + coarse - 1, 
       1);
@@ -110,7 +110,7 @@ export class ItemCounter {
       return null;
     }
     // 7 searches
-    let bsups = await this.calibrateFindMax(croppedMat, 'Bunker Supplies', 
+    let bsups = await this._calibrateFindMax(croppedMat, 'Bunker Supplies', 
       shirt2.iconSizePx - coarse + 1, 
       shirt2.iconSizePx + coarse - 1,
       1);
@@ -175,7 +175,7 @@ export class ItemCounter {
     };
   }
 
-  async calibrateFindMax(screenshot, itemName, from, to, step) {
+  async _calibrateFindMax(screenshot, itemName, from, to, step) {
     let maxC = 0.0;
     let maxPx = 0;
     let best = null;
@@ -185,7 +185,7 @@ export class ItemCounter {
         return null;
       }
       //console.log('testing px size ', iconSizePx);
-      let current = await this.calibrateFind(screenshot, itemName, true, iconSizePx);
+      let current = await this._calibrateFind(screenshot, itemName, true, iconSizePx);
       if (current.confidence > maxC) {
         maxC = current.confidence;
         maxPx = iconSizePx;
@@ -196,7 +196,7 @@ export class ItemCounter {
     return best;
   }
 
-  async calibrateFind(screenshotMat, itemName, crated, iconSizePx) {
+  async _calibrateFind(screenshotMat, itemName, crated, iconSizePx) {
     //let item = items.find((item) => { return item.itemName == 'Soldier Supplies'; });
     let item = this.items.find((item) => { return item.itemName == itemName; });
     let message = "Searching " + item.itemName + " at " + iconSizePx + "px...";
@@ -272,7 +272,7 @@ export class ItemCounter {
       cv.imshow(this.visCanvas, stockpileMat);
     }
     screenshot.delete();
-  	
+
     let i = 0;
     for (let item of this.items) {
       //item = items[0];
@@ -361,7 +361,7 @@ export class ItemCounter {
     stockpileMat.delete();
     console.info(found);
     return found;
-  };
+  }
 
   async _findIcon(stockpileMat, item, calibration) {
     const diffs = [
@@ -642,8 +642,8 @@ const addExtraDecor = async (scaledItemMat, decorMat, position, itemWidth, itemH
     padBot = itemHeight - height;
     padRight = itemWidth - width;
   } else if (position == 'botright') {
-    padBot = Math.round(0.0 / 32.0 * itemHeight);;
-    padRight = Math.round(0.0 / 32.0 * itemWidth);;
+    padBot = Math.round(0.0 / 32.0 * itemHeight);
+    padRight = Math.round(0.0 / 32.0 * itemWidth);
     padTop = itemHeight - padBot - height;
     padLeft = itemWidth - padRight - width;
   }

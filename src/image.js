@@ -26,15 +26,6 @@ export const loadImageMat = async function(imageUrl) {
   }
 }
 
-// Borrowed from docs.opencv.org sources
-const loadImageToCanvas = async function(url, domCanvas) {
-  let ctx = domCanvas.getContext('2d');
-  let img = await loadImage(url);
-  canvas.width = img.width;
-  canvas.height = img.height;
-  ctx.drawImage(img, 0, 0, img.width, img.height);
-}
-
 export const clearCanvas = async (domCanvas) => {
   const context = domCanvas.getContext('2d');
   context.clearRect(0, 0, domCanvas.width, domCanvas.height);
