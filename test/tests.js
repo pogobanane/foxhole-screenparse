@@ -1,11 +1,11 @@
 import assert from 'assert';
-import { ItemCounter } from '../itemcounter.js';
+import { ItemCounter } from '../src/itemcounter.js';
 import Jimp from 'jimp';
 import cv from '@techstark/opencv-js';
 import { Canvas, createCanvas, Image, ImageData, loadImage } from 'canvas';
 import { writeFileSync } from 'fs'; 
 import { JSDOM } from 'jsdom';
-import { setInNodejs } from '../icons.js';
+import { setInNodejs } from '../src/icons.js';
 
 describe('Simple Math Test', () => {
  it('should return 2', () => {
@@ -20,9 +20,7 @@ describe('Simple itemcounter API test', function() {
   this.timeout(5 * 60 * 1000);
 
   it('canvas works with opencv', async () => {
-    console.log("ready?");
     await openCvReady();
-    console.log("yes");
     installDOM();
     const image = await loadImage('./example-screenshot.jpg');
     const src = cv.imread(image);
@@ -39,7 +37,9 @@ describe('Simple itemcounter API test', function() {
   });
 
   it('should initialize', async () => {
-    let counter = new ItemCounter(createCanvas(2000, 2000));
+    let counter = new ItemCounter({
+      tmpCanvas: createCanvas(2000, 2000)
+    });
     //let counter = new ItemCounter();
     await counter.init();
     counter.setFilter({ 'colonial': false, 'warden': true, 'shippables': false });
@@ -68,6 +68,7 @@ function installDOM() {
 }
 
 async function openCvReady() {
+  // TODO this is also needed for normal websites
   let promise = new Promise(resolve => {
     cv['onRuntimeInitialized']=resolve;
   });
