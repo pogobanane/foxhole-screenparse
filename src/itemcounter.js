@@ -14,7 +14,7 @@ export const getImgPath = (imgPath) => {
 }
 
 export class ItemCounter {
-  constructor(tmpCanvas, progressCallback = (progress)=>{}, errorCallback = (msg)=>{}, iconpacksLoc = "iconpacks", currentTemplate = null, visualizationCanvas = null, domList = null) {
+  constructor({tmpCanvas, progressCallback = (progress)=>{}, errorCallback = (msg)=>{}, iconpacksLoc = "iconpacks", currentTemplate = null, visualizationCanvas = null, domList = null}) {
     this.tmpCanvas = tmpCanvas; // scratchpad canvas element (should be display: none)
     this.items = getItems();
     this.progress = new Progress(progressCallback, errorCallback, this.items);

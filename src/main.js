@@ -96,11 +96,22 @@ export const run = async () => {
       document.getElementById('resultTable').hidden = false;
     }
   };
+  let errorCb = (msg) => {
+    window.alert(msg);
+  };
   let currentTemplate = document.getElementById('canvasItem');
   let visualizationCanvas = document.getElementById('canvasImgmatch');
   let list = document.getElementById("itemlist");
   if (itemcounter === null) {
-    itemcounter = new ItemCounter(tmpCanvas, progressCb, ()=>{}, "iconpacks", currentTemplate, visualizationCanvas, list);
+    itemcounter = new ItemCounter({
+      tmpCanvas: tmpCanvas, 
+      progressCallback: progressCb,
+      errorCallback: errorCb,
+      iconpacksLoc: "iconpacks", 
+      currentTemplate: currentTemplate,
+      visualizationCanvas: visualizationCanvas,
+      domList: list
+    });
     await itemcounter.init();
   }
   itemcounter.setFilter(await getFilter());
