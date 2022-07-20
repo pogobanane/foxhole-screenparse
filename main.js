@@ -1,3 +1,5 @@
+import { ItemCounter } from './itemcounter.js';
+
 var itemcounter = null;
 
 const connect_file_img = (imageid, fileinputid) => {
@@ -124,7 +126,9 @@ const abort = () => {
   itemcounter.abort = true;
 }
 
-const loaded = async () => {
+//export const loaded = async () => {
+//export async function loaded() {
+export const loaded = async function() {
   connect_file_img('imageSrc', 'fileInputSrc');
 
   for (let pack of known_iconpacks) {
