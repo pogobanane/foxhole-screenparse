@@ -67,7 +67,7 @@ export class Icons {
     }
 
     // return default item
-    let image = loadImage(getImgPath(item.imgPath));
+    let image = await loadImage(getImgPath(item.imgPath));
     return cv.imread(image);
   }
 
