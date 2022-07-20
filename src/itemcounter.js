@@ -4,7 +4,6 @@ import { OCR, postprocessSeaport } from './ocr.js';
 import cv from '@techstark/opencv-js';
 import { extra_icons, stockpile_types } from './items.js';
 import { loadImageMat } from './image.js';
-import Jimp from 'jimp';
 
 export const getImgPath = (imgPath) => {
   if (imgPath.startsWith('http')) {

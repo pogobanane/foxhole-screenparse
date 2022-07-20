@@ -1,4 +1,7 @@
 import { ItemCounter } from './itemcounter.js';
+import { getItems } from './items.js';
+import { loadImage, clearCanvas } from './image.js';
+import { known_iconpacks } from './items.js';
 
 var itemcounter = null;
 
@@ -68,7 +71,7 @@ const getFilter = async () => {
   };
 }
 
-const run = async () => {
+export const run = async () => {
   console.log("run");
   removeAllChildNodes(document.getElementById('itemlist'));
   removeAllChildNodes(document.getElementById('preformattedNames'));
@@ -122,7 +125,7 @@ const run = async () => {
   await printCSV(findings);
 }
 
-const abort = () => {
+export const abort = () => {
   itemcounter.abort = true;
 }
 

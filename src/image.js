@@ -35,7 +35,7 @@ const loadImageToCanvas = async function(url, domCanvas) {
   ctx.drawImage(img, 0, 0, img.width, img.height);
 }
 
-const clearCanvas = async (domCanvas) => {
+export const clearCanvas = async (domCanvas) => {
   const context = domCanvas.getContext('2d');
   context.clearRect(0, 0, domCanvas.width, domCanvas.height);
 }
