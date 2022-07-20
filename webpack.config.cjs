@@ -9,17 +9,17 @@ module.exports = {
     library: {
       type: 'umd',
       name: 'sp',
-    }
+    },
   },
   plugins: [
 		new NodePolyfillPlugin({
-			excludeAliases: ['fs', 'jimp']
+			excludeAliases: ['fs']
 		})
 	],
   resolve: {
     fallback: {
       fs: false,
-      jimp: false,
     },
-  }
+  },
+  devtool: "inline-source-map",
 };
