@@ -1,4 +1,11 @@
-const getImgPath = (imgPath) => {
+import { getItems } from './items.js';
+import { Icons } from './icons.js';
+import { OCR, postprocessSeaport } from './ocr.js';
+import cv from '@techstark/opencv-js';
+import { extra_icons, stockpile_types } from './items.js';
+import { loadImageMat } from './image.js';
+
+export const getImgPath = (imgPath) => {
   if (imgPath.startsWith('http')) {
     return imgPath;
   } else {
@@ -6,8 +13,8 @@ const getImgPath = (imgPath) => {
   }
 }
 
-class ItemCounter {
-  constructor(tmpCanvas, progressCallback = (progress)=>{}, errorCallback = (msg)=>{}, iconpacksLoc = "iconpacks", currentTemplate = null, visualizationCanvas = null, domList = null) {
+export class ItemCounter {
+  constructor({tmpCanvas, progressCallback = (progress)=>{}, errorCallback = (msg)=>{}, iconpacksLoc = "iconpacks", currentTemplate = null, visualizationCanvas = null, domList = null}) {
     this.tmpCanvas = tmpCanvas; // scratchpad canvas element (should be display: none)
     this.items = getItems();
     this.progress = new Progress(progressCallback, errorCallback, this.items);
@@ -16,13 +23,17 @@ class ItemCounter {
     this.domList = domList; // list of debug info for items
     this.abort = false;
     this.filter = null; // see main.js:getFilter
-    this.screenshotImg = null;
+    this.screenshotMat = null;
     this.icons = new Icons(iconpacksLoc);
     this.tesseract = new OCR();
   }
 
   async init() {
     await this.tesseract.init();
+  }
+
+  async terminate() {
+    await this.tesseract.terminate();
   }
 
   setFilter(filter) {
@@ -33,12 +44,17 @@ class ItemCounter {
     this.iconpack = iconpack;
   }
 
-  // returns null on error
   async count(imageElem) {
+    let mat = cv.imread(imageElem);
+    return await this.countMat(mat);
+  }
+
+  // returns null on error
+  async countMat(imageMat) {
     let start = performance.now();
 
     this.abort = false;
-    this.screenshotImg = imageElem;
+    this.screenshotMat = imageMat;
 
     let cal = await this._calibrate();
     if (cal == null) {
@@ -60,13 +76,12 @@ class ItemCounter {
   }
 
   async _calibrate() {
-    let image = cv.imread(this.screenshotImg);
+    let image = this.screenshotMat;
     var screenshot = new cv.Mat();
     cv.cvtColor(image, screenshot, cv.COLOR_RGBA2GRAY, 0);
-    image.delete();
     const coarse = 4;
     // 12 coarse searches
-    let shirt1 = await this.calibrateFindMax(screenshot, 'Soldier Supplies', 25, 70, coarse);
+    let shirt1 = await this._calibrateFindMax(screenshot, 'Soldier Supplies', 25, 70, coarse);
     if (shirt1 === null) {
       screenshot.delete();
       return null;
@@ -85,7 +100,7 @@ class ItemCounter {
           );
     let croppedMat = screenshot.roi(rect);
     // 7 fine searches
-    let shirt2 = await this.calibrateFindMax(croppedMat, 'Soldier Supplies', 
+    let shirt2 = await this._calibrateFindMax(croppedMat, 'Soldier Supplies', 
       shirt1.iconSizePx - coarse + 1, 
       shirt1.iconSizePx + coarse - 1, 
       1);
@@ -95,7 +110,7 @@ class ItemCounter {
       return null;
     }
     // 7 searches
-    let bsups = await this.calibrateFindMax(croppedMat, 'Bunker Supplies', 
+    let bsups = await this._calibrateFindMax(croppedMat, 'Bunker Supplies', 
       shirt2.iconSizePx - coarse + 1, 
       shirt2.iconSizePx + coarse - 1,
       1);
@@ -160,7 +175,7 @@ class ItemCounter {
     };
   }
 
-  async calibrateFindMax(screenshot, itemName, from, to, step) {
+  async _calibrateFindMax(screenshot, itemName, from, to, step) {
     let maxC = 0.0;
     let maxPx = 0;
     let best = null;
@@ -170,7 +185,7 @@ class ItemCounter {
         return null;
       }
       //console.log('testing px size ', iconSizePx);
-      let current = await this.calibrateFind(screenshot, itemName, true, iconSizePx);
+      let current = await this._calibrateFind(screenshot, itemName, true, iconSizePx);
       if (current.confidence > maxC) {
         maxC = current.confidence;
         maxPx = iconSizePx;
@@ -181,7 +196,7 @@ class ItemCounter {
     return best;
   }
 
-  async calibrateFind(screenshotMat, itemName, crated, iconSizePx) {
+  async _calibrateFind(screenshotMat, itemName, crated, iconSizePx) {
     //let item = items.find((item) => { return item.itemName == 'Soldier Supplies'; });
     let item = this.items.find((item) => { return item.itemName == itemName; });
     let message = "Searching " + item.itemName + " at " + iconSizePx + "px...";
@@ -240,7 +255,7 @@ class ItemCounter {
   // expects the calibration.stockpileBox to already been drawn into the canvasImgmatch
   async _countItems(calibration) {
     let found = [];
-    let image = cv.imread(this.screenshotImg);
+    let image = this.screenshotMat;
     var screenshot = new cv.Mat();
     cv.cvtColor(image, screenshot, cv.COLOR_RGBA2GRAY, 0);
     image.delete();
@@ -257,7 +272,7 @@ class ItemCounter {
       cv.imshow(this.visCanvas, stockpileMat);
     }
     screenshot.delete();
-  	
+
     let i = 0;
     for (let item of this.items) {
       //item = items[0];
@@ -346,7 +361,7 @@ class ItemCounter {
     stockpileMat.delete();
     console.info(found);
     return found;
-  };
+  }
 
   async _findIcon(stockpileMat, item, calibration) {
     const diffs = [
@@ -567,28 +582,26 @@ const confidentEnough = (confidence, item, calibration) => {
 }
 
 // return new mat
-const addCrate = async (scaledItemMat, width, height) => {
-  let icon = await loadImage(getImgPath('icons/menus/filtercrates.png'));
-  let step1 = cv.imread(icon);
-  let ret = await addExtraDecor(scaledItemMat, step1, 'botright', width, height);
-  step1.delete();
+export const addCrate = async (scaledItemMat, width, height) => {
+  let icon = await loadImageMat(getImgPath('icons/menus/filtercrates.png'));
+  let ret = await addExtraDecor(scaledItemMat, icon, 'botright', width, height);
+  icon.delete();
   return ret;
 }
 
 // return new mat
-const addExtraIcon = async (scaledItemMat, item, width, height) => {
+export const addExtraIcon = async (scaledItemMat, item, width, height) => {
   if (typeof item.extraIcon === 'undefined') {
     return scaledItemMat.clone();
   }
   let imgPath = extra_icons[item.extraIcon].imgPath;
-  let icon = await loadImage(getImgPath(imgPath));
-  let step1 = cv.imread(icon);
-  let ret = await addExtraDecor(scaledItemMat, step1, 'topleft', width, height);
-  step1.delete();
+  let icon = await loadImageMat(getImgPath(imgPath));
+  let ret = await addExtraDecor(scaledItemMat, icon, 'topleft', width, height);
+  icon.delete();
   return ret;
 }
 
-const resize = (inMat, outMat, width, height) => {
+export const resize = (inMat, outMat, width, height) => {
   if (isNaN(width) || isNaN(height)) {
     console.error("resized to NaN");
   }
@@ -629,8 +642,8 @@ const addExtraDecor = async (scaledItemMat, decorMat, position, itemWidth, itemH
     padBot = itemHeight - height;
     padRight = itemWidth - width;
   } else if (position == 'botright') {
-    padBot = Math.round(0.0 / 32.0 * itemHeight);;
-    padRight = Math.round(0.0 / 32.0 * itemWidth);;
+    padBot = Math.round(0.0 / 32.0 * itemHeight);
+    padRight = Math.round(0.0 / 32.0 * itemWidth);
     padTop = itemHeight - padBot - height;
     padLeft = itemWidth - padRight - width;
   }

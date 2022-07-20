@@ -4556,7 +4556,7 @@ const gameitems = [
     },
   ];
 
-const known_iconpacks = [
+export const known_iconpacks = [
   {
     "name": "UILabelIcons3.0",
     "label": "UILabelIcons3.0",
@@ -4575,7 +4575,7 @@ const known_iconpacks = [
   }
 ]
 
-const extra_icons = {
+export const extra_icons = {
   "smoke": {
     "label": "Smoke",
     "labelLong": "Creates Smoke",
@@ -4678,7 +4678,7 @@ const extra_icons = {
   }
 }
 
-const stockpile_types = [
+export const stockpile_types = [
   {
     "label": "Seaport",
     "crateBased": true
@@ -4729,13 +4729,12 @@ const stockpile_types = [
   },
 ]
 
-const getItems = () => {
+export const getItems = () => {
   let ret = [];
   let a;
   let b;
   for (let item of gameitems) {
     if (item.itemCategory === 'vehicles' || item.itemCategory === 'shipables') {
-      let name = item.itemName + ' (crated)';
       a = JSON.parse(JSON.stringify(item));
       b = JSON.parse(JSON.stringify(item));
       a.crated = "always";

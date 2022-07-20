@@ -1,4 +1,9 @@
-class OCR {
+import Tesseract from 'tesseract.js';
+import cv from '@techstark/opencv-js';
+import { inNodejs } from './icons.js';
+import Jimp from 'jimp';
+
+export class OCR {
   constructor() {
     this.worker = null; // classical tesseract only
     this.AIworker = null; // default with AI
@@ -16,6 +21,11 @@ class OCR {
     await this.AIworker.load();
     await this.AIworker.loadLanguage('eng');
     await this.AIworker.initialize('eng');
+  }
+
+  async terminate() {
+    await this.worker.terminate();
+    await this.AIworker.terminate();
   }
 
   async itemCount(domElem, points) {
@@ -36,13 +46,15 @@ class OCR {
             width: Math.abs(points.x1 - points.x0), 
             height: Math.abs(points.y1 - points.y0)
     }};
-    const result = await this.worker.recognize(domElem); //, options);
+    let image = await fromDomElem(domElem);
+    const result = await this.worker.recognize(image); //, options);
     console.debug(result);
     console.debug(result.data.text);
 
     return parseNKInt(result.data.text);
   }
 
+  // domElem: html canvas in browsers or simulated canvas in nodejs
   async detectSeaport(domElem) {
     const params = {
       //'tessedit_ocr_engine_mode': 0,
@@ -55,12 +67,34 @@ class OCR {
       //'tessjs_create_osd': '1'
     };
     await this.AIworker.setParameters(params);
-    const result = await this.AIworker.recognize(domElem);
+    let image = await fromDomElem(domElem);
+    const result = await this.AIworker.recognize(image);
     console.debug(result);
     console.debug(result.data.text);
 
     return result.data.text;
   }
+}
+
+async function fromDomElem(domElem) {
+  let image = null;
+
+  if (inNodejs) {
+    // on nodejs, tesseract does not accept simulated html canvases, but for example raw buffers
+    let jimage = null;
+    await Jimp.read(domElem.toBuffer('image/png'))
+    .then(img => {
+      jimage = img;
+    })
+    .catch(err => {
+      console.log(err);
+    });
+    image = await jimage.getBufferAsync(Jimp.MIME_PNG);
+  } else {
+    image = domElem
+  }
+
+  return image;
 }
 
 const parseNKInt = (string) => {
@@ -74,7 +108,7 @@ const parseNKInt = (string) => {
 }
 
 // returns: matOut
-const postprocessSeaport = async (matIn) => {
+export const postprocessSeaport = async (matIn) => {
   let step = new cv.Mat();
   let step2 = new cv.Mat();
   //cv.cvtColor(matIn, step, cv.COLOR_RGBA2GRAY, 0);
