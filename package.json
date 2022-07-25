@@ -2,9 +2,7 @@
   "name": "foxhole-screenparse",
   "version": "1.0.0",
   "description": "Foxhole-screenparse reads contents of stockpile screenshots to ease logistics planning.",
-  "main": "dist/main.js",
   "module": "src/main.js",
-  "browser": "dist/browser.js",
   "type": "module",
   "scripts": {
     "test": "mocha",
