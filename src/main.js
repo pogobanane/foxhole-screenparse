@@ -142,7 +142,7 @@ export const abort = () => {
 
 //export const loaded = async () => {
 //export async function loaded() {
-export const loaded = async function() {
+export async function loaded() {
   connect_file_img('imageSrc', 'fileInputSrc');
 
   for (let pack of known_iconpacks) {
