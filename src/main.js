@@ -1,3 +1,8 @@
+import { ItemCounter } from './itemcounter.js';
+import { getItems } from './items.js';
+import { loadImage, clearCanvas } from './image.js';
+import { known_iconpacks } from './items.js';
+
 var itemcounter = null;
 
 const connect_file_img = (imageid, fileinputid) => {
@@ -66,7 +71,7 @@ const getFilter = async () => {
   };
 }
 
-const run = async () => {
+export const run = async () => {
   console.log("run");
   removeAllChildNodes(document.getElementById('itemlist'));
   removeAllChildNodes(document.getElementById('preformattedNames'));
@@ -91,11 +96,22 @@ const run = async () => {
       document.getElementById('resultTable').hidden = false;
     }
   };
+  let errorCb = (msg) => {
+    window.alert(msg);
+  };
   let currentTemplate = document.getElementById('canvasItem');
   let visualizationCanvas = document.getElementById('canvasImgmatch');
   let list = document.getElementById("itemlist");
   if (itemcounter === null) {
-    itemcounter = new ItemCounter(tmpCanvas, progressCb, "iconpacks", currentTemplate, visualizationCanvas, list);
+    itemcounter = new ItemCounter({
+      tmpCanvas: tmpCanvas, 
+      progressCallback: progressCb,
+      errorCallback: errorCb,
+      iconpacksLoc: "iconpacks", 
+      currentTemplate: currentTemplate,
+      visualizationCanvas: visualizationCanvas,
+      domList: list
+    });
     await itemcounter.init();
   }
   itemcounter.setFilter(await getFilter());
@@ -120,11 +136,13 @@ const run = async () => {
   await printCSV(findings);
 }
 
-const abort = () => {
+export const abort = () => {
   itemcounter.abort = true;
 }
 
-const loaded = async () => {
+//export const loaded = async () => {
+//export async function loaded() {
+export async function loaded() {
   connect_file_img('imageSrc', 'fileInputSrc');
 
   for (let pack of known_iconpacks) {

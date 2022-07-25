@@ -79,11 +79,13 @@ This repo contains two sub-projects: A standalone statically served website (`./
 
 ## Standalone Website
 
-Clone this repository with all submodules: `git clone --recurse-submodules [repourl]`
+1. Clone this repository with all submodules: `git clone --recurse-submodules [repourl]`
 
-Pull to fetch updates: `git pull && git submodule update`
+2. Pull to fetch updates: `git pull && git submodule update`
 
-Run a debugging server: `make debug`
+3. Build the javascript bundle: `npm run build`
+
+4. Run a debugging server: `make debug`
 
 The webpage has no backend, so just shove the files into some webroot or so which has its files statically served (i.e. `make install`).
 
@@ -91,6 +93,13 @@ The webpage has no backend, so just shove the files into some webroot or so whic
 
 
 Use `make appsscript` to package the files (`./apps-script/build`). Those files will be pushed to google via googles `clasp`. You can just as well copy and paste the build files to the `Apps Script` area of your spreadsheet to incorporate the sidebar, for example if you don't have clasp installed.
+
+# License
+
+Mozilla Public License 2.0 ([MPL](./LICENSE)): 
+
+- This allows, for example, programs using MPL-licensed code to be statically linked to and distributed as part of a larger proprietary piece of software [[1]](https://www.mozilla.org/en-US/MPL/2.0/FAQ/)
+- All modified files containing MPL'd code must be disclosed under the MPL. [[2]](https://tldrlegal.com/license/mozilla-public-license-2.0-(mpl-2))
 
 # Conribute
 
