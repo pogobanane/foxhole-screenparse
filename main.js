@@ -95,7 +95,7 @@ const run = async () => {
   let visualizationCanvas = document.getElementById('canvasImgmatch');
   let list = document.getElementById("itemlist");
   if (itemcounter === null) {
-    itemcounter = new ItemCounter(tmpCanvas, progressCb, "iconpacks", currentTemplate, visualizationCanvas, list);
+    itemcounter = new ItemCounter(tmpCanvas, progressCb, window.alert, "iconpacks", currentTemplate, visualizationCanvas, list);
     await itemcounter.init();
   }
   itemcounter.setFilter(await getFilter());
