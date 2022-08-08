@@ -850,6 +850,7 @@ const gameitems = [
       "ammoUsed": "30mm",
       "numberProduced": 5,
       "stockpileLimitPrivate": 100,
+      "extraIcon": "explosive",
       "isTeched": true,
       "isMpfCraftable": true,
       "cost": {
@@ -1047,6 +1048,7 @@ const gameitems = [
       "isMpfCraftable": true,
       "damageType": "Deals armor piercing damage",
       "damageDesc": "Can penetrate armored vehicles",
+      "extraIcon": "armour_piercing",
       "vehiclePen": "Damage to the sides and rear of armored vehicles have a higher chance to penetrate at close range and at direct angles.",
       "vehiclePenChance": "High chance to penetrate armored vehicles.",
       "cost": {
@@ -1099,6 +1101,7 @@ const gameitems = [
       "isMpfCraftable": true,
       "damageType": "Deals armor piercing damage",
       "damageDesc": "Can penetrate armored vehicles",
+      "extraIcon": "armour_piercing",
       "vehiclePen": "Damage to the sides and rear of armored vehicles have a higher chance to penetrate at close range and at direct angles.",
       "vehiclePenChance": "High chance to penetrate armored vehicles.",
       "cost": {
