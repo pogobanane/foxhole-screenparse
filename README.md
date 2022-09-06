@@ -1,7 +1,7 @@
 # foxhole-screenparse
 
 Foxhole-screenparse reads contents of stockpile screenshots to ease logistics planning. 
-To calculate valuable information from the stockpile data, foxhole-screeparse is integrated into the [Stocks v6 demo](https://docs.google.com/spreadsheets/d/1qVe41WyBE-yunY1HUi_jYfHlnz32cfaFj986BWBv4fY/edit?usp=sharing) Google Spreadsheet ([copy sheet](https://docs.google.com/spreadsheets/d/1qVe41WyBE-yunY1HUi_jYfHlnz32cfaFj986BWBv4fY/copy)). 
+To calculate valuable information from the stockpile data, foxhole-screeparse is integrated into the [Stocks v6.4 demo](https://docs.google.com/spreadsheets/d/1e-i3HwPQmW3dCsUXWX1G4hE4G2YQDlE-RbI4FbSx4CY/edit?usp=sharing) Google Spreadsheet ([copy sheet](https://docs.google.com/spreadsheets/d/1e-i3HwPQmW3dCsUXWX1G4hE4G2YQDlE-RbI4FbSx4CY/copy)). 
 Note that the screenparser sidebar only works when logged in. 
 
 <img src="spreadsheet1.png" alt="Spreadsheet Overview + Insert" style="width: 50%;" />
