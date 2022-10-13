@@ -1,5 +1,12 @@
 # foxhole-screenparse
 
+```
+Note: For my use-cases, foxhole-screenparse has been fully replaced 
+by github.com/GICodeWarrior/fir, which is better in basically 
+every regard. Foxhole-screenparse is therefore unmaintained now and 
+i suggest you also direct your efforts towards fir.
+```
+
 Foxhole-screenparse reads contents of stockpile screenshots to ease logistics planning. 
 To calculate valuable information from the stockpile data, foxhole-screeparse is integrated into the [Stocks v6.4 demo](https://docs.google.com/spreadsheets/d/1e-i3HwPQmW3dCsUXWX1G4hE4G2YQDlE-RbI4FbSx4CY/edit?usp=sharing) Google Spreadsheet ([copy sheet](https://docs.google.com/spreadsheets/d/1e-i3HwPQmW3dCsUXWX1G4hE4G2YQDlE-RbI4FbSx4CY/copy)). 
 Note that the screenparser sidebar only works when logged in. 
@@ -63,15 +70,15 @@ Foxhole-screenparse parses contents of stockpiles into machine-readable lists.
 It uses a naive image processing approach using openCVs template matching and tesseract for OCR/text recognition. 
 Both of those libraries run directly in your browser using wasm and thelike. 
 
-|                                | screenparse           | [Stockpiler](https://github.com/tehruttiger/Stockpiler)   |
-|--------------------------------|-----------------------|----------------------|
-| platform                       | browser based         | windows app          |
-| Seaports/Storage Depots        | yes                   | yes                  |
-| Bunker Bases etc.              | partially             | yes                  |
-| Supports different resolutions | 1080p - 4k            | manual work required |
-| Supports modded item icons     | some                  | manual work required |
-| imaging tech                   | openCV, tesseract OCR | openCV               |
-| language                       | js                    | py                   |
+|                                | screenparse           | [Stockpiler](https://github.com/tehruttiger/Stockpiler)   | [fir](https://github.com/GICodeWarrior/fir) |
+|--------------------------------|-----------------------|----------------------|--------|
+| platform                       | browser based         | windows app          | browser based |
+| Seaports/Storage Depots        | yes                   | yes                  | yes |
+| Bunker Bases etc.              | partially             | yes                  | yes |
+| Supports different resolutions | 1080p - 4k            | manual work required | everything |
+| Supports modded item icons     | some                  | manual work required | excellent |
+| imaging tech                   | openCV, tesseract OCR | openCV               | machine learning |
+| language                       | js                    | py                   | js |
 
 # Build / Deploy
 
